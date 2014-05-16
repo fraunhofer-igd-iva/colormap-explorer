@@ -1,0 +1,21 @@
+# Gradle files
+.gradle
+
+# Checkstyle
+.checkstyle
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+/bin
+/build
+/bin
+/bin
+/bin
+/bin
+/bin
+/bin
+/bin
+/bin
+/bin
