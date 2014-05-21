@@ -16,6 +16,7 @@
 
 package main;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -47,7 +48,6 @@ import com.google.common.math.IntMath;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
 import de.fhg.igd.pcolor.util.ColorTools;
-
 import events.MyEventBus;
 import events.TileSelectionEvent;
 
@@ -61,6 +61,10 @@ public class JMiniHexPanel extends JPanel
 	
 	private static final long serialVersionUID = 6582370458976011408L;
 
+	private static final ViewingConditions VIEW_ENV = ViewingConditions.sRGB_typical_envirnonment;
+	private static final ColorSpace COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+
+	
 	private Colormap2D colormap;
 	private HexTileModel tileModel;
 	private Optional<Tile> selection = Optional.absent();
@@ -169,10 +173,10 @@ public class JMiniHexPanel extends JPanel
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		drawVectorField(g);
+		drawSelection(g);
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAhint);
 
-		drawSelection(g);
 		g1.setClip(null);
 	}
 
@@ -181,20 +185,21 @@ public class JMiniHexPanel extends JPanel
 		int mapWidth = tileModel.getMapWidth();
 		int mapHeight = tileModel.getMapHeight();
 
-		ViewingConditions env = ViewingConditions.sRGB_typical_envirnonment;
-		ColorSpace colorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-
 		double maxDist = tileModel.getTileHeight() * 0.5;	// distance to tile border
 		
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
+
+				if (!shouldDraw(x, y))
+					continue;
+				
 				double forceX = 0; 
 				double forceY = 0;
 
 				int worldX = tileModel.getWorldX(x, y);
 				int worldY = tileModel.getWorldY(x, y);
 				Color color = getTileColor(worldX, worldY);
-				PColor color2 = PColor.create(colorSpace, color.getColorComponents(new float[3]));
+				PColor color2 = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 				Collection<Direction> neighs = tileModel.validDirections(x, y);
 				
 				for (Direction dir : neighs)
@@ -206,9 +211,9 @@ public class JMiniHexPanel extends JPanel
 						int nworldX = tileModel.getWorldX(n.getMapX(), n.getMapY());
 						int nworldY = tileModel.getWorldY(n.getMapX(), n.getMapY());
 						Color ncolor = getTileColor(nworldX, nworldY);
-						PColor ncolor2 = PColor.create(colorSpace, ncolor.getColorComponents(new float[3]));
+						PColor ncolor2 = PColor.create(COLOR_SPACE, ncolor.getColorComponents(new float[3]));
 						
-						double weight = ColorTools.distance(color2, ncolor2, env);
+						double weight = ColorTools.distance(color2, ncolor2, VIEW_ENV);
 						double dx = nworldX - worldX;
 						double dy = nworldY - worldY;
 						double len = Math.sqrt(dx * dx + dy * dy);
@@ -229,6 +234,31 @@ public class JMiniHexPanel extends JPanel
 				drawArrow(g, worldX, worldY, tx, ty, arrColor);
 			}
 		}
+	}
+
+	private boolean shouldDraw(int x, int y)
+	{
+		if (selection.isPresent())
+		{
+			Tile tile = selection.get();
+			
+			// don't draw selected tile
+			if (tile.getMapX() == x && tile.getMapY() == y)
+				return false;
+			
+			// don't draw neighbors of the selected tile
+			Collection<Direction> dirs = tileModel.validDirections(tile.getMapX(), tile.getMapY());
+			for (Direction dir : dirs)
+			{
+				Tile neighbor = tileModel.getNeighborFor(tile.getMapX(), tile.getMapY(), dir);
+				if (neighbor.getMapX() == x && neighbor.getMapY() == y)
+					return false;
+			}
+			
+			return true;
+		}
+
+		return true;
 	}
 
 	private void drawArrow(Graphics2D g, int sx, int sy, int tx, int ty, Color color)
@@ -293,23 +323,95 @@ public class JMiniHexPanel extends JPanel
 		if (selection.isPresent())
 		{
 			Tile tile = selection.get();
-			int x = tile.getMapX();
-			int y = tile.getMapY();
-			int worldX = tileModel.getWorldX(x, y);
-			int worldY = tileModel.getWorldY(x, y);
-			
-			g.setColor(Color.BLACK);
-			g.translate(worldX, worldY);
-			g.draw(hexagon);
-			g.translate(-worldX, -worldY);
+			drawHexagonFrame(g, tile, Color.BLACK);
 
-			// draw debug info - arrows to all valid neighbors
-//			for (Direction dir : tileModel.validDirections(x, y))
-//			{
-//				Tile n = tileModel.getNeighborFor(x, y, dir);
-//				drawArrow(g, worldX, worldY, tileModel.getWorldX(n.getMapX(), n.getMapY()), tileModel.getWorldY(n.getMapX(), n.getMapY()), Color.BLACK);
-//			}
+			double totalDist = computeTotalColorDistance(tile);
+			
+			if (totalDist > 0)
+			{
+				drawDistanceGrid(g, tile, totalDist);
+			}
 		}
 	}
 
+	private void drawDistanceGrid(Graphics2D g, Tile tile, double totalDist)
+	{
+		int x = tile.getMapX();
+		int y = tile.getMapY();
+		int worldX = tileModel.getWorldX(x, y);
+		int worldY = tileModel.getWorldY(x, y);
+		
+		Color color = getTileColor(worldX, worldY);
+		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
+		
+		// draw arrows to all neighbors weighted by their color distance
+		Collection<Direction> dirs = tileModel.validDirections(x, y);
+		for (Direction dir : dirs)
+		{
+			Tile n = tileModel.getNeighborFor(x, y, dir);
+			int neighX = tileModel.getWorldX(n.getMapX(), n.getMapY());
+			int neighY = tileModel.getWorldY(n.getMapX(), n.getMapY());
+
+			Color ncolor = getTileColor(neighX, neighY);
+			PColor pncolor = PColor.create(COLOR_SPACE, ncolor.getColorComponents(new float[3]));
+			
+			double dist = ColorTools.distance(pcolor, pncolor, VIEW_ENV);
+			
+			double weight = 10 * dist / totalDist;
+			
+//			int dx = neighX - worldX;
+//			int dy = neighY - worldY;
+//			int tx = (int)(worldX + dx * weight + 0.5);
+//			int ty = (int)(worldY + dy * weight + 0.5);
+//			drawArrow(g, worldX, worldY, tx, ty, Color.BLACK);
+
+			g.setStroke(new BasicStroke((float)weight));
+			drawArrow(g, worldX, worldY, neighX, neighY, Color.BLACK);
+		}
+		
+		g.setStroke(new BasicStroke());
+	}
+
+	private void drawHexagonFrame(Graphics2D g, Tile tile, Color color)
+	{
+		int x = tile.getMapX();
+		int y = tile.getMapY();
+		int worldX = tileModel.getWorldX(x, y);
+		int worldY = tileModel.getWorldY(x, y);
+		
+		g.setColor(color);
+		g.translate(worldX, worldY);
+		g.draw(hexagon);
+		g.translate(-worldX, -worldY);
+	}
+
+	private double computeTotalColorDistance(Tile tile)
+	{
+		int x = tile.getMapX();
+		int y = tile.getMapY();
+
+		int worldX = tileModel.getWorldX(x, y);
+		int worldY = tileModel.getWorldY(x, y);
+
+		Color color = getTileColor(worldX, worldY);
+		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
+
+		double sum = 0;
+		
+		for (Direction dir : tileModel.validDirections(x, y))
+		{
+			Tile n = tileModel.getNeighborFor(x, y, dir);
+			int neighX = tileModel.getWorldX(n.getMapX(), n.getMapY());
+			int neighY = tileModel.getWorldY(n.getMapX(), n.getMapY());
+
+			Color ncolor = getTileColor(neighX, neighY);
+			PColor pncolor = PColor.create(COLOR_SPACE, ncolor.getColorComponents(new float[3]));
+			
+			double dist = ColorTools.distance(pcolor, pncolor, VIEW_ENV);
+			
+			sum += Math.abs(dist);
+		}
+		
+		return sum;
+	}
 }
