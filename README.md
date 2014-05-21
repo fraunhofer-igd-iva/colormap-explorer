@@ -1,7 +1,7 @@
 #ColorMap Explorer
 **A tool for exploring 2D colormaps**
 
-![image1](images/2014-05-16_screenshot.png "The main panel")
+![image1](images/2014-05-21_screenshot.png "The main panel")
 
 
 ### Overview
