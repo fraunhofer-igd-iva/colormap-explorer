@@ -64,6 +64,18 @@ public class IsometricTileModel implements TileModel
 	public int getMapWidth()
 	{
 		return mapWidth;
+	}
+	
+	@Override
+	public int getWorldWidth()
+	{
+		return tileWidth * mapWidth;
+	}
+	
+	@Override
+	public int getWorldHeight()
+	{
+		return tileHeight * mapHeight / 2;
 	}	
 	
 	/**

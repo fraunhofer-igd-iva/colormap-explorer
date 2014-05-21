@@ -59,6 +59,16 @@ public interface TileModel
 	int getWorldX(int mapX, int mapY);
 
 	/**
+	 * @return the width of the world in world coords.
+	 */
+	int getWorldWidth();
+
+	/**
+	 * @return the height of the world in world coords.
+	 */
+	int getWorldHeight();
+
+	/**
 	 * @param x the map x coordinate
 	 * @param y the map y coordinate
 	 * @return the tile

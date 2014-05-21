@@ -17,6 +17,8 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,11 +32,16 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.RepaintManager;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sun.swing.SwingUtilities2;
 import tiling.Tile;
+import tiling.TileModel;
 import colormaps.Colormap2D;
 
 import com.google.common.eventbus.Subscribe;
@@ -52,8 +59,8 @@ public class JConfigPanel extends JPanel
 	private static final Logger logger = LoggerFactory.getLogger(JConfigPanel.class);
 	
 	private static final long serialVersionUID = -3147864756762616815L;
-	private JTextField tfX;
-	private JTextField tfY;
+
+	private final JPanel tileInfoPanel;
 
 	public JConfigPanel(List<Colormap2D> colorMaps)
 	{
@@ -73,29 +80,31 @@ public class JConfigPanel extends JPanel
 			}
 		});
 		
+		mapsCombo.setSelectedIndex(0);
+		
 		JLabel label = new JLabel("Colormap");
-		label.setAlignmentX(Box.CENTER_ALIGNMENT);
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(label);
 		panel.add(mapsCombo);
 		
 		panel.add(Box.createVerticalStrut(10));
 
-		JPanel tileInfo = new JPanel();
-		tileInfo.setLayout(new GridLayout(0, 2, 5, 5));
-		tileInfo.setBorder(BorderFactory.createTitledBorder("Info"));
-		tfX = new JTextField();
-		tfY = new JTextField();
+		tileInfoPanel = new JPanel();
+		tileInfoPanel.setLayout(new GridLayout(0, 2, 5, 5));
+		tileInfoPanel.setBorder(BorderFactory.createTitledBorder("Info"));
+		JTextField tfX = new JTextField("sdfsf");
+		JTextField tfY = new JTextField("xx");
 		tfX.setEditable(false);
 		tfY.setEditable(false);
-		tfX.setHorizontalAlignment(JTextField.RIGHT);
-		tfY.setHorizontalAlignment(JTextField.RIGHT);
+		tfX.setHorizontalAlignment(SwingConstants.RIGHT);
+		tfY.setHorizontalAlignment(SwingConstants.RIGHT);
 		tfX.setBackground(Color.WHITE);
 		tfY.setBackground(Color.WHITE);
-		tileInfo.add(new JLabel("X"));
-		tileInfo.add(tfX);
-		tileInfo.add(new JLabel("Y"));
-		tileInfo.add(tfY);
-		panel.add(tileInfo);
+		tileInfoPanel.add(new JLabel("X"));
+		tileInfoPanel.add(tfX);
+		tileInfoPanel.add(new JLabel("Y"));
+		tileInfoPanel.add(tfY);
+		panel.add(tileInfoPanel);
 		
 		MyEventBus.getInstance().register(this);
 	}
@@ -103,20 +112,55 @@ public class JConfigPanel extends JPanel
 	@Subscribe
 	public void onSelect(TileSelectionEvent event)
 	{
-		Set<Tile> tiles = event.getSelection();
+		tileInfoPanel.removeAll();
+
+		Colormap2D colormap = event.getColormap();
+		TileModel tileModel = event.getTileModel();
 		
-		if (tiles.isEmpty())
+		Set<Tile> tiles = event.getSelection();
+
+		for (Tile tile : tiles)
 		{
-			tfX.setText(null);
-			tfY.setText(null);
+			int x = tile.getMapX();
+			int y = tile.getMapY();
+			int worldX = tileModel.getWorldX(x, y);
+			int worldY = tileModel.getWorldY(x, y);
+			
+			float mapX = (float)worldX / tileModel.getWorldWidth();
+			float mapY = (float)worldY / tileModel.getWorldHeight();
+			
+			Color color = colormap.getColor(mapX, mapY);
+
+			int red = color.getRed();
+			int green = color.getGreen();
+			int blue = color.getBlue();
+
+			int lum = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
+			float[] hsb = Color.RGBtoHSB(red, green, blue, null);
+			
+			addInfo(tileInfoPanel, "Relative X", String.format("%.3f", mapX));
+			addInfo(tileInfoPanel, "Relative Y", String.format("%.3f", mapY));
+
+			addInfo(tileInfoPanel, "Red", String.valueOf(red));
+			addInfo(tileInfoPanel, "Green", String.valueOf(green));
+			addInfo(tileInfoPanel, "Blue", String.valueOf(blue));
+			
+			addInfo(tileInfoPanel, "Hue", String.valueOf((int)(hsb[0] * 360)) + " °");
+			addInfo(tileInfoPanel, "Saturation", String.valueOf((int)(hsb[1] * 100)) + "%");
+			addInfo(tileInfoPanel, "Value", String.valueOf((int)(hsb[2] * 100)) + "%");
+			addInfo(tileInfoPanel, "Luminance", String.valueOf(lum));
 		}
-		else
-		{
-			// TODO: support more than one selected tile
-			// TODO: use tile model and colormap to show more info
-			Tile tile = tiles.iterator().next();
-			tfX.setText("" + tile.getMapX());
-			tfY.setText("" + tile.getMapY());
-		}
+		
+		tileInfoPanel.revalidate();
+	}
+
+	private void addInfo(Container c, String label, String value)
+	{
+		JTextField tfX = new JTextField(value);
+		tfX.setEditable(false);
+		tfX.setHorizontalAlignment(SwingConstants.RIGHT);
+		tfX.setBackground(Color.WHITE);
+		c.add(new JLabel(label));
+		c.add(tfX);
 	}
 }

@@ -16,9 +16,12 @@
 
 package events;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Maps;
 import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -33,6 +36,8 @@ public final class MyEventBus
 
 	private static final Logger logger = LoggerFactory.getLogger(MyEventBus.class);
 	
+	private static final Map<Class<?>, Object> history = Maps.newConcurrentMap();
+	
 	static 
 	{
 		INSTANCE.register(new Object()
@@ -43,6 +48,15 @@ public final class MyEventBus
 				logger.warn("Dead event: " + event.getEvent());
 			}
 		});
+		
+		INSTANCE.register(new Object()
+		{
+			@Subscribe
+			public void onEveryObject(Object object)
+			{
+				history.put(object.getClass(), object);
+			}
+		});		
 	}
 	
 	/** 
@@ -51,6 +65,11 @@ public final class MyEventBus
 	private MyEventBus()
 	{
 		// empty
+	}
+	
+	public static <T> T getLast(Class<T> clazz)
+	{
+		return clazz.cast(history.get(clazz));
 	}
 	
 	/**

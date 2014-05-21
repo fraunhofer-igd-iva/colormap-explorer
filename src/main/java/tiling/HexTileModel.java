@@ -135,11 +135,13 @@ public class HexTileModel implements TileModel
 		return y * tileHeight + (x % 2) * tileHeight / 2;
 	}
 	
+	@Override
 	public int getWorldWidth()
 	{
 		return (mapWidth-1) * (topLength + tileWidth) / 2;
 	}
 
+	@Override
 	public int getWorldHeight()
 	{
 		return mapHeight * tileHeight - tileHeight / 2;

@@ -67,6 +67,13 @@ public class JColorViewPanel extends JPanel
 			}
 		}
 		
+		// get last selection event and trigger it manually to be up to date
+		ColormapSelectionEvent selEvent = MyEventBus.getLast(ColormapSelectionEvent.class);
+		if (selEvent != null)
+		{
+			onSelect(selEvent);
+		}
+
 		MyEventBus.getInstance().register(this);
 	}
 	

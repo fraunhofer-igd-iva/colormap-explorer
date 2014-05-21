@@ -102,6 +102,18 @@ public class RectTileModel implements TileModel
 	}
 	
 	@Override
+	public int getWorldWidth()
+	{
+		return tileWidth * mapWidth;
+	}
+	
+	@Override
+	public int getWorldHeight()
+	{
+		return tileHeight * mapHeight;
+	}
+	
+	@Override
 	public Optional<Tile> getTileAtWorldPos(int worldX, int worldY)
 	{
 		int x = IntMath.divide(worldX, tileWidth, RoundingMode.FLOOR);
