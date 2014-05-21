@@ -16,15 +16,7 @@
 
 package main;
 
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.BLUE;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.GREEN;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.HUE;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.REAL;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.RED;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.SATURATION;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.TEST1;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.TEST2;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.VALUE;
+import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.*;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -56,7 +48,7 @@ public class JColorViewPanel extends JPanel
 	private int cols = 3;
 	
 	private final JMiniHexPanel[][] panels = new JMiniHexPanel[rows][cols];
-	private final List<ViewType> types = ImmutableList.of(REAL, TEST1, TEST2, RED, GREEN, BLUE, HUE, SATURATION, VALUE);
+	private final List<ViewType> types = ImmutableList.of(REAL, LUMINANCE, TEST, RED, GREEN, BLUE, HUE, SATURATION, VALUE);
 
 	/**
 	 * Default constructor

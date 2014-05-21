@@ -29,6 +29,7 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	public enum ViewType
 	{
 		REAL,
+		LUMINANCE,
 		RED,
 		GREEN,
 		BLUE,
@@ -36,8 +37,7 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 		SATURATION,
 		VALUE,
 		
-		TEST1,
-		TEST2
+		TEST;
 	}
 	
 	private ViewType viewType;
@@ -53,19 +53,22 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	}
 	
 	@Override
-	public Color getColor(float x, float y)
+	public Color getColor(float mx, float my)
 	{
-		Color color = getColormap().getColor(x, y);
+		Color color = getColormap().getColor(mx, my);
 		
 		int red = color.getRed();
 		int green = color.getGreen();
 		int blue = color.getBlue();
-		float[] hsv = new float[3];
+		float[] hsv;
 		
 		switch (viewType)
 		{
 		case REAL:
 			return color;
+		case LUMINANCE:
+			int y = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
+			return new Color(y, y ,y);
 		case RED:
 			return new Color(red, 0, 0);
 		case GREEN:
