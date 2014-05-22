@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 import colormaps.Colormap2D;
 
@@ -30,29 +31,37 @@ import com.google.common.base.Preconditions;
  * The main window
  * @author Martin Steiger
  */
-public class JColorMapExplorer extends JFrame
+public class ColorMapExplorer extends JFrame
 {
 	private static final long serialVersionUID = 339070765825907575L;
 
 	/**
 	 * @param colorMaps a list of colormaps
 	 */
-	public JColorMapExplorer(List<Colormap2D> colorMaps) 
+	public ColorMapExplorer(List<Colormap2D> colorMaps) 
 	{
 		super("ColorMap Explorer");
 		
 		Preconditions.checkArgument(!colorMaps.isEmpty());
 		
-		final JConfigPanel configPane = new JConfigPanel(colorMaps);
-		final JColorViewPanel viewPane = new JColorViewPanel();
+		final ConfigPanel configPane = new ConfigPanel(colorMaps);
 		
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, viewPane);
+		final DecomposedViewPanel viewPanel = new DecomposedViewPanel();
+		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel(); 
+		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel(); 
+		
+		JTabbedPane tabPane = new JTabbedPane();
+		tabPane.add("Decomposed Colormap", viewPanel);
+		tabPane.add("Points Example View", pointsExampleView);
+		tabPane.add("Overlay Example View", overlayExampleView);
+		
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);
 		splitPane.setDividerLocation(250);
 
 		// Provide minimum sizes for the two components in the split pane
 		Dimension minimumSize = new Dimension(50, 50);
 		configPane.setMinimumSize(minimumSize);
-		viewPane.setMinimumSize(minimumSize);
+		tabPane.setMinimumSize(minimumSize);
 		
 		getContentPane().add(splitPane);
 	}

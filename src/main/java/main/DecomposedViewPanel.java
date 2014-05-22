@@ -40,20 +40,20 @@ import events.MyEventBus;
  * The main display panel (right side)
  * @author Martin Steiger
  */
-public class JColorViewPanel extends JPanel
+public class DecomposedViewPanel extends JPanel
 {
 	private static final long serialVersionUID = -222462739962919021L;
 
 	private int rows = 3;
 	private int cols = 3;
 	
-	private final JMiniHexPanel[][] panels = new JMiniHexPanel[rows][cols];
+	private final DecomposedPanel[][] panels = new DecomposedPanel[rows][cols];
 	private final List<ViewType> types = ImmutableList.of(REAL, LUMINANCE, TEST, RED, GREEN, BLUE, HUE, SATURATION, VALUE);
 
 	/**
 	 * Default constructor
 	 */
-	public JColorViewPanel()
+	public DecomposedViewPanel()
 	{
 		setLayout(new GridLayout(rows, cols, 5, 5));
 		
@@ -61,7 +61,7 @@ public class JColorViewPanel extends JPanel
 		{
 			for (int col = 0; col < cols; col++)
 			{
-				JMiniHexPanel mini = new JMiniHexPanel(new ConstantColormap2D(Color.WHITE));
+				DecomposedPanel mini = new DecomposedPanel(new ConstantColormap2D(Color.WHITE));
 				panels[row][col] = mini;
 				add(mini);
 			}

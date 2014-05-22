@@ -55,9 +55,9 @@ import events.TileSelectionEvent;
  * Displays the colormap based on rectangles
  * @author Martin Steiger
  */
-public class JMiniHexPanel extends JPanel
+public class DecomposedPanel extends JPanel
 {
-	private static final Logger logger = LoggerFactory.getLogger(JMiniHexPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(DecomposedPanel.class);
 	
 	private static final long serialVersionUID = 6582370458976011408L;
 
@@ -73,7 +73,7 @@ public class JMiniHexPanel extends JPanel
 	/**
 	 * @param colormap the colormap to show
 	 */
-	public JMiniHexPanel(Colormap2D colormap)
+	public DecomposedPanel(Colormap2D colormap)
 	{
 		this.colormap = colormap;
 		int cells = 10;
@@ -136,7 +136,7 @@ public class JMiniHexPanel extends JPanel
 			tiles = Collections.singleton(selection.get()); else
 			tiles = Collections.emptySet();
 		
-		TileSelectionEvent event = new TileSelectionEvent(tiles, JMiniHexPanel.this.colormap, tileModel);
+		TileSelectionEvent event = new TileSelectionEvent(tiles, DecomposedPanel.this.colormap, tileModel);
 		MyEventBus.getInstance().post(event);
 		
 		logger.debug("Selected tiles: " + tiles);

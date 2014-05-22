@@ -32,14 +32,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.RepaintManager;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.swing.SwingUtilities2;
 import tiling.Tile;
 import tiling.TileModel;
 import colormaps.Colormap2D;
@@ -54,15 +51,15 @@ import events.TileSelectionEvent;
  * TODO Type description
  * @author Martin Steiger
  */
-public class JConfigPanel extends JPanel
+public class ConfigPanel extends JPanel
 {
-	private static final Logger logger = LoggerFactory.getLogger(JConfigPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConfigPanel.class);
 	
 	private static final long serialVersionUID = -3147864756762616815L;
 
 	private final JPanel tileInfoPanel;
 
-	public JConfigPanel(List<Colormap2D> colorMaps)
+	public ConfigPanel(List<Colormap2D> colorMaps)
 	{
 		JPanel panel = new JPanel();
 		add(panel);
@@ -92,18 +89,6 @@ public class JConfigPanel extends JPanel
 		tileInfoPanel = new JPanel();
 		tileInfoPanel.setLayout(new GridLayout(0, 2, 5, 5));
 		tileInfoPanel.setBorder(BorderFactory.createTitledBorder("Info"));
-		JTextField tfX = new JTextField("sdfsf");
-		JTextField tfY = new JTextField("xx");
-		tfX.setEditable(false);
-		tfY.setEditable(false);
-		tfX.setHorizontalAlignment(SwingConstants.RIGHT);
-		tfY.setHorizontalAlignment(SwingConstants.RIGHT);
-		tfX.setBackground(Color.WHITE);
-		tfY.setBackground(Color.WHITE);
-		tileInfoPanel.add(new JLabel("X"));
-		tileInfoPanel.add(tfX);
-		tileInfoPanel.add(new JLabel("Y"));
-		tileInfoPanel.add(tfY);
 		panel.add(tileInfoPanel);
 		
 		MyEventBus.getInstance().register(this);

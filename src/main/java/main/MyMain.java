@@ -63,7 +63,7 @@ public final class MyMain
 		
 		List<Colormap2D> colorMaps = getColormaps("colormaps.impl");
 		
-		JColorMapExplorer frame = new JColorMapExplorer(colorMaps);
+		ColorMapExplorer frame = new ColorMapExplorer(colorMaps);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(728, 600);
