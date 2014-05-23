@@ -27,11 +27,15 @@ import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.math.RoundingMode;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Random;
 
 import javax.swing.JPanel;
+
+import com.google.common.math.IntMath;
 
 import colormaps.Colormap2D;
 
@@ -80,22 +84,31 @@ public class OverlayExamplePanel extends JPanel
 		Font derivedFont = g.getFont().deriveFont(Font.PLAIN, (float)fontSize);
 		
 		Random r = new Random(123456);
-		int gridX = 10;
-		int gridY = 10;
+		int gridX = 20;
+		int gridY = 20;
+		
+		int width = IntMath.divide(getWidth(), gridX, RoundingMode.CEILING);
+		int height = IntMath.divide(getHeight(), gridY, RoundingMode.CEILING);
+		
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-		for (int y = 0; y < getHeight(); y += gridY)
+		for (int y = 0; y < height; y++)
 		{
-			for (int x = 0; x < getWidth(); x += gridX)
+			for (int x = 0; x < width; x++)
 			{
 				float cx = r.nextFloat();
 				float cy = r.nextFloat();
 			
 				Color color = colormap.getColor(cx, cy);
 			
-				g.setColor(color);
-				g.fillRect(x, y, gridX, gridY);
+				img.setRGB(x, y, color.getRGB());
 			}
 		}
+		
+		// width * gridX is not identical with getWidt() due to rounding
+		
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(img, 0, 0, width * gridX, height * gridY, null);
 
 		FontRenderContext frc = g.getFontRenderContext();
 
