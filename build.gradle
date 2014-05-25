@@ -6,6 +6,9 @@ apply plugin: 'idea'
 group = 'de.fhg.igd.iva'
 version = '1.0-SNAPSHOT'
 
+compileJava.options.encoding = 'ISO-8859-15'
+javadoc.options.encoding = 'ISO-8859-15'
+
 mainClassName = "main.MyMain"
 
 // We use both Maven Central and the Humboldt Artifactory instance, which contains igd-iva/pcolor
