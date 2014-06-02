@@ -46,6 +46,16 @@ public abstract class GuoLabStyle extends PColorBased
 		this.lightnessFunc = lightnessFunc;
 		this.chromaFunc = chromaFunc;
 	}
+	
+	public static Function<Float, Float> constant_1f(final float constant) {
+		return new Function<Float, Float>() {
+			
+			@Override
+			public Float apply(Float input) {
+				return 55f;  // guessed from poster
+			}
+		};
+	}
 
 	public static Function<Float, Float> cone(final float factor)
 	{
@@ -87,6 +97,21 @@ public abstract class GuoLabStyle extends PColorBased
 		};
 	}
 
+	public static Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>> linear_ba(
+			final float x_offset,
+			final float x_factor,
+			final float y_offset,
+			final float y_factor) {
+		return new Function<Map.Entry<Float,Float>, Map.Entry<Float,Float>>() {
+			@Override
+			public Entry<Float, Float> apply(Entry<Float, Float> input) {
+				return new AbstractMap.SimpleEntry<>(
+						y_offset + input.getValue() * y_factor,
+						x_offset + input.getKey() * x_factor);
+			}
+		};
+	}
+	
 	@Override
 	public PColor getPColor(float x, float y)
 	{
