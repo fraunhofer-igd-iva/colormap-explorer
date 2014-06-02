@@ -22,19 +22,25 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import colormaps.Colormap2D;
 
 import com.google.common.base.Preconditions;
 
 /**
- * The main window
+ * The main window, also the entry point for the application.
  * @author Martin Steiger
  */
 public class ColorMapExplorer extends JFrame
 {
+	private static final Logger logger = LoggerFactory.getLogger(ColorMapExplorer.class);
+	
 	private static final long serialVersionUID = 339070765825907575L;
-
+	
 	/**
 	 * @param colorMaps a list of colormaps
 	 */
@@ -65,4 +71,29 @@ public class ColorMapExplorer extends JFrame
 		
 		getContentPane().add(splitPane);
 	}
+
+	/**
+	 * @param args (ignored)
+	 */
+	public static void main(String[] args)
+	{
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e)	// admittedly, this is horrible, but we don't really care about l&f
+		{
+			logger.error("Cannot set look & feel", e);
+		}
+		
+		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+		
+		ColorMapExplorer frame = new ColorMapExplorer(colorMaps);
+
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(728, 600);
+		frame.setLocationByPlatform(true);
+
+		frame.setVisible(true);
+	}	
 }

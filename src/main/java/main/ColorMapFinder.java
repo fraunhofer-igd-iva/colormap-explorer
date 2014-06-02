@@ -16,15 +16,13 @@
 
 package main;
 
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.JFrame;
-import javax.swing.UIManager;
 
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -38,44 +36,23 @@ import colormaps.Colormap2D;
  * Entry point for the application
  * @author Martin Steiger
  */
-public final class MyMain
+public final class ColorMapFinder
 {
-	private static final Logger logger = LoggerFactory.getLogger(MyMain.class);
+	private static final Logger logger = LoggerFactory.getLogger(ColorMapFinder.class);
 	
-	private MyMain()
+	private ColorMapFinder()
 	{
 		// private
 	}
 	
 	/**
-	 * @param args (ignored)
+	 * @param packageName the package name
+	 * @return a sorted list of Colormap2D instances
 	 */
-	public static void main(String[] args)
-	{
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e)	// admittedly, this is horrible, but we don't really care about l&f
-		{
-			logger.error("Cannot set look & feel", e);
-		}
-		
-		List<Colormap2D> colorMaps = getColormaps("colormaps.impl");
-		
-		ColorMapExplorer frame = new ColorMapExplorer(colorMaps);
-
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(728, 600);
-		frame.setLocationByPlatform(true);
-
-		frame.setVisible(true);
-	}
-
-	private static List<Colormap2D> getColormaps(String packageName)
+	public static List<Colormap2D> findInPackage(String packageName)
 	{
 		Set<URL> urls = ClasspathHelper.forPackage(packageName);
-//		Set<URL> urls = ClasspathHelper.forJavaClassPath();
+
 		ConfigurationBuilder config = new ConfigurationBuilder();
 		config.setUrls(urls);
 		Reflections ref = new Reflections(config);
@@ -86,10 +63,16 @@ public final class MyMain
 		for (Class<? extends Colormap2D> clazz : colormapClasses) {
 			try
 			{
-				if (clazz.getName().startsWith(packageName))
+				if (!clazz.getName().startsWith(packageName))
+					continue;
+
+				if (Modifier.isAbstract(clazz.getModifiers()))
 				{
-					colorMaps.add(clazz.newInstance());
+					logger.info("Skipping abstract class " + clazz);
+					continue;
 				}
+				
+				colorMaps.add(clazz.newInstance());
 			}
 			catch (InstantiationException | IllegalAccessException e)
 			{
