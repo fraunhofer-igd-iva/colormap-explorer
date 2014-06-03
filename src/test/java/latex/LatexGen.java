@@ -65,7 +65,7 @@ public final class LatexGen
 	private static void compileLaTeX(File texFile)
 	{
 		String compiler = "C:\\Program Files (x86)\\MiKTeX 2.9\\miktex\\bin\\pdflatex.exe";
-		ProcessBuilder pb = new ProcessBuilder(compiler, "-max-print-line=120", "-synctex=-1", "-interaction=nonstopmode", texFile.getAbsolutePath());
+		ProcessBuilder pb = new ProcessBuilder(compiler, "-max-print-line=220", "-synctex=-1", "-interaction=nonstopmode", texFile.getAbsolutePath());
 		File workingDir = texFile.getParentFile();
 		System.out.println("Working directory: " + workingDir);
 		pb.directory(workingDir);

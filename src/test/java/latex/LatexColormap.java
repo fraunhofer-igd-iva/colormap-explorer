@@ -41,13 +41,29 @@ public class LatexColormap
 		return colormap.getName();
 	}
 
+	public String getDesc()
+	{
+		return colormap.getDescription().replaceAll("\\&", "\\\\&");
+	}
+
+	public String getColorspace()
+	{
+		return colormap.getColorSpace().toString().replaceAll("\\_", "\\\\_");
+	}
+
 	public void addImage(String imgFile)
 	{
 		images.add(imgFile);
 	}
-	
+
 	public List<String> getImages()
 	{
 		return Collections.unmodifiableList(images);
+	}
+
+	public List<String> getRefs()
+	{
+		return Collections.emptyList();
+//		return Collections.unmodifiableList(colormap.getReferences());
 	}
 }
