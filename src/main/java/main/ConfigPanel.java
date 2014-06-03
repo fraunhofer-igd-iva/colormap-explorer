@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
+import colorSpaces.CIELAB;
+import colorSpaces.CIELABLch;
 import colormaps.Colormap2D;
 
 import com.google.common.eventbus.Subscribe;
@@ -128,6 +130,7 @@ public class ConfigPanel extends JPanel
 
 			int lum = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
 			float[] hsb = Color.RGBtoHSB(red, green, blue, null);
+			double[] lch = new CIELABLch().fromColor(color);
 			
 			addInfo(tileInfoPanel, "Relative X", String.format("%.3f", mapX));
 			addInfo(tileInfoPanel, "Relative Y", String.format("%.3f", mapY));
@@ -140,6 +143,8 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "Saturation", String.valueOf((int)(hsb[1] * 100)) + "%");
 			addInfo(tileInfoPanel, "Value", String.valueOf((int)(hsb[2] * 100)) + "%");
 			addInfo(tileInfoPanel, "Luminance", String.valueOf(lum));
+			addInfo(tileInfoPanel, "Lightness", String.valueOf(lch[0]));
+			addInfo(tileInfoPanel, "Chroma", String.valueOf(lch[1]));
 		}
 		
 		tileInfoPanel.revalidate();

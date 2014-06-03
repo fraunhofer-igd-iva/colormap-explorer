@@ -18,7 +18,9 @@ package colormaps.transformed;
 
 import java.awt.Color;
 
+import colorSpaces.CIELAB;
 import colormaps.Colormap2D;
+import de.fhg.igd.pcolor.CIELab;
 
 /**
  * Transforms a given colormap by filtering a channel
@@ -57,6 +59,9 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	{
 		Color color = getColormap().getColor(mx, my);
 		
+		CIELAB cielab = new CIELAB();
+		double[] lab = cielab.fromColor(color);
+	
 		int red = color.getRed();
 		int green = color.getGreen();
 		int blue = color.getBlue();
