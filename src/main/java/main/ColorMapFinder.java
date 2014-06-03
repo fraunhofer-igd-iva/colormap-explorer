@@ -71,7 +71,13 @@ public final class ColorMapFinder
 					logger.info("Skipping abstract class " + clazz);
 					continue;
 				}
-				
+
+				if (!Modifier.isPublic(clazz.getModifiers()))
+				{
+					logger.info("Skipping non-public class " + clazz);
+					continue;
+				}
+
 				colorMaps.add(clazz.newInstance());
 			}
 			catch (InstantiationException | IllegalAccessException e)

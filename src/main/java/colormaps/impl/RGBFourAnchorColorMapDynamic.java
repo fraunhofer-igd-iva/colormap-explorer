@@ -21,7 +21,7 @@ import java.awt.Color;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGBFourAnchorColorMapDynamic extends AbstractColormap2D {
+class RGBFourAnchorColorMapDynamic extends AbstractColormap2D {
 
 	private Color lowerLeft;
 	private Color lowerRight;

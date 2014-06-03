@@ -17,19 +17,22 @@ package latex;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+
+import main.ColorMapFinder;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STRawGroupDir;
 import org.stringtemplate.v4.misc.ErrorManager;
 
 import colormaps.Colormap2D;
-import colormaps.impl.BCR37;
-import colormaps.impl.Himberg98RGB;
+import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
 
 import com.google.common.collect.Lists;
 
@@ -46,15 +49,55 @@ public final class LatexGen
 	
 	public static void main(String[] args) throws IOException
 	{
-		List<Colormap2D> asList = Lists.newArrayList();
-		asList.add(new BCR37());
-		asList.add(new Himberg98RGB());
+//		List<Colormap2D> colorMaps = Lists.newArrayList();
+//		colorMaps.add(new BCR37());
+//		colorMaps.add(new Himberg98RGB());
+		
+		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
-		generateTable(asList, output);
+		generateTable(colorMaps, output);
+		
+		compileLaTeX(new File(output, "colormaps.tex"));
 	}
 	
-    public static void generateTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
+	private static void compileLaTeX(File texFile)
+	{
+		String compiler = "C:\\Program Files (x86)\\MiKTeX 2.9\\miktex\\bin\\pdflatex.exe";
+		ProcessBuilder pb = new ProcessBuilder(compiler, "-max-print-line=120", "-synctex=-1", "-interaction=nonstopmode", texFile.getAbsolutePath());
+		File workingDir = texFile.getParentFile();
+		System.out.println("Working directory: " + workingDir);
+		pb.directory(workingDir);
+		
+		try
+		{
+			Process process = pb.start();
+			BufferedReader stdOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			 
+            String line=null;
+
+            while((line=stdOutput.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            while((line=stdError.readLine()) != null) {
+                System.err.println(line);
+            }
+
+			int exitCode = process.waitFor();
+			System.out.println("Compiler has terminated with " + exitCode);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		
+	}
+
+	public static void generateTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
     {
     	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources");
         templateDir.delimiterStartChar = '$';
@@ -69,13 +112,23 @@ public final class LatexGen
         {
         	LatexColormap lcm = new LatexColormap(cm);
 			lcms.add(lcm);
-        	File imgFile = new File(imageFolder, toFilename(cm.getName()));
-        	String relativePath = "images/" + imgFile.getName();	// TODO: make it pretty
-			lcm.addImage(relativePath);
-        	saveToFile(cm, imgFile);
+			
+			for (ViewType viewType : ViewType.values())
+			{
+	        	String fname = cm.getName() + "_" + viewType.toString();
+				File imgFile = new File(imageFolder, toFilename(fname));
+	        	
+//	        	SimpleFilteredColormap2D filtered = new SimpleFilteredColormap2D(cm, viewType);
+//	        	saveToFile(filtered, imgFile);
+
+	        	String relativePath = "images/" + imgFile.getName();	// TODO: make it pretty
+				lcm.addImage(relativePath);
+			} 
+			
         }
         
         ST st = templateDir.getInstanceOf("Table");
+        st.add("columns", ViewType.values());
 		st.add("colormap", lcms);
 
         File fname = new File(outputFolder, "colormaps.tex");
@@ -85,7 +138,10 @@ public final class LatexGen
     
 	private static String toFilename(String name)
 	{
-		return name.replaceAll(" ", "") + ".png";
+		return name
+			.replaceAll(" ", "_")
+			.replaceAll("\\.", "") 
+			+ ".png";
 	}
 
 	private static void saveToFile(Colormap2D map, File file) throws IOException
