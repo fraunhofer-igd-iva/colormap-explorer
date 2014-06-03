@@ -16,6 +16,7 @@
 
 package main;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -33,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,36 +63,41 @@ public class ConfigPanel extends JPanel
 
 	public ConfigPanel(List<Colormap2D> colorMaps)
 	{
-		JPanel panel = new JPanel();
-		add(panel);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout(10, 10));
+		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
 		final JComboBox<Colormap2D> mapsCombo = new JComboBox<Colormap2D>(colorMaps.toArray(new Colormap2D[0]));
+		
+		final JPanel cmPanel = new JPanel(new BorderLayout(5, 5));
+		cmPanel.add(new JLabel("Colormap"), BorderLayout.NORTH);
+		cmPanel.add(mapsCombo, BorderLayout.CENTER);
+		
+		final JLabel descLabel = new JLabel();
+		descLabel.setBorder(BorderFactory.createTitledBorder("Description"));
+		cmPanel.add(descLabel, BorderLayout.SOUTH);
+
+		add(cmPanel, BorderLayout.NORTH);
+		
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		
+		tileInfoPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+		tileInfoPanel.setBorder(BorderFactory.createTitledBorder("Tile Info"));
+		centerPanel.add(tileInfoPanel, BorderLayout.NORTH);
+		add(centerPanel, BorderLayout.CENTER);
+
 		mapsCombo.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				Colormap2D colormap = (Colormap2D) mapsCombo.getSelectedItem();
+				descLabel.setText("<html>" + colormap.getDescription() + "</html>");
 				MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
 				logger.debug("Selected colormap " + colormap);
 			}
 		});
-		
 		mapsCombo.setSelectedIndex(0);
-		
-		JLabel label = new JLabel("Colormap");
-		label.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel.add(label);
-		panel.add(mapsCombo);
-		
-		panel.add(Box.createVerticalStrut(10));
 
-		tileInfoPanel = new JPanel();
-		tileInfoPanel.setLayout(new GridLayout(0, 2, 5, 5));
-		tileInfoPanel.setBorder(BorderFactory.createTitledBorder("Info"));
-		panel.add(tileInfoPanel);
-		
 		MyEventBus.getInstance().register(this);
 	}
 

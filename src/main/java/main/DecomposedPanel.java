@@ -43,11 +43,14 @@ import tiling.Tile;
 import colormaps.Colormap2D;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.math.IntMath;
 
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
 import de.fhg.igd.pcolor.util.ColorTools;
+
+import events.ColormapSelectionEvent;
 import events.MyEventBus;
 import events.TileSelectionEvent;
 
@@ -81,6 +84,8 @@ public class DecomposedPanel extends JPanel
 		// the rounding error is < 0.1 pixel for widths: 22 / 30 / 38 / 52
 		int width = 32;
 		int topLen = width / 2;
+		
+		// adjust height to create regular hexagons
 		double hf = 0.5 + width * Math.sqrt(3) * 0.5;
 		int height = (int) hf;
 
@@ -122,8 +127,20 @@ public class DecomposedPanel extends JPanel
 		hexagon.addPoint(tl / 2, h / 2);
 		hexagon.addPoint(- tl / 2, h / 2);
 		hexagon.addPoint(-w / 2, 0);
+		
+		MyEventBus.getInstance().register(this);
 	}
 
+	@Subscribe
+	public void onSelect(ColormapSelectionEvent event)
+	{
+		Optional<Tile> oldSelection = selection;
+		
+		// clear and re-set selection to trigger update
+		updateTileSelection(Optional.<Tile>absent());
+		updateTileSelection(oldSelection);
+	}
+	
 	protected void updateTileSelection(Optional<Tile> newSel)
 	{
 		if (selection.equals(newSel))
@@ -159,8 +176,8 @@ public class DecomposedPanel extends JPanel
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
 		
-		int cellsX = IntMath.divide(getWidth(), tileModel.getAvgTileWidth(), RoundingMode.HALF_UP);
-		int cellsY = IntMath.divide(getHeight(), tileModel.getTileHeight(), RoundingMode.HALF_UP);
+		int cellsX = IntMath.divide(getWidth(), tileModel.getAvgTileWidth(), RoundingMode.UP);
+		int cellsY = IntMath.divide(getHeight(), tileModel.getTileHeight(), RoundingMode.UP);
 		tileModel.setMapWidth(cellsX);
 		tileModel.setMapHeight(cellsY);
 		
