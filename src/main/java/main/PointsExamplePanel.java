@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package main;
 
 import java.awt.Color;
@@ -28,7 +27,7 @@ import javax.swing.JPanel;
 import colormaps.Colormap2D;
 
 /**
- * TODO Type description
+ * Displays colored points on a given background
  * @author Martin Steiger
  */
 public class PointsExamplePanel extends JPanel
@@ -40,7 +39,7 @@ public class PointsExamplePanel extends JPanel
 	private int alpha;
 	
 	/**
-	 * @param colormap
+	 * @param colormap the colormap for the points
 	 */
 	public PointsExamplePanel(Colormap2D colormap)
 	{
@@ -48,7 +47,7 @@ public class PointsExamplePanel extends JPanel
 	}
 
 	/**
-	 * @param colormap
+	 * @param colormap the colormap for the points
 	 */
 	public void setColormap(Colormap2D colormap)
 	{
@@ -56,6 +55,9 @@ public class PointsExamplePanel extends JPanel
 		repaint();
 	}
 	
+	/**
+	 * @param alpha the transparency of the points
+	 */
 	public void setAlpha(int alpha)
 	{
 		this.alpha = alpha;

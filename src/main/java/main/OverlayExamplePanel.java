@@ -26,7 +26,6 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.math.RoundingMode;
 import java.text.AttributedCharacterIterator;
@@ -35,12 +34,12 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import com.google.common.math.IntMath;
-
 import colormaps.Colormap2D;
 
+import com.google.common.math.IntMath;
+
 /**
- * TODO Type description
+ * Displays a text overlay on a blurred colormap
  * @author Martin Steiger
  */
 public class OverlayExamplePanel extends JPanel
@@ -54,7 +53,7 @@ public class OverlayExamplePanel extends JPanel
 	private int fontSize;
 	
 	/**
-	 * @param colormap
+	 * @param colormap the colormap to use
 	 */
 	public OverlayExamplePanel(Colormap2D colormap)
 	{
@@ -62,7 +61,7 @@ public class OverlayExamplePanel extends JPanel
 	}
 
 	/**
-	 * @param colormap
+	 * @param colormap the new colormap
 	 */
 	public void setColormap(Colormap2D colormap)
 	{
@@ -70,6 +69,9 @@ public class OverlayExamplePanel extends JPanel
 		repaint();
 	}
 	
+	/**
+	 * @param color the font color
+	 */
 	public void setOverlayColor(Color color)
 	{
 		this.overlayColor = color;
@@ -81,7 +83,7 @@ public class OverlayExamplePanel extends JPanel
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
 		
-		Font derivedFont = g.getFont().deriveFont(Font.PLAIN, (float)fontSize);
+		Font derivedFont = g.getFont().deriveFont(Font.PLAIN, fontSize);
 		
 		Random r = new Random(123456);
 		int gridX = 20;
@@ -138,12 +140,10 @@ public class OverlayExamplePanel extends JPanel
 	}
 
 	/**
-	 * @param fontSize
+	 * @param fontSize the font size
 	 */
 	public void setFontSize(int fontSize)
 	{
 		this.fontSize = fontSize;
 	}
-
-
 }

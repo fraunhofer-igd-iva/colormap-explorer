@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package main;
 
 import java.awt.Color;
@@ -34,7 +33,7 @@ import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
 /**
- * TODO Type description
+ * A grid of {@link PointsExamplePanel}s
  * @author Martin Steiger
  */
 public class PointsExampleViewPanel extends JPanel

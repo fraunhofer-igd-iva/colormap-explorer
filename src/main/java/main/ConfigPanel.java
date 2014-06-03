@@ -18,7 +18,6 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -27,14 +26,11 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +46,7 @@ import events.MyEventBus;
 import events.TileSelectionEvent;
 
 /**
- * TODO Type description
+ * The config and info panel at the left
  * @author Martin Steiger
  */
 public class ConfigPanel extends JPanel
@@ -61,6 +57,9 @@ public class ConfigPanel extends JPanel
 
 	private final JPanel tileInfoPanel;
 
+	/**
+	 * @param colorMaps the (sorted) list of all available color maps
+	 */
 	public ConfigPanel(List<Colormap2D> colorMaps)
 	{
 		setLayout(new BorderLayout(10, 10));
