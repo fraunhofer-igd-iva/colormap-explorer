@@ -15,6 +15,7 @@
  */
 package latex;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class LatexColormap
 
 	public List<String> getRefs()
 	{
-		return Collections.emptyList();
+		return (Math.random() < 0.0) ? Collections.<String>emptyList() : Arrays.asList("bmfg", "sdsdf");
 //		return Collections.unmodifiableList(colormap.getReferences());
 	}
 }
