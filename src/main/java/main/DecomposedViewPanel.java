@@ -25,7 +25,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import colormaps.Colormap2D;
-import colormaps.impl.ConstantColormap2D;
+import colormaps.ConstantColormap2D;
 import colormaps.transformed.SimpleFilteredColormap2D;
 import colormaps.transformed.TransformedColormap2D;
 import colormaps.transformed.SimpleFilteredColormap2D.ViewType;

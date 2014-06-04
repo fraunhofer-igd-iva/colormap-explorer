@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package colormaps.impl;
+package colormaps;
 
 import java.awt.Color;
-
-import colormaps.AbstractColormap2D;
-import colormaps.ColorSpace;
 
 /**
  * A colormap with a constant gray value of 0.5

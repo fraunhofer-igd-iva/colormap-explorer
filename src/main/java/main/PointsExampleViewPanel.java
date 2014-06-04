@@ -23,7 +23,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import colormaps.Colormap2D;
-import colormaps.impl.ConstantColormap2D;
+import colormaps.ConstantColormap2D;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
