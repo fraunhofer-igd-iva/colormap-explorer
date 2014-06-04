@@ -15,9 +15,10 @@
  */
 package latex;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import colormaps.Colormap2D;
 
@@ -62,9 +63,29 @@ public class LatexColormap
 		return Collections.unmodifiableList(images);
 	}
 
-	public List<String> getRefs()
+	public List<String> getShortRefs()
 	{
-		return (Math.random() < 0.0) ? Collections.<String>emptyList() : Arrays.asList("bmfg", "sdsdf");
-//		return Collections.unmodifiableList(colormap.getReferences());
+		List<String> refs = Lists.newArrayList();
+		
+		// we match "@" followed by 1+ alphanumeric chars, "{" a 
+		// group with 1+ alphanumeric chars, "," and anything that follows  
+		// e.g. @inproceedings{himberg1998enhancing,
+		Pattern refPattern = Pattern.compile("@\\w+\\{(\\w+),.*");
+		
+		for (String bibtex : colormap.getReferences())
+		{
+			Matcher match = refPattern.matcher(bibtex);
+			if (match.matches())
+			{
+				String shortRef = match.group(1);
+				refs.add(shortRef);
+			}
+			else
+			{
+				System.out.println("Warning: Could not match BibTeX entry: " + bibtex);
+			}
+		}
+		
+		return refs;
 	}
 }

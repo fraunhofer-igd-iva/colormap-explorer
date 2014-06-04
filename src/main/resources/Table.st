@@ -21,8 +21,8 @@
 	\\hline
 	
     $colormap:{cm|$cm.name$ $\\$
-    	$if(!cm.refs.empty)$ $\\$
-    		\\cite{$cm.refs:{ref|$ref$}; separator = ","$\} $\\$ 
+    	$if(!cm.shortRefs.empty)$ $\\$
+    		\\cite{$cm.shortRefs:{ref|$ref$}; separator = ","$\} $\\$ 
     	$endif$ $\\$
     \\newline 
     \\scriptsize $cm.desc$ & $cm.colorspace$ & 

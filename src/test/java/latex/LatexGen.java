@@ -19,8 +19,10 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -32,6 +34,7 @@ import org.stringtemplate.v4.STRawGroupDir;
 import org.stringtemplate.v4.misc.ErrorManager;
 
 import colormaps.Colormap2D;
+import colormaps.transformed.SimpleFilteredColormap2D;
 import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
 
 import com.google.common.collect.Lists;
@@ -59,9 +62,34 @@ public final class LatexGen
 		output.mkdirs();
 		generateTable(colorMaps, output);
 		
+		generateBibTex(colorMaps, output);
+		
 		compileLaTeX(new File(output, "colormaps.tex"));
 	}
 	
+	private static void generateBibTex(List<Colormap2D> colormaps, File folder)
+	{
+		File bibtex = new File(folder, "colormaps.bib");
+		
+		try (PrintWriter out = new PrintWriter(bibtex))
+		{
+			for (Colormap2D cm : colormaps)
+	        {
+				for (String ref : cm.getReferences())
+				{
+					out.println(ref);
+					out.println();
+				}
+	        }
+			
+			System.out.println("Created file " + bibtex);
+		}
+		catch (FileNotFoundException e)
+		{
+			System.err.println("Could not write to " + bibtex);
+		}
+	}
+
 	private static void compileLaTeX(File texFile)
 	{
 		String compiler = "C:\\Program Files (x86)\\MiKTeX 2.9\\miktex\\bin\\pdflatex.exe";
@@ -97,7 +125,7 @@ public final class LatexGen
 		
 	}
 
-	public static void generateTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
+	private static void generateTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
     {
     	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources");
         templateDir.delimiterStartChar = '$';
@@ -118,8 +146,8 @@ public final class LatexGen
 	        	String fname = cm.getName() + "_" + viewType.toString();
 				File imgFile = new File(imageFolder, toFilename(fname));
 	        	
-//	        	SimpleFilteredColormap2D filtered = new SimpleFilteredColormap2D(cm, viewType);
-//	        	saveToFile(filtered, imgFile);
+	        	SimpleFilteredColormap2D filtered = new SimpleFilteredColormap2D(cm, viewType);
+	        	saveToFile(filtered, imgFile);
 
 	        	String relativePath = "images/" + imgFile.getName();	// TODO: make it pretty
 				lcm.addImage(relativePath);
