@@ -21,14 +21,19 @@ import java.awt.Color;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-class RGBFourAnchorColorMapDynamic extends AbstractColormap2D {
+/**
+ * Colormap with four anchor colors in the edges and linear interpolation in
+ * between (RGB). The four colors are assigned at run-time.
+ * 
+ */
+class FourCornersAnchorColorMapParameterizable extends AbstractColormap2D {
 
 	private Color lowerLeft;
 	private Color lowerRight;
 	private Color upperRight;
 	private Color upperLeft;
 
-	public RGBFourAnchorColorMapDynamic(Color upperLeft, Color upperRight,
+	public FourCornersAnchorColorMapParameterizable(Color upperLeft, Color upperRight,
 			Color lowerLeft, Color lowerRight) {
 
 		if (lowerLeft == null || lowerRight == null || upperLeft == null
@@ -63,7 +68,7 @@ class RGBFourAnchorColorMapDynamic extends AbstractColormap2D {
 
 	@Override
 	public String getDescription() {
-		return "Colormap2D with four anchor colors. the four colors are assigned at run-time.";
+		return "Colormap with four anchor colors in the edges and linear interpolation in between (RGB). The four colors are assigned at run-time.";
 	}
 
 	@Override

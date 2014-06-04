@@ -21,27 +21,28 @@ import java.awt.Color;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGBConstantRed extends AbstractColormap2D {
+public class ConstantBlue extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
 
-		return new Color(0.5f, x, y);
+		return new Color(x, y, 0.5f);
 	}
 
 	@Override
 	public String getName() {
-		return "RGBConstantRed";
+		return "ConstantBlue";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB colormap with constant Red. Green and Blue span one axis each.";
+		return "RGB colormap with constant Blue. Red and Green span one axis each.";
 	}
 
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
 	}
+
 }

@@ -17,47 +17,30 @@
 package colormaps.impl;
 
 import java.awt.Color;
-import java.util.Collections;
-import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class Himberg98RGB extends AbstractColormap2D {
+public class ConstantGreen extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
-
-		return new Color(y, (1-x), x);
+		return new Color(x, 0.5f, y);
 	}
 
 	@Override
 	public String getName() {
-		return "Himberg 1998";
+		return "ConstantGreen";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB Colormap. X-axis: green vs. blue, Y-axis: red.";
+		return "RGB colormap with constant Green. Red and Blue span one axis each.";
 	}
 
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
-	}
-	
-	@Override
-	public List<String> getReferences()
-	{
-		return Collections.singletonList(
-			"@inproceedings{himberg1998enhancing,"
-		  + "title={Enhancing the SOM based data visualization by linking different data projections},"
-		  + "author={Himberg, Johan},"
-		  + "booktitle={Proceedings of 1st International Symposium IDEAL},"
-		  + "volume={98},"
-		  + "pages={427--434},"
-		  + "year={1998}"
-		  + "}");
 	}
 }

@@ -21,7 +21,7 @@ import java.awt.Color;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGB4AnchorRedBlueGreenYellow extends AbstractColormap2D {
+public class FourCornersAnchor extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
@@ -143,12 +143,12 @@ public class RGB4AnchorRedBlueGreenYellow extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "RGB4AnchorRedBlueGreenYellow";
+		return "FourCornersAnchor";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB colormap with the color anchors Red, Blue, Green, and Yellow.";
+		return "RGB colormap with four color anchors in the edges: Red, Blue, Green, and Yellow.";
 	}
 
 	@Override

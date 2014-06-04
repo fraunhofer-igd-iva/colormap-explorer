@@ -17,13 +17,15 @@
 package colormaps.impl;
 
 import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGBWainerAndFrancolini extends AbstractColormap2D {
+public class WainerAndFrancolini extends AbstractColormap2D {
 
-	private RGBFourAnchorColorMapDynamic[][] colorMaps;
+	private FourCornersAnchorColorMapParameterizable[][] colorMaps;
 
 	@Override
 	public Color getColor(float x, float y) {
@@ -55,7 +57,7 @@ public class RGBWainerAndFrancolini extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "RGBWainerAndFrancolini";
+		return "WainerAndFrancolini";
 	}
 
 	@Override
@@ -90,25 +92,25 @@ public class RGBWainerAndFrancolini extends AbstractColormap2D {
 		Color dreizwo = new Color(148, 183, 9);
 		Color dreidrei = new Color(251, 233, 0);
 
-		colorMaps = new RGBFourAnchorColorMapDynamic[3][3];
+		colorMaps = new FourCornersAnchorColorMapParameterizable[3][3];
 
-		colorMaps[0][0] = new RGBFourAnchorColorMapDynamic(nullnull, nulleins,
+		colorMaps[0][0] = new FourCornersAnchorColorMapParameterizable(nullnull, nulleins,
 				einsnull, einseins);
-		colorMaps[1][0] = new RGBFourAnchorColorMapDynamic(nulleins, nullzwo,
+		colorMaps[1][0] = new FourCornersAnchorColorMapParameterizable(nulleins, nullzwo,
 				einseins, einszwo);
-		colorMaps[2][0] = new RGBFourAnchorColorMapDynamic(nullzwo, nulldrei,
+		colorMaps[2][0] = new FourCornersAnchorColorMapParameterizable(nullzwo, nulldrei,
 				einszwo, einsdrei);
-		colorMaps[0][1] = new RGBFourAnchorColorMapDynamic(einsnull, einseins,
+		colorMaps[0][1] = new FourCornersAnchorColorMapParameterizable(einsnull, einseins,
 				zwonull, zwoeins);
-		colorMaps[1][1] = new RGBFourAnchorColorMapDynamic(einseins, einszwo,
+		colorMaps[1][1] = new FourCornersAnchorColorMapParameterizable(einseins, einszwo,
 				zwoeins, zwozwo);
-		colorMaps[2][1] = new RGBFourAnchorColorMapDynamic(einszwo, einsdrei,
+		colorMaps[2][1] = new FourCornersAnchorColorMapParameterizable(einszwo, einsdrei,
 				zwozwo, zwodrei);
-		colorMaps[0][2] = new RGBFourAnchorColorMapDynamic(zwonull, zwoeins,
+		colorMaps[0][2] = new FourCornersAnchorColorMapParameterizable(zwonull, zwoeins,
 				dreinull, dreieins);
-		colorMaps[1][2] = new RGBFourAnchorColorMapDynamic(zwoeins, zwozwo,
+		colorMaps[1][2] = new FourCornersAnchorColorMapParameterizable(zwoeins, zwozwo,
 				dreieins, dreizwo);
-		colorMaps[2][2] = new RGBFourAnchorColorMapDynamic(zwozwo, zwodrei,
+		colorMaps[2][2] = new FourCornersAnchorColorMapParameterizable(zwozwo, zwodrei,
 				dreizwo, dreidrei);
 	}
 
@@ -122,5 +124,17 @@ public class RGBWainerAndFrancolini extends AbstractColormap2D {
 		double o = interpolate(lo, ro, positionX);
 		double u = interpolate(lu, ru, positionX);
 		return interpolate(o, u, positionY);
+	}
+
+	@Override
+	public List<String> getReferences() {
+		return Collections
+				.singletonList("@article{wainer1980empirical,"
+						+ "title={An empirical inquiry concerning human understanding of two-variable color maps},"
+						+ "author={Wainer, Howard and Francolini, Carl M},"
+						+ "journal={The American Statistician},"
+						+ "volume={34}," + "number={2}," + "pages={81--93},"
+						+ "year={1980}," + "publisher={Taylor and Francis}"
+						+ "}");
 	}
 }

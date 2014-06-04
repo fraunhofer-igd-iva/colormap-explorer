@@ -21,56 +21,27 @@ import java.awt.Color;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-/**
- * <p>
- * Title: BCR37
- * </p>
- * 
- * <p>
- * Description: taken from Poster
- * "Cross-modal Sound-to-Sight Associations with Musical Timbre in Non-Synesthetes"
- * - William S. Griscom and Stephen E. Palmer - Department of Psychology,
- * University of California, Berkeley
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2014
- * </p>
- * 
- * @author Jürgen Bernard
- * 
- */
-
-public class BCR37 extends AbstractColormap2D {
+public class ConstantRed extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
-		
-		// red
-		float r = 124.6f + 91.8f * x - 47.53f * y;
 
-		// green
-		float g = 98.8f + 77.73f * x + 23.066f * y;
-
-		// blue
-		float b = 145.9f - 36.3f * x + 12.7f * y;
-
-		return new Color((int) r, (int) g, (int) b);
+		return new Color(0.5f, x, y);
 	}
 
 	@Override
 	public String getName() {
-		return "BCR37";
+		return "ConstantRed";
 	}
 
 	@Override
 	public String getDescription() {
-		return "W. Griscom and S. Palmer. Violins are green, pianos are blue: Cross-modal sound-to-sight associations with timbre in synesthetes & non-synesthetes. Journal of Vision, 13(9):1169–1169, 2013.";
+		return "RGB colormap with constant Red. Green and Blue span one axis each.";
 	}
 
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.BCR37_CIE;
+		return ColorSpace.RGB;
 	}
 }

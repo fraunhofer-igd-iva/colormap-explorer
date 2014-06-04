@@ -21,26 +21,56 @@ import java.awt.Color;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGBConstantGreen extends AbstractColormap2D {
+/**
+ * <p>
+ * Title: BCR37
+ * </p>
+ * 
+ * <p>
+ * Description: taken from Poster
+ * "Cross-modal Sound-to-Sight Associations with Musical Timbre in Non-Synesthetes"
+ * - William S. Griscom and Stephen E. Palmer - Department of Psychology,
+ * University of California, Berkeley
+ * </p>
+ * 
+ * <p>
+ * Copyright: Copyright (c) 2014
+ * </p>
+ * 
+ * @author Jürgen Bernard
+ * 
+ */
+
+public class BCP37 extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
-		return new Color(x, 0.5f, y);
+		
+		// red
+		float r = 124.6f + 91.8f * x - 47.53f * y;
+
+		// green
+		float g = 98.8f + 77.73f * x + 23.066f * y;
+
+		// blue
+		float b = 145.9f - 36.3f * x + 12.7f * y;
+
+		return new Color((int) r, (int) g, (int) b);
 	}
 
 	@Override
 	public String getName() {
-		return "RGBConstantGreen";
+		return "BCP37";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB colormap with constant Green. Red and Blue span one axis each.";
+		return "Colormap with (CIELAB) colors from the BCP 37 (Berkeley Color Project)";
 	}
 
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.RGB;
+		return ColorSpace.BCP37_CIE;
 	}
 }

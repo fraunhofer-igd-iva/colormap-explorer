@@ -21,7 +21,7 @@ import java.awt.Color;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGBDiagonalCuttingYellowRedBlueCyan extends AbstractColormap2D {
+public class CubeDiagonalCutting2 extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
@@ -32,12 +32,12 @@ public class RGBDiagonalCuttingYellowRedBlueCyan extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "RGBDiagonalCuttingYellowRedBlueCyan";
+		return "CubeDiagonalCutting2";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB cube diagonal cuting with 4 corners as color anchors. Yellow, red, blue, cyan.";
+		return "RGB cube diagonal cuting with the color anchors Yellow, Red, Blue and Cyan. X-axis: Green, y-axis: Blue vs. Red";
 	}
 
 	@Override

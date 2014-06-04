@@ -17,32 +17,53 @@
 package colormaps.impl;
 
 import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGBConstantBlue extends AbstractColormap2D {
+
+/**
+ * @Deprecated identical to CubeDiagonalCutting1
+ * @author jubernar
+ *
+ */
+public class Himberg98 extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
 
-		return new Color(x, y, 0.5f);
+		return new Color(y, (1-x), x);
 	}
 
 	@Override
 	public String getName() {
-		return "RGBConstantBlue";
+		return "Himberg 1998";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB colormap with constant Blue. Red and Green span one axis each.";
+		return "[Identical with Diagonal Cutting 1] RGB Colormap with linear interpolated color chanels. X-axis: green vs. blue, Y-axis: red.";
 	}
 
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
 	}
-
+	
+	@Override
+	public List<String> getReferences()
+	{
+		return Collections.singletonList(
+			"@inproceedings{himberg1998enhancing,"
+		  + "title={Enhancing the SOM based data visualization by linking different data projections},"
+		  + "author={Himberg, Johan},"
+		  + "booktitle={Proceedings of 1st International Symposium IDEAL},"
+		  + "volume={98},"
+		  + "pages={427--434},"
+		  + "year={1998}"
+		  + "}");
+	}
 }

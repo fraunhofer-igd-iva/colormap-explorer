@@ -16,15 +16,14 @@
 
 package colormaps.impl;
 
-
 import java.awt.Color;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class RGBRobertsonAndOCallaghan3 extends AbstractColormap2D {
+public class RobertsonAndOCallaghan1 extends AbstractColormap2D {
 
-	private RGBFourAnchorColorMapDynamic[][] colorMaps;
+	private FourCornersAnchorColorMapParameterizable[][] colorMaps;
 
 	@Override
 	public Color getColor(float x, float y) {
@@ -56,12 +55,12 @@ public class RGBRobertsonAndOCallaghan3 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "RGBRobertsonAndOCallaghan3";
+		return "RobertsonAndOCallaghan1";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB colormap with 4x4 discrete color anchors. The colors in the corners are: Light-Orange, Pink, Anthracite, Blue";
+		return "RGB colormap with 4x4 discrete color anchors. In the corners: Light-Orange, Brown, Dark-Brown, Blue";
 	}
 
 	@Override
@@ -71,45 +70,45 @@ public class RGBRobertsonAndOCallaghan3 extends AbstractColormap2D {
 
 	private void initializeColorMap() {
 
-		Color nullnull = new Color(178,102,128);
-		Color nulleins = new Color(195,132,137);
-		Color nullzwo = new Color(216,179,160);
-		Color nulldrei = new Color(247,218,170);
+		Color nullnull = new Color(198, 119, 95);
+		Color nulleins = new Color(212, 137, 100);
+		Color nullzwo = new Color(225, 174, 113);
+		Color nulldrei = new Color(247, 225, 168);
 
-		Color einsnull = new Color(120,87,100);
-		Color einseins = new Color(152,104,134);
-		Color einszwo = new Color(166,138,159);
-		Color einsdrei = new Color(197,178,160);
+		Color einsnull = new Color(126, 92, 78);
+		Color einseins = new Color(156, 118, 100);
+		Color einszwo = new Color(164, 145, 111);
+		Color einsdrei = new Color(172, 196, 158);
 
-		Color zwonull = new Color(74,67,72);
-		Color zwoeins = new Color(98,87,111);
-		Color zwozwo = new Color(98,112,166);
-		Color zwodrei = new Color(120,137,156);
+		Color zwonull = new Color(84, 73, 72);
+		Color zwoeins = new Color(80, 74, 70);
+		Color zwozwo = new Color(106, 119, 106);
+		Color zwodrei = new Color(87, 130, 131);
 
-		Color dreinull = new Color(59,56,59);
-		Color dreieins = new Color(63,61,71);
-		Color dreizwo = new Color(60,67,78);
-		Color dreidrei = new Color(78,99,119);
+		Color dreinull = new Color(58, 60, 59);
+		Color dreieins = new Color(56, 65, 65);
+		Color dreizwo = new Color(65, 80, 84);
+		Color dreidrei = new Color(77, 106, 125);
 
-		colorMaps = new RGBFourAnchorColorMapDynamic[3][3];
+		colorMaps = new FourCornersAnchorColorMapParameterizable[3][3];
 
-		colorMaps[0][0] = new RGBFourAnchorColorMapDynamic(nullnull, nulleins,
+		colorMaps[0][0] = new FourCornersAnchorColorMapParameterizable(nullnull, nulleins,
 				einsnull, einseins);
-		colorMaps[1][0] = new RGBFourAnchorColorMapDynamic(nulleins, nullzwo,
+		colorMaps[1][0] = new FourCornersAnchorColorMapParameterizable(nulleins, nullzwo,
 				einseins, einszwo);
-		colorMaps[2][0] = new RGBFourAnchorColorMapDynamic(nullzwo, nulldrei,
+		colorMaps[2][0] = new FourCornersAnchorColorMapParameterizable(nullzwo, nulldrei,
 				einszwo, einsdrei);
-		colorMaps[0][1] = new RGBFourAnchorColorMapDynamic(einsnull, einseins,
+		colorMaps[0][1] = new FourCornersAnchorColorMapParameterizable(einsnull, einseins,
 				zwonull, zwoeins);
-		colorMaps[1][1] = new RGBFourAnchorColorMapDynamic(einseins, einszwo,
+		colorMaps[1][1] = new FourCornersAnchorColorMapParameterizable(einseins, einszwo,
 				zwoeins, zwozwo);
-		colorMaps[2][1] = new RGBFourAnchorColorMapDynamic(einszwo, einsdrei,
+		colorMaps[2][1] = new FourCornersAnchorColorMapParameterizable(einszwo, einsdrei,
 				zwozwo, zwodrei);
-		colorMaps[0][2] = new RGBFourAnchorColorMapDynamic(zwonull, zwoeins,
+		colorMaps[0][2] = new FourCornersAnchorColorMapParameterizable(zwonull, zwoeins,
 				dreinull, dreieins);
-		colorMaps[1][2] = new RGBFourAnchorColorMapDynamic(zwoeins, zwozwo,
+		colorMaps[1][2] = new FourCornersAnchorColorMapParameterizable(zwoeins, zwozwo,
 				dreieins, dreizwo);
-		colorMaps[2][2] = new RGBFourAnchorColorMapDynamic(zwozwo, zwodrei,
+		colorMaps[2][2] = new FourCornersAnchorColorMapParameterizable(zwozwo, zwodrei,
 				dreizwo, dreidrei);
 	}
 
