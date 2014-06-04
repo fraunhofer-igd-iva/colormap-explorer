@@ -16,6 +16,9 @@
 
 package colormaps;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.google.common.base.Preconditions;
 
 /**
@@ -38,5 +41,11 @@ public abstract class AbstractColormap2D implements Colormap2D {
 	@Override
 	public String toString() {
 		return getName();
+	}
+	
+	@Override
+	public List<String> getReferences()
+	{
+		return Collections.emptyList();
 	}
 }

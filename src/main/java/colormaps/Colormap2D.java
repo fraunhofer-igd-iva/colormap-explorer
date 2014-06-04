@@ -17,6 +17,7 @@
 package colormaps;
 
 import java.awt.Color;
+import java.util.List;
 
 /**
  * Defines a color map in 2D space
@@ -31,9 +32,23 @@ public interface Colormap2D
 	 */
 	Color getColor(float x, float y);
 
+	/**
+	 * @return the short name of the color map
+	 */
 	String getName();
 
+	/**
+	 * @return the full description
+	 */
 	String getDescription();
 
+	/**
+	 * @return the color space
+	 */
 	ColorSpace getColorSpace();
+
+	/**
+	 * @return a list of full BibTeX entries
+	 */
+	List<String> getReferences();
 }

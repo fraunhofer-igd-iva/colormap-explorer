@@ -17,6 +17,8 @@
 package colormaps.impl;
 
 import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
@@ -43,5 +45,19 @@ public class Himberg98RGB extends AbstractColormap2D {
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
+	}
+	
+	@Override
+	public List<String> getReferences()
+	{
+		return Collections.singletonList(
+			"@inproceedings{himberg1998enhancing,"
+		  + "title={Enhancing the SOM based data visualization by linking different data projections},"
+		  + "author={Himberg, Johan},"
+		  + "booktitle={Proceedings of 1st International Symposium IDEAL},"
+		  + "volume={98},"
+		  + "pages={427--434},"
+		  + "year={1998}"
+		  + "}");
 	}
 }
