@@ -18,6 +18,9 @@ package colormaps.impl;
 
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
@@ -56,7 +59,7 @@ public class RobertsonAndOCallaghan3 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "RobertsonAndOCallaghan3";
+		return "Robertson and OCallaghan 1988 Blue-Pink";
 	}
 
 	@Override
@@ -67,6 +70,11 @@ public class RobertsonAndOCallaghan3 extends AbstractColormap2D {
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
+	}
+	
+	@Override
+	public List<String> getReferences() {
+		return Collections.singletonList("robertson1986generation");
 	}
 
 	private void initializeColorMap() {

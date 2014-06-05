@@ -17,31 +17,38 @@
 package colormaps.impl;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class CubeDiagonalCutting2 extends AbstractColormap2D {
+public class CubeDiagonalCuttingGreenMagenta extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
 
-		return new Color(1 - y, x, y);
+		return new Color(x, (1 - y), y);
 	}
 
 	@Override
 	public String getName() {
-		return "CubeDiagonalCutting2";
+		return "Cube Diagonal Cutting Green-Magenta";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB cube diagonal cuting with the color anchors Yellow, Red, Blue and Cyan. X-axis: Green, y-axis: Blue vs. Red";
+		return "RGB cube diagonal cuting with the anchors Green, Yellow, Magenta, and Blue. X-axis: Red, y-axis: Blue vs. Green";
 	}
 
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
+	}
+
+	@Override
+	public List<String> getReferences() {
+		return Arrays.asList("himberg1998enhancing", "Vesanto98", "Vesanto99som", "khedairia2008", "Bremm2011");
 	}
 }
