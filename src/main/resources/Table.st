@@ -13,7 +13,7 @@
 
 \begin{document}
 
-%\section{Appendix}
+\section*{Appendix}
 
 % The first column is a paragraph (allows for linebreaks with \newline) - all others are c
 \begin{tabular}{p{7cm}|c|$columns:{ignored|c}$}
@@ -30,5 +30,9 @@
     }; separator = "\\\\ \n\\hline \n"$
     
 \end{tabular}
+
+\bibliographystyle{alpha}
+
+\bibliography{colormaps}
 
 \end{document}

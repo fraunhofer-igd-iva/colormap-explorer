@@ -32,13 +32,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.jbibtex.BibTeXDatabase;
+import org.jbibtex.BibTeXEntry;
+import org.jbibtex.Key;
+import org.jbibtex.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
 import colormaps.Colormap2D;
+import colorspaces.CIELAB;
+import colorspaces.CIELABLch;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import events.ColormapSelectionEvent;
@@ -59,8 +67,9 @@ public class ConfigPanel extends JPanel
 
 	/**
 	 * @param colorMaps the (sorted) list of all available color maps
+	 * @param database the BibTeX database
 	 */
-	public ConfigPanel(List<Colormap2D> colorMaps)
+	public ConfigPanel(List<Colormap2D> colorMaps, final BibTeXDatabase database)
 	{
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -71,9 +80,15 @@ public class ConfigPanel extends JPanel
 		cmPanel.add(new JLabel("Colormap"), BorderLayout.NORTH);
 		cmPanel.add(mapsCombo, BorderLayout.CENTER);
 		
+		JPanel cmInfoPanel = new JPanel(new BorderLayout(5, 5));
 		final JLabel descLabel = new JLabel();
 		descLabel.setBorder(BorderFactory.createTitledBorder("Description"));
-		cmPanel.add(descLabel, BorderLayout.SOUTH);
+		final JLabel refsLabel = new JLabel();
+		refsLabel.setBorder(BorderFactory.createTitledBorder("References"));
+		cmInfoPanel.add(descLabel, BorderLayout.NORTH);
+		cmInfoPanel.add(refsLabel, BorderLayout.SOUTH);
+
+		cmPanel.add(cmInfoPanel, BorderLayout.SOUTH);
 
 		add(cmPanel, BorderLayout.NORTH);
 		
@@ -91,8 +106,41 @@ public class ConfigPanel extends JPanel
 			{
 				Colormap2D colormap = (Colormap2D) mapsCombo.getSelectedItem();
 				descLabel.setText("<html>" + colormap.getDescription() + "</html>");
+				
+				List<String> entries = Lists.newArrayList();
+				for (String ref : colormap.getReferences())
+				{
+					BibTeXEntry entry = database.resolveEntry(new Key(ref));
+					if (entry != null)
+					{
+						entries.add(getField(entry, BibTeXEntry.KEY_TITLE));					
+						entries.add(getField(entry, BibTeXEntry.KEY_AUTHOR));					
+						entries.add(getField(entry, BibTeXEntry.KEY_YEAR));					
+						entries.add(getField(entry, BibTeXEntry.KEY_HOWPUBLISHED));					
+					}
+					else
+					{
+						logger.warn("Invalid BibTeX reference " + ref);
+					}
+				}
+				
+				String refs = Joiner.on("<br/>").skipNulls().join(entries);
+				
+				refsLabel.setText("<html>" + refs + "</html>");
 				MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
 				logger.debug("Selected colormap " + colormap);
+			}
+
+			private String getField(BibTeXEntry entry, Key key)
+			{
+				Value field = entry.getField(key);
+				if (field == null)
+					return null;
+				
+				String left = key.toString();
+				left = Character.toUpperCase(left.charAt(0)) + left.substring(1);
+				left = "<b>" + left + ":</b> ";
+				return left + field.toUserString();
 			}
 		});
 		mapsCombo.setSelectedIndex(0);
@@ -128,6 +176,8 @@ public class ConfigPanel extends JPanel
 
 			int lum = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
 			float[] hsb = Color.RGBtoHSB(red, green, blue, null);
+			double[] lch = new CIELABLch().fromColor(color);
+			double attention = Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]);
 			
 			addInfo(tileInfoPanel, "Relative X", String.format("%.3f", mapX));
 			addInfo(tileInfoPanel, "Relative Y", String.format("%.3f", mapY));
@@ -140,6 +190,9 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "Saturation", String.valueOf((int)(hsb[1] * 100)) + "%");
 			addInfo(tileInfoPanel, "Value", String.valueOf((int)(hsb[2] * 100)) + "%");
 			addInfo(tileInfoPanel, "Luminance", String.valueOf(lum));
+			addInfo(tileInfoPanel, "Lightness", String.format("%.0f", lch[0]));
+			addInfo(tileInfoPanel, "Chroma", String.format("%.0f", lch[1]));
+			addInfo(tileInfoPanel, "Attention", String.format("%.3f", attention/100.0));
 		}
 		
 		tileInfoPanel.revalidate();
