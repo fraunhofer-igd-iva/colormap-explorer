@@ -42,8 +42,9 @@ import org.slf4j.LoggerFactory;
 import tiling.Tile;
 import tiling.TileModel;
 import colormaps.Colormap2D;
-import colorspaces.CIELAB;
 import colorspaces.CIELABLch;
+import colorspaces.RGB;
+import colorspaces.XYZ;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -175,7 +176,8 @@ public class ConfigPanel extends JPanel
 			int green = color.getGreen();
 			int blue = color.getBlue();
 
-			int lum = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
+			int luma = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
+			double luminance = XYZ.rgb2xyz(RGB.color2rgb(color))[1];
 			float[] hsb = Color.RGBtoHSB(red, green, blue, null);
 			double[] lch = new CIELABLch().fromColor(color);
 			double attention = Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]);
@@ -190,7 +192,8 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "Hue", String.valueOf((int)(hsb[0] * 360)) + " °");
 			addInfo(tileInfoPanel, "Saturation", String.valueOf((int)(hsb[1] * 100)) + "%");
 			addInfo(tileInfoPanel, "Value", String.valueOf((int)(hsb[2] * 100)) + "%");
-			addInfo(tileInfoPanel, "Luminance", String.valueOf(lum));
+			addInfo(tileInfoPanel, "Luma", String.valueOf(luma));
+			addInfo(tileInfoPanel, "Luminance", String.format("%.1f %%", luminance));
 			addInfo(tileInfoPanel, "Lightness", String.format("%.0f", lch[0]));
 			addInfo(tileInfoPanel, "Chroma", String.format("%.0f", lch[1]));
 			addInfo(tileInfoPanel, "Attention", String.format("%.3f", attention/100.0));
