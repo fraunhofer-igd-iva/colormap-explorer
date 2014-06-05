@@ -176,7 +176,7 @@ public class ConfigPanel extends JPanel
 			int green = color.getGreen();
 			int blue = color.getBlue();
 
-			int luma = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
+			int luma = RGB.getLumaByte(color);
 			double luminance = XYZ.rgb2xyz(RGB.color2rgb(color))[1];
 			float[] hsb = Color.RGBtoHSB(red, green, blue, null);
 			double[] lch = new CIELABLch().fromColor(color);
