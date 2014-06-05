@@ -17,7 +17,6 @@
 package main;
 
 import java.awt.Dimension;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,7 +30,6 @@ import javax.swing.UIManager;
 import org.jbibtex.BibTeXDatabase;
 import org.jbibtex.BibTeXParser;
 import org.jbibtex.ParseException;
-import org.jbibtex.TokenMgrException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,78 +40,78 @@ import com.google.common.base.Preconditions;
 
 /**
  * The main window, also the entry point for the application.
+ * 
  * @author Martin Steiger
  */
-public class ColorMapExplorer extends JFrame
-{
-	private static final Logger logger = LoggerFactory.getLogger(ColorMapExplorer.class);
-	
+public class ColorMapExplorer extends JFrame {
+	private static final Logger logger = LoggerFactory
+			.getLogger(ColorMapExplorer.class);
+
 	private static final long serialVersionUID = 339070765825907575L;
-	
+
 	/**
-	 * @param colorMaps a list of colormaps
-	 * @param database the BibTeX database
+	 * @param colorMaps
+	 *            a list of colormaps
+	 * @param database
+	 *            the BibTeX database
 	 */
-	public ColorMapExplorer(List<Colormap2D> colorMaps, BibTeXDatabase database) 
-	{
+	public ColorMapExplorer(List<Colormap2D> colorMaps, BibTeXDatabase database) {
 		super("ColorMap Explorer");
-		
+
 		Preconditions.checkArgument(!colorMaps.isEmpty());
-		
+
 		final ConfigPanel configPane = new ConfigPanel(colorMaps, database);
-		
+
 		final DecomposedViewPanel viewPanel = new DecomposedViewPanel();
-		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel(); 
-		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel(); 
-		
+		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel();
+		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel();
+
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Decomposed Colormap", viewPanel);
 		tabPane.add("Points Example View", pointsExampleView);
 		tabPane.add("Overlay Example View", overlayExampleView);
-		
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);
+
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				configPane, tabPane);
 		splitPane.setDividerLocation(250);
 
 		// Provide minimum sizes for the two components in the split pane
 		Dimension minimumSize = new Dimension(50, 50);
 		configPane.setMinimumSize(minimumSize);
 		tabPane.setMinimumSize(minimumSize);
-		
+
 		getContentPane().add(splitPane);
 	}
 
 	/**
-	 * @param args (ignored)
+	 * @param args
+	 *            (ignored)
 	 */
-	public static void main(String[] args)
-	{
-		try
-		{
+	public static void main(String[] args) {
+		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e)	// admittedly, this is horrible, but we don't really care about l&f
+		} catch (Exception e) // admittedly, this is horrible, but we don't
+								// really care about l&f
 		{
 			logger.error("Cannot set look & feel", e);
 		}
-		
-		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
-		
+
+		List<Colormap2D> colorMaps = ColorMapFinder
+				.findInPackage("colormaps.impl");
+
 		BibTeXDatabase database = new BibTeXDatabase();
-		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/colorBib.bib"))
-		{
+		try (InputStream bibtex = ColorMapExplorer.class
+				.getResourceAsStream("/colorBib.bib")) {
 			BibTeXParser bibtexParser = new BibTeXParser();
-			InputStreamReader reader = new InputStreamReader(bibtex, Charsets.ISO_8859_1);
+			InputStreamReader reader = new InputStreamReader(bibtex,
+					Charsets.ISO_8859_1);
 			database = bibtexParser.parse(reader);
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Could not open bibtex file", e);
-		}
-		catch (TokenMgrException | ParseException e)
-		{
+		} catch (ParseException e) {
 			logger.error("Could not parse bibtex file", e);
 		}
-		
+
 		ColorMapExplorer frame = new ColorMapExplorer(colorMaps, database);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -121,5 +119,5 @@ public class ColorMapExplorer extends JFrame
 		frame.setLocationByPlatform(true);
 
 		frame.setVisible(true);
-	}	
+	}
 }

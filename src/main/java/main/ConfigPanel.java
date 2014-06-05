@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import tiling.Tile;
 import tiling.TileModel;
 import colormaps.Colormap2D;
-import colorspaces.CIELAB;
 import colorspaces.CIELABLch;
 
 import com.google.common.base.Joiner;
