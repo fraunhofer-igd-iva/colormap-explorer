@@ -18,9 +18,10 @@ package colormaps.transformed;
 
 import java.awt.Color;
 
-import colorSpaces.CIELAB;
-import colorSpaces.CIELABLch;
 import colormaps.Colormap2D;
+import colorspaces.CIELAB;
+import colorspaces.CIELABLch;
+
 import de.fhg.igd.pcolor.CIELab;
 
 /**
