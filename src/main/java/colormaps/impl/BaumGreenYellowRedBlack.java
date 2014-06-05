@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014 Fraunhofer IGD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package colormaps.impl;
 
 import java.awt.Color;
@@ -16,22 +31,22 @@ public class BaumGreenYellowRedBlack extends AbstractColormap2D {
 		// red
 		float r = 0.789864892142907f + 255.89422028982f * x
 				+ 0.0184526315177488f * y;
-		if (r > 255)
-			System.out.println("Red: " + r);
+//		if (r > 255)
+//			System.out.println("Red: " + r);
 		r = Math.max(0, Math.min(255, r));
 
 		// green
 		float g = 0.0676231280670265f + 0.620400537432935f * x
 				+ 255.376889232313f * y;
-		if (g > 255)
-			System.out.println("Green: " + g);
+//		if (g > 255)
+//			System.out.println("Green: " + g);
 		g = Math.max(0, Math.min(255, g));
 
 		// blue
 		float b = 1.30667120293858f - 0.0487380129975751f * x
 				+ -0.186210117808519f * y;
-		if (b > 255)
-			System.out.println("Blue: " + b);
+//		if (b > 255)
+//			System.out.println("Blue: " + b);
 		b = Math.max(0, Math.min(255, b));
 
 		return new Color((int) r, (int) g, (int) b);

@@ -116,7 +116,8 @@ public class ConfigPanel extends JPanel
 						entries.add(getField(entry, BibTeXEntry.KEY_TITLE));					
 						entries.add(getField(entry, BibTeXEntry.KEY_AUTHOR));					
 						entries.add(getField(entry, BibTeXEntry.KEY_YEAR));					
-						entries.add(getField(entry, BibTeXEntry.KEY_HOWPUBLISHED));					
+						entries.add(getField(entry, BibTeXEntry.KEY_HOWPUBLISHED));
+						entries.add("");
 					}
 					else
 					{
