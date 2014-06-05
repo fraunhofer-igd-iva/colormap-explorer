@@ -131,6 +131,7 @@ public class ConfigPanel extends JPanel
 			int lum = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
 			float[] hsb = Color.RGBtoHSB(red, green, blue, null);
 			double[] lch = new CIELABLch().fromColor(color);
+			double attention = Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]);
 			
 			addInfo(tileInfoPanel, "Relative X", String.format("%.3f", mapX));
 			addInfo(tileInfoPanel, "Relative Y", String.format("%.3f", mapY));
@@ -143,9 +144,9 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "Saturation", String.valueOf((int)(hsb[1] * 100)) + "%");
 			addInfo(tileInfoPanel, "Value", String.valueOf((int)(hsb[2] * 100)) + "%");
 			addInfo(tileInfoPanel, "Luminance", String.valueOf(lum));
-			addInfo(tileInfoPanel, "Lightness", String.valueOf(lch[0]));
-			addInfo(tileInfoPanel, "Chroma", String.valueOf(lch[1]));
-			addInfo(tileInfoPanel, "Attention", String.valueOf(Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1])/100.0));
+			addInfo(tileInfoPanel, "Lightness", String.format("%.0f", lch[0]));
+			addInfo(tileInfoPanel, "Chroma", String.format("%.0f", lch[1]));
+			addInfo(tileInfoPanel, "Attention", String.format("%.3f", attention/100.0));
 		}
 		
 		tileInfoPanel.revalidate();
