@@ -56,14 +56,6 @@ public class Himberg98 extends AbstractColormap2D {
 	@Override
 	public List<String> getReferences()
 	{
-		return Collections.singletonList(
-			"@inproceedings{himberg1998enhancing,"
-		  + "title={Enhancing the SOM based data visualization by linking different data projections},"
-		  + "author={Himberg, Johan},"
-		  + "booktitle={Proceedings of 1st International Symposium IDEAL},"
-		  + "volume={98},"
-		  + "pages={427--434},"
-		  + "year={1998}"
-		  + "}");
+		return Collections.singletonList("himberg1998enhancing");
 	}
 }
