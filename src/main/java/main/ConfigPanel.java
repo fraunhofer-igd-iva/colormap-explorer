@@ -145,6 +145,7 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "Luminance", String.valueOf(lum));
 			addInfo(tileInfoPanel, "Lightness", String.valueOf(lch[0]));
 			addInfo(tileInfoPanel, "Chroma", String.valueOf(lch[1]));
+			addInfo(tileInfoPanel, "Attention", String.valueOf(Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1])/100.0));
 		}
 		
 		tileInfoPanel.revalidate();

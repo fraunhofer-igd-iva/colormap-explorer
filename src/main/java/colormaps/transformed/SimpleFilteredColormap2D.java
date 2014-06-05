@@ -19,6 +19,7 @@ package colormaps.transformed;
 import java.awt.Color;
 
 import colorSpaces.CIELAB;
+import colorSpaces.CIELABLch;
 import colormaps.Colormap2D;
 import de.fhg.igd.pcolor.CIELab;
 
@@ -59,8 +60,9 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	{
 		Color color = getColormap().getColor(mx, my);
 		
-		CIELAB cielab = new CIELAB();
-		double[] lab = cielab.fromColor(color);
+		
+		double[] lab = new CIELAB().fromColor(color);
+		double[] lch = new CIELABLch().fromColor(color);
 	
 		int red = color.getRed();
 		int green = color.getGreen();
