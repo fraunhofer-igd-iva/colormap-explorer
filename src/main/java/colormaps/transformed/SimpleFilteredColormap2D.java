@@ -21,7 +21,7 @@ import java.awt.Color;
 import colormaps.Colormap2D;
 import colorspaces.CIELAB;
 import colorspaces.CIELABLch;
-
+import colorspaces.RGB;
 import de.fhg.igd.pcolor.CIELab;
 
 /**
@@ -75,7 +75,7 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 		case REAL:
 			return color;
 		case LUMINANCE:
-			int y = (int) (0.299f * red + 0.587f * green + 0.114f * blue + 0.5);
+			int y = RGB.getLumaByte(color);
 			return new Color(y, y ,y);
 		case RED:
 			return new Color(red, 0, 0);
