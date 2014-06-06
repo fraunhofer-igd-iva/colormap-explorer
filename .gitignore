@@ -10,3 +10,7 @@
 .settings/
 /bin
 /build
+
+# Other
+/*.log
+/output.txt

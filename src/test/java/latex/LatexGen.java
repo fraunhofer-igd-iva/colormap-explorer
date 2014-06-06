@@ -146,8 +146,11 @@ public final class LatexGen
 	        	String fname = cm.getName() + "_" + viewType.toString();
 				File imgFile = new File(imageFolder, toFilename(fname));
 	        	
-	        	SimpleFilteredColormap2D filtered = new SimpleFilteredColormap2D(cm, viewType);
-	        	saveToFile(filtered, imgFile);
+				if (!imgFile.exists())
+				{
+					SimpleFilteredColormap2D filtered = new SimpleFilteredColormap2D(cm, viewType);
+					saveToFile(filtered, imgFile);
+				}
 
 	        	String relativePath = "images/" + imgFile.getName();	// TODO: make it pretty
 				lcm.addImage(relativePath);
@@ -169,6 +172,7 @@ public final class LatexGen
 		return name
 			.replaceAll(" ", "_")
 			.replaceAll("\\.", "") 
+			.replaceAll(":", "") 
 			+ ".png";
 	}
 

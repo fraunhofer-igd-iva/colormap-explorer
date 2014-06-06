@@ -2,6 +2,8 @@ package colormapRegression;
 
 import java.io.IOException;
 
+import regression.BufferedImageAnalyzer;
+
 public class StatisticsTester {
 
 	public static void main(String[] args) throws IOException {
