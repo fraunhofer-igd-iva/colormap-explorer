@@ -50,6 +50,10 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
+import de.fhg.igd.pcolor.PColor;
+import de.fhg.igd.pcolor.colorspace.CS_CIECAM02;
+import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
+import de.fhg.igd.pcolor.colorspace.CS_sRGB;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 import events.TileSelectionEvent;
@@ -181,6 +185,7 @@ public class ConfigPanel extends JPanel
 			float[] hsb = Color.RGBtoHSB(red, green, blue, null);
 			double[] lch = new CIELABLch().fromColor(color);
 			double attention = Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]);
+			float[] appearanceCorrelates = getAppearance(color);
 			
 			addInfo(tileInfoPanel, "Relative X", String.format("%.3f", mapX));
 			addInfo(tileInfoPanel, "Relative Y", String.format("%.3f", mapY));
@@ -197,9 +202,22 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "Lightness", String.format("%.0f", lch[0]));
 			addInfo(tileInfoPanel, "Chroma", String.format("%.0f", lch[1]));
 			addInfo(tileInfoPanel, "Attention", String.format("%.3f", attention/100.0));
+			addInfo(tileInfoPanel, "CAM Hue", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.h]));
+			addInfo(tileInfoPanel, "CAM Hue composition", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.H]));
+			addInfo(tileInfoPanel, "CAM Colorfulness", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.C]));
+			addInfo(tileInfoPanel, "CAM Saturation", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.s]));
+			addInfo(tileInfoPanel, "CAM Lightness (J)", String.format("%.1f", appearanceCorrelates[CS_CIECAM02.J]));
+			
 		}
 		
 		tileInfoPanel.revalidate();
+	}
+
+	private float[] getAppearance(Color color) {
+		PColor pColorTmp = PColor.create(CS_sRGB.instance, color.getColorComponents(new float[3]));
+		float[] xyz = PColor.convert(pColorTmp, CS_CIEXYZ.instance).getComponents();
+		float[] appearanceCorrelates = CS_CIECAM02.defaultInstance.fromCIEXYZ(xyz);
+		return appearanceCorrelates;
 	}
 
 	private void addInfo(Container c, String label, String value)
