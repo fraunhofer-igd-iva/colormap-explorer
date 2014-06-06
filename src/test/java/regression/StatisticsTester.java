@@ -28,7 +28,14 @@ public class StatisticsTester {
 		// "src/main/java/colormapRegression/images/orangeLightBlue.png",
 		// "output.txt");
 
-		BufferedImageAnalyzer.analyzeBufferedImage("/images/greenRedYellowBlack.png", "output.txt");
+		// BufferedImageAnalyzer.analyzeBufferedImage(
+		// "src/main/java/colormapRegression/images/greenRedYellowBlack.png",
+		// "output.txt");
+
+		BufferedImageAnalyzer
+				.analyzeBufferedImage(
+						"src/main/java/colormapRegression/images/LespinasGreenPurple.png",
+						"output.txt");
 	}
 
 }
