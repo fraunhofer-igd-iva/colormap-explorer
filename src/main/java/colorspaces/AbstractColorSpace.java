@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Fraunhofer IGD
+ * Copyright (c) 2014, University of Konstanz
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package colorspaces;
 
-package colormaps;
+import java.awt.Color;
 
-public enum ColorSpace 
-{
-	RGB, HSV, BCP37_CIE, CONSTANT_GRAY, GUO_2005_GAUSS, NONE, GUO_2005_CONE, CIE_Lab, GRISCOM
+/**
+ * @author Sebastian Mittelstaedt
+ */
+public abstract class AbstractColorSpace {
+	
+	public abstract double[] toRGB(double[] v);
+	public abstract Color toColor(double[] v, boolean returnBlackForUndefinedRGB);
+	public abstract double[] fromRGB(double[] rgb);
+	public abstract double[] fromColor(Color c);
+
 }

@@ -17,38 +17,38 @@
 package colormaps.impl;
 
 import java.awt.Color;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
-public class ConstantGreen extends AbstractColormap2D {
+public class Baum2DLookupTable extends AbstractColormap2D {
 
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
-		return new Color(x, 0.5f, y);
+
+		return new Color(x, x, y);
 	}
 
 	@Override
 	public String getName() {
-		return "Constant Green";
+		return "Baum et al. 2006";
 	}
 
 	@Override
 	public String getDescription() {
-		return "RGB colormap with constant Green. Red and Blue span one axis each.";
+		return "2D color lookup table by Baum et al. used for the fusion of multimodal images.";
 	}
 
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
 	}
-	
+
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList("Bremm2011");
+		return Collections.singletonList("baum2006techniques");
 	}
 }

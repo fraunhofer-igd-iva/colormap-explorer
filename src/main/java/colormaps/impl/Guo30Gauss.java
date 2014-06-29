@@ -16,6 +16,10 @@
 
 package colormaps.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class Guo30Gauss extends GuoLabStyle
 {
 	public Guo30Gauss()
@@ -39,5 +43,10 @@ public class Guo30Gauss extends GuoLabStyle
 	public colormaps.ColorSpace getColorSpace()
 	{
 		return colormaps.ColorSpace.GUO_2005_GAUSS;
+	}
+	
+	@Override
+	public List<String> getReferences() {
+		return Arrays.asList("Guo05", "Guo06inquiry", "Guo06visualization");
 	}
 }

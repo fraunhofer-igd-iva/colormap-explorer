@@ -17,6 +17,9 @@
 package colormaps.impl;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
@@ -70,7 +73,7 @@ class FourCornersAnchorColorMapParameterizable extends AbstractColormap2D {
 	public String getDescription() {
 		return "Colormap with four anchor colors in the edges and linear interpolation in between (RGB). The four colors are assigned at run-time.";
 	}
-
+	
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;

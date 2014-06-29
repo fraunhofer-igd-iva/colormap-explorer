@@ -16,29 +16,33 @@
 
 package colormaps.impl;
 
-public class Guo30Cone extends GuoLabStyle
-{
-	public Guo30Cone()
-	{
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class Guo30Cone extends GuoLabStyle {
+	public Guo30Cone() {
 		super(cone(60f), linearAB(0, 80, 0, -80));
 	}
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return "Guo 2005 (Cone)";
 	}
 
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return "Guo 2005 (L*a*b*; Cone lightness; chroma linearly mapped to ab)";
 	}
 
 	@Override
-	public colormaps.ColorSpace getColorSpace()
-	{
+	public colormaps.ColorSpace getColorSpace() {
 		return colormaps.ColorSpace.GUO_2005_CONE;
+	}
+
+	@Override
+	public List<String> getReferences() {
+		return Arrays.asList("Guo05", "Guo06inquiry", "Guo06visualization");
 	}
 
 }

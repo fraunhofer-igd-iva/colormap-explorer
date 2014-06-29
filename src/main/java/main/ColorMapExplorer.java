@@ -17,6 +17,10 @@
 package main;
 
 import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -24,11 +28,16 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
+import org.jbibtex.BibTeXDatabase;
+import org.jbibtex.BibTeXParser;
+import org.jbibtex.ParseException;
+import org.jbibtex.TokenMgrException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import colormaps.Colormap2D;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 /**
@@ -43,14 +52,15 @@ public class ColorMapExplorer extends JFrame
 	
 	/**
 	 * @param colorMaps a list of colormaps
+	 * @param database the BibTeX database
 	 */
-	public ColorMapExplorer(List<Colormap2D> colorMaps) 
+	public ColorMapExplorer(List<Colormap2D> colorMaps, BibTeXDatabase database) 
 	{
 		super("ColorMap Explorer");
 		
 		Preconditions.checkArgument(!colorMaps.isEmpty());
 		
-		final ConfigPanel configPane = new ConfigPanel(colorMaps);
+		final ConfigPanel configPane = new ConfigPanel(colorMaps, database);
 		
 		final DecomposedViewPanel viewPanel = new DecomposedViewPanel();
 		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel(); 
@@ -88,7 +98,23 @@ public class ColorMapExplorer extends JFrame
 		
 		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
-		ColorMapExplorer frame = new ColorMapExplorer(colorMaps);
+		BibTeXDatabase database = new BibTeXDatabase();
+		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/colorBib.bib"))
+		{
+			BibTeXParser bibtexParser = new BibTeXParser();
+			InputStreamReader reader = new InputStreamReader(bibtex, Charsets.ISO_8859_1);
+			database = bibtexParser.parse(reader);
+		}
+		catch (IOException e)
+		{
+			logger.error("Could not open bibtex file", e);
+		}
+		catch (TokenMgrException | ParseException e)
+		{
+			logger.error("Could not parse bibtex file", e);
+		}
+		
+		ColorMapExplorer frame = new ColorMapExplorer(colorMaps, database);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(728, 600);

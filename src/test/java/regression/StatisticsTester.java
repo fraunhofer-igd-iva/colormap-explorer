@@ -13,10 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package regression;
 
-package colormaps;
+import java.io.IOException;
 
-public enum ColorSpace 
-{
-	RGB, HSV, BCP37_CIE, CONSTANT_GRAY, GUO_2005_GAUSS, NONE, GUO_2005_CONE, CIE_Lab, GRISCOM
+public class StatisticsTester {
+
+	public static void main(String[] args) throws IOException {
+		// BufferedImageAnalyzer.analyzeBufferedImage(
+		// "src/main/java/colormapRegression/images/magentaGreen.png",
+		// "output.txt");
+
+		// BufferedImageAnalyzer.analyzeBufferedImage(
+		// "src/main/java/colormapRegression/images/orangeLightBlue.png",
+		// "output.txt");
+
+		BufferedImageAnalyzer.analyzeBufferedImage("/images/greenRedYellowBlack.png", "output.txt");
+	}
+
 }

@@ -17,6 +17,9 @@
 package colormaps.impl;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
@@ -46,7 +49,7 @@ public class BCP37 extends AbstractColormap2D {
 	@Override
 	public Color getColor(float x, float y) {
 		checkRanges(x, y);
-		
+
 		// red
 		float r = 124.6f + 91.8f * x - 47.53f * y;
 
@@ -61,7 +64,7 @@ public class BCP37 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "BCP37";
+		return "BCP 37";
 	}
 
 	@Override
@@ -72,5 +75,10 @@ public class BCP37 extends AbstractColormap2D {
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.BCP37_CIE;
+	}
+
+	@Override
+	public List<String> getReferences() {
+		return Collections.singletonList("griscom2013violins");
 	}
 }

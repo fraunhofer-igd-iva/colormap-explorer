@@ -17,6 +17,9 @@
 package colormaps.impl;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
@@ -32,7 +35,7 @@ public class ConstantBlue extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "ConstantBlue";
+		return "Constant Blue";
 	}
 
 	@Override
@@ -43,6 +46,11 @@ public class ConstantBlue extends AbstractColormap2D {
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.RGB;
+	}
+	
+	@Override
+	public List<String> getReferences() {
+		return Arrays.asList("schreck2010techniques", "hein2010recognition", "Bremm2011", "kramer2011analysis", "kramer2013wind");
 	}
 
 }
