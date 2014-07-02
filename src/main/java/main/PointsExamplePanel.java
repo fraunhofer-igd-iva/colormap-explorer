@@ -30,7 +30,7 @@ import colormaps.Colormap2D;
  * Displays colored points on a given background
  * @author Martin Steiger
  */
-public class PointsExamplePanel extends JPanel
+public class PointsExamplePanel extends JPanel implements ColormapPanel
 {
 	private static final long serialVersionUID = 4842610449905121603L;
 
@@ -46,9 +46,7 @@ public class PointsExamplePanel extends JPanel
 		this.colormap = colormap;
 	}
 
-	/**
-	 * @param colormap the colormap for the points
-	 */
+	@Override
 	public void setColormap(Colormap2D colormap)
 	{
 		this.colormap = colormap;
