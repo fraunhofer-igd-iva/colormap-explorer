@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import colormaps.Colormap2D;
 import colormaps.ConstantColormap2D;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
@@ -33,39 +32,33 @@ import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
 /**
- * A grid of {@link PointsExamplePanel}s
- * @author Martin Steiger
+ * A grid of Analysis panels
+ * @author Simon Thum
  */
-public class PointsExampleViewPanel extends JPanel
+public class AnalysisPanel extends JPanel
 {
 	private static final long serialVersionUID = 4842610449905121603L;
-
-	private final List<Color> backgrounds = ImmutableList.of(Color.WHITE, Color.GRAY, Color.BLACK);
-	private final List<Integer> alphas = ImmutableList.of(64, 128, 192, 255);
 
 	private final List<ColormapPanel> panels = Lists.newArrayList();
 	
 	/**
 	 * Default constructor
 	 */
-	public PointsExampleViewPanel()
+	public AnalysisPanel()
 	{
-		int rows = backgrounds.size();
-		int cols = alphas.size();
+		int rows = 2;
+		int cols = 1;
 		
 		setLayout(new GridLayout(rows, cols, 5, 5));
 		
-		for (int row = 0; row < rows; row++)
-		{
-			for (int col = 0; col < cols; col++)
-			{
-				PointsExamplePanel mini = new PointsExamplePanel(new ConstantColormap2D(Color.WHITE));
-				mini.setBackground(backgrounds.get(row));
-				mini.setAlpha(alphas.get(col));
-				panels.add(mini);
-				add(mini);
-			}
-		}
+		MismatchScatterplotPanel mmPanelDirect = new MismatchScatterplotPanel(new ConstantColormap2D(Color.WHITE), false);
+		MismatchScatterplotPanel mmPanelLog = new MismatchScatterplotPanel(new ConstantColormap2D(Color.WHITE), true);
+		mmPanelDirect.setBackground(Color.WHITE);
+		mmPanelLog.setBackground(Color.WHITE);
+		panels.add(mmPanelDirect);
+		panels.add(mmPanelLog);
+		add(mmPanelDirect);
+		add(mmPanelLog);
 		
 		// get last selection event and trigger it manually to be up to date
 		ColormapSelectionEvent selEvent = MyEventBus.getLast(ColormapSelectionEvent.class);

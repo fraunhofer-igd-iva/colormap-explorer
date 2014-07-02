@@ -63,13 +63,15 @@ public class ColorMapExplorer extends JFrame
 		final ConfigPanel configPane = new ConfigPanel(colorMaps, database);
 		
 		final DecomposedViewPanel viewPanel = new DecomposedViewPanel();
-		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel(); 
-		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel(); 
+		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel();
+		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel();
+		final AnalysisPanel analysisPanel = new AnalysisPanel();
 		
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Decomposed Colormap", viewPanel);
 		tabPane.add("Points Example View", pointsExampleView);
 		tabPane.add("Overlay Example View", overlayExampleView);
+		tabPane.add("Analysis View", analysisPanel);
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);
 		splitPane.setDividerLocation(250);
