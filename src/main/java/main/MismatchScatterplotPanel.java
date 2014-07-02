@@ -38,13 +38,18 @@ import de.fhg.igd.pcolor.util.ColorTools;
  */
 public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 {
+	private static final Color NORMAL_DOT_COLOR = new Color(0, 0, 0, 0.1f);
+
+	private static final Color BORDERLINE_DOT_COLOR = new Color(1,0,0,0.5f);
+	
+
 	private static final long serialVersionUID = 4842610449905121603L;
 
 	private static ViewingConditions comparisonVc = ViewingConditions.sRGB_typical_envirnonment;
 
 	private Colormap2D colormap;
 
-	private int points = 10000;
+	private int points = 50000;
 	
 	private boolean useLog;
 	
@@ -99,16 +104,25 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			float bx = r.nextFloat();
 			float by = r.nextFloat();
 			
-			// distance on color map - 0 to 1
-			double mapdistance = Math.hypot(bx - ax, by - ay) / Math.sqrt(2.0);
+			// distance on color map - 0 to 1.41
+			double mapdistance = Math.hypot(bx - ax, by - ay);
 			
 			Color colorA = colormap.getColor(ax, ay);
 			Color colorB = colormap.getColor(bx, by);
 			
 			// roughly 0-100
-			double cdist = colorDiff(colorA, colorB) / 120f;
+			double cdist = colorDiff(colorA, colorB);
 			
-			g.setColor(new Color(0, 0, 0, 0.1f));
+			// make less relevant dots red
+			if (cdist < 1.0 || mapdistance == 0 || mapdistance > 1.0f)
+				g.setColor(BORDERLINE_DOT_COLOR);
+			else
+				g.setColor(NORMAL_DOT_COLOR);
+			
+			// normalize
+			cdist /= 120f;  
+			mapdistance /= Math.sqrt(2.0);
+			
 			int xCoord = (int)(maxX * mapdistance);
 			int yCoord;
 			if (useLog)
