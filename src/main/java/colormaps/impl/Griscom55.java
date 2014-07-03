@@ -15,7 +15,7 @@ package colormaps.impl;
 public class Griscom55 extends GuoLabStyle {
 	
 	public Griscom55() {
-		super(constant_1f(0.55f), linear_ba(-4, 40, -10, -25));
+		super(constant1f(0.55f), linearBa(-4, 40, -10, -25));
 	}
 
 	@Override

@@ -40,19 +40,22 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 {
 	private static final long serialVersionUID = 4842610449905121603L;
 
+	private static ViewingConditions comparisonVc = ViewingConditions.sRGB_typical_envirnonment;
+
 	private Colormap2D colormap;
 
 	private int points = 10000;
 	
-	private boolean log = false;
+	private boolean useLog;
 	
 	/**
 	 * @param colormap the colormap for the points
+	 * @param useLog use logarithmic scale
 	 */
-	public MismatchScatterplotPanel(Colormap2D colormap, boolean log)
+	public MismatchScatterplotPanel(Colormap2D colormap, boolean useLog)
 	{
 		this.colormap = colormap;
-		this.log = log;
+		this.useLog = useLog;
 	}
 
 	/**
@@ -66,14 +69,12 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	}
 	
 	/**
-	 * @param points the number of points
+	 * @param numPoints the number of points
 	 */
-	public void setPointNumber(int points)
+	public void setPointNumber(int numPoints)
 	{
-		this.points = points;
+		this.points = numPoints;
 	}
-	
-	static ViewingConditions comparisonVc = ViewingConditions.sRGB_typical_envirnonment;
 	
 	@Override
 	protected void paintComponent(Graphics g1)
@@ -110,7 +111,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			g.setColor(new Color(0, 0, 0, 0.1f));
 			int xCoord = (int)(maxX * mapdistance);
 			int yCoord;
-			if (log)
+			if (useLog)
 				yCoord = (int)((Math.log(cdist / mapdistance)/3)*maxY + (maxY/2));
 			else
 				yCoord = (int)(maxY * cdist);
