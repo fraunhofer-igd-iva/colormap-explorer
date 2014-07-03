@@ -54,6 +54,7 @@ import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_CIECAM02;
 import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
+
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 import events.TileSelectionEvent;
@@ -146,7 +147,24 @@ public class ConfigPanel extends JPanel
 				String left = key.toString();
 				left = Character.toUpperCase(left.charAt(0)) + left.substring(1);
 				left = "<b>" + left + ":</b> ";
-				return left + field.toUserString();
+				
+				// remove capitalization-preserving brackets { }
+				String userString = field.toUserString();
+				if (userString.startsWith("{") && userString.endsWith("}"))
+				{
+					userString = userString.substring(1, userString.length() - 2);
+				}
+				
+				userString = userString.replaceAll("\\\\\"\\{u\\}", "ü");	// matches \"{u}
+				userString = userString.replaceAll("\\{\\\\\"u\\}", "ü");	// matches {\"u}
+
+				userString = userString.replaceAll("\\\\\"\\{a\\}", "ä");	// matches \"{a}
+				userString = userString.replaceAll("\\{\\\\\"a\\}", "ä");	// matches {\"a}
+
+				userString = userString.replaceAll("\\\\\"\\{o\\}", "ö");	// matches \"{o}
+				userString = userString.replaceAll("\\{\\\\\"o\\}", "ö");	// matches {\"o}
+
+				return left + userString;
 			}
 		});
 		mapsCombo.setSelectedIndex(0);
