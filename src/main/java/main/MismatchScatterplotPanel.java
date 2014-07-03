@@ -29,6 +29,7 @@ import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
 import de.fhg.igd.pcolor.util.ColorTools;
+import static java.lang.Math.*;
 
 /**
  * Displays a scatterplot of perceptual color distance over color map distance.
@@ -101,11 +102,22 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			float ax = r.nextFloat();
 			float ay = r.nextFloat();
 			
-			float bx = r.nextFloat();
-			float by = r.nextFloat();
+			float bx = 0, by = 0;
 			
-			// distance on color map - 0 to 1.41
-			double mapdistance = Math.hypot(bx - ax, by - ay);
+			final float dist = r.nextFloat();
+			
+			int tries = 10;
+			while (tries >= 1) {
+				float angle = (float) (r.nextFloat() * Math.PI * 2.0);
+				
+				bx = (float) (ax + sin(angle) * dist); 
+				by = (float) (ay + cos(angle) * dist);
+				if (bx >= 0.0 && bx <= 1.0 && by >= 0.0 && by <= 1.0)
+					break;
+				tries --;
+			}
+			if (tries == 0)
+				continue;  // should not happen often, distorts scatterplot
 			
 			Color colorA = colormap.getColor(ax, ay);
 			Color colorB = colormap.getColor(bx, by);
@@ -114,19 +126,18 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			double cdist = colorDiff(colorA, colorB);
 			
 			// make less relevant dots red
-			if (cdist < 1.0 || mapdistance == 0 || mapdistance > 1.0f)
+			if (cdist < 1.0 || dist == 0 || dist > 1.0f)
 				g.setColor(BORDERLINE_DOT_COLOR);
 			else
 				g.setColor(NORMAL_DOT_COLOR);
 			
 			// normalize
 			cdist /= 120f;  
-			mapdistance /= Math.sqrt(2.0);
 			
-			int xCoord = (int)(maxX * mapdistance);
+			int xCoord = (int)(maxX * dist);
 			int yCoord;
 			if (useLog)
-				yCoord = (int)((Math.log(cdist / mapdistance)/3)*maxY + (maxY/2));
+				yCoord = (int)((Math.log(cdist / dist)/3)*maxY + (maxY/2));
 			else
 				yCoord = (int)(maxY * cdist);
 			g.fillOval(xCoord, yCoord, dia, dia);
