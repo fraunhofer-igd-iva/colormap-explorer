@@ -22,9 +22,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JPanel;
+
+import org.terasology.math.delaunay.Voronoi;
+import org.terasology.math.geom.LineSegment;
+import org.terasology.math.geom.Rect2d;
+import org.terasology.math.geom.Vector2d;
 
 import colormaps.Colormap2D;
 
@@ -55,6 +62,8 @@ public class JndViewPanel extends JPanel
 
 	private double jndThreshold = 5.0;
 	
+	private Voronoi delaunay;
+	
 	public JndViewPanel()
 	{
 		// get last selection event and trigger it manually to be up to date
@@ -72,6 +81,7 @@ public class JndViewPanel extends JPanel
 	{
 		colormap = event.getSelection();
 		updateRegions();
+		updateDelaunay();
 		repaint();
 	}
 
@@ -81,10 +91,10 @@ public class JndViewPanel extends JPanel
 		
 		int sampleRate = 100;
 		
-		for (int y = 0; y < sampleRate; y++)
+		for (int y = 1; y < sampleRate-1; y++)
 		{
 			float my = y / (float)(sampleRate - 1);
-			for (int x = 0; x < sampleRate; x++)
+			for (int x = 1; x < sampleRate-1; x++)
 			{
 				float mx = x / (float)(sampleRate - 1);
 				boolean ok = true;
@@ -110,6 +120,16 @@ public class JndViewPanel extends JPanel
 		}
 	}
 	
+	private void updateDelaunay()
+	{
+		List<Vector2d> pts = new ArrayList<>(jndPoints.size());
+		for (Point2D pt : jndPoints.keySet())
+		{
+			pts.add(new Vector2d(pt.getX(), pt.getY()));
+		}
+		delaunay = new Voronoi(pts, Rect2d.createFromMinAndMax(0, 0, 1, 1));
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g1)
 	{
@@ -117,6 +137,7 @@ public class JndViewPanel extends JPanel
 		Graphics2D g = (Graphics2D)g1;
 		
 		drawColormap(g);
+		drawVoronoi(g);
 	}
 
 	private int getScreenWidth()
@@ -162,4 +183,35 @@ public class JndViewPanel extends JPanel
 			}
 		}
 	}
+	
+	/**
+	 * Draws Voronoi diagram based on current triangulation
+	 * A Voronoi diagram can be created from a Delaunay triangulation by
+	 * connecting the circumcenters of neighboring triangles
+	 */
+	private void drawVoronoi(Graphics g)
+	{
+		List<LineSegment> segs = delaunay.voronoiDiagram();
+
+		g.setColor(Color.BLACK);
+		for (LineSegment seg : segs)
+		{
+			double x1 = mapXtoScreenX(seg.getP0().getX());
+			double y1 = mapYtoScreenY(seg.getP0().getY());
+			double x2 = mapXtoScreenX(seg.getP1().getX());
+			double y2 = mapYtoScreenY(seg.getP1().getY());
+			
+			g.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+		}
+
+		g.setColor(Color.WHITE);
+		for (Vector2d pt : delaunay.siteCoords())
+		{
+			int r = 2;
+			int wx = (int) mapXtoScreenX(pt.getX());
+			int wy = (int) mapXtoScreenX(pt.getY());
+			g.fillOval(wx - r, wy - r, 2 * r , 2 * r);
+		}
+	}
+
 }
