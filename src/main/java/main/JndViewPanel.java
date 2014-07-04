@@ -22,13 +22,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Point2D;
-import java.util.Set;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
 import colormaps.Colormap2D;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.pcolor.PColor;
@@ -39,7 +39,7 @@ import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
 /**
- * TODO Type description
+ * Display points with a certain jnd distance
  * @author Martin Steiger
  */
 public class JndViewPanel extends JPanel
@@ -51,7 +51,9 @@ public class JndViewPanel extends JPanel
 
 	private Colormap2D colormap;
 	
-	private Set<Point2D> jndPoints = Sets.newHashSet();
+	private Map<Point2D, PColor> jndPoints = Maps.newHashMap();
+
+	private double jndThreshold = 5.0;
 	
 	public JndViewPanel()
 	{
@@ -90,13 +92,10 @@ public class JndViewPanel extends JPanel
 				Color color = colormap.getColor(mx, my);
 				PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 
-				for (Point2D pt : jndPoints)
+				for (PColor expcolor : jndPoints.values())
 				{
-					Color exist = colormap.getColor((float)pt.getX(), (float)pt.getY());
-					PColor expcolor = PColor.create(COLOR_SPACE, exist.getColorComponents(new float[3]));
-					
 					double dist = ColorTools.distance(pcolor, expcolor, VIEW_ENV);
-					if (dist < 6.0)
+					if (dist < jndThreshold)
 					{
 						ok = false;
 						break;
@@ -105,7 +104,7 @@ public class JndViewPanel extends JPanel
 				
 				if (ok)
 				{
-					jndPoints.add(new Point2D.Double(mx, my));
+					jndPoints.put(new Point2D.Double(mx, my), pcolor);
 				}
 			}
 		}
@@ -117,33 +116,48 @@ public class JndViewPanel extends JPanel
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
 		
-		int width = Math.min(getWidth(), getHeight());
-		int height = width;
-
-		drawColormap(g, width, height);
-
-		int dx = 3;
-		int dy = 2;
-		g.setColor(Color.BLACK);
-		for (Point2D pt : jndPoints)
-		{
-			int x = (int) (pt.getX() * width + 0.5);
-			int y = (int) (pt.getY() * height + 0.5);
-			
-			g.drawLine(x - dx, y - dy, x + dx, y + dy);
-			g.drawLine(x - dx, y + dy, x + dx, y - dy);
-		}
+		drawColormap(g);
 	}
 
-	private void drawColormap(Graphics2D g, int width, int height)
+	private int getScreenWidth()
 	{
-		for (int y = 0; y < height; y++)
+		return Math.min(getWidth(), getHeight());
+	}
+
+	private int getScreenHeight()
+	{
+		return Math.min(getWidth(), getHeight());
+	}
+
+	private double mapXtoScreenX(double mx)
+	{
+		return mx * (getScreenWidth() - 1);
+	}
+
+	private double mapYtoScreenY(double my)
+	{
+		return my * (getScreenHeight() - 1);
+	}
+	
+	private double screenXtoMapX(double sx)
+	{
+		return sx / (getScreenWidth() - 1);
+	}
+
+	private double screenYtoMapY(double sy)
+	{
+		return sy / (getScreenHeight() - 1);
+	}
+
+	private void drawColormap(Graphics2D g)
+	{
+		for (int y = 0; y < getScreenHeight(); y++)
 		{
-			float my = y / (height - 1f);
-			for (int x = 0; x < width; x++)
+			double my = screenYtoMapY(y);
+			for (int x = 0; x < getScreenWidth(); x++)
 			{
-				float mx = x / (width - 1f);
-				g.setColor(colormap.getColor(mx, my));
+				double mx = screenXtoMapX(x);
+				g.setColor(colormap.getColor((float)mx, (float)my));
 				g.drawLine(x, y, x, y);
 			}
 		}
