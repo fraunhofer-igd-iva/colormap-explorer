@@ -74,7 +74,7 @@ public class BCP37 extends AbstractColormap2D {
 
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.BCP37_CIE;
+		return ColorSpace.sRGB;
 	}
 
 	@Override

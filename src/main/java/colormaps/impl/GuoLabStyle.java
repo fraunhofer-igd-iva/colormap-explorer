@@ -123,4 +123,10 @@ public abstract class GuoLabStyle extends PColorBased
 		Map.Entry<Float, Float> ab = chromaFunc.apply(new AbstractMap.SimpleEntry<>(nx, ny));
 		return PColor.create(CS_CIELab.instance, new float[] { light, ab.getKey(), ab.getValue() });
 	}
+	
+	@Override
+	public colormaps.ColorSpace getColorSpace() {
+		return colormaps.ColorSpace.CIE_Lab;
+	}
+	
 }

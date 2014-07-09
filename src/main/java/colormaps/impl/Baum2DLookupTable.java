@@ -44,7 +44,7 @@ public class Baum2DLookupTable extends AbstractColormap2D {
 
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.RGB;
+		return ColorSpace.sRGB;
 	}
 
 	@Override

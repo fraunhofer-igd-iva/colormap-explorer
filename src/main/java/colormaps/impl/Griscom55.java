@@ -27,10 +27,5 @@ public class Griscom55 extends GuoLabStyle {
 	public String getDescription() {
 		return "Griscom and Palmer 2013 - not really a 2D color map, maybe not Lab.";
 	}
-
-	@Override
-	public colormaps.ColorSpace getColorSpace() {
-		return colormaps.ColorSpace.GRISCOM;
-	}
 	
 }

@@ -66,7 +66,7 @@ public class BaumOrangeCyan extends AbstractColormap2D {
 
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.CIE_Lab;
+		return ColorSpace.sRGB;
 	}
 
 	@Override
