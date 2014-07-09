@@ -22,6 +22,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -40,7 +41,7 @@ import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 
-import colormaps.Colormap2D;
+import colormaps.CachedColormap2D;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -64,7 +65,7 @@ public class JndViewPanel extends JPanel
 	private static final ViewingConditions VIEW_ENV = ViewingConditions.sRGB_typical_envirnonment;
 	private static final ColorSpace COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_sRGB);
 
-	private Colormap2D colormap;
+	private CachedColormap2D colormap;
 	
 	private Map<Point2D, PColor> jndPoints = Maps.newHashMap();
 
@@ -115,17 +116,33 @@ public class JndViewPanel extends JPanel
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
-		colormap = event.getSelection();
-//		updateRegions();
+		if (!this.isVisible())
+			return;
+
+		colormap = new CachedColormap2D(event.getSelection(), 512, 512);
+
+		updateRegions();
 //		updateDelaunay();
+
 		repaint();
 	}
 
+	@Override
+	public void setVisible(boolean aFlag)
+	{
+		super.setVisible(aFlag);
+		
+		if (aFlag)
+		{
+			onSelect(MyEventBus.getLast(ColormapSelectionEvent.class));
+		}
+	}
+	
 	private void updateRegions()
 	{
 		jndPoints.clear();
 		
-		int sampleRate = 100;
+		int sampleRate = 20;
 		
 		for (int y = 1; y < sampleRate-1; y++)
 		{
@@ -173,7 +190,7 @@ public class JndViewPanel extends JPanel
 		Graphics2D g = (Graphics2D)g1;
 		
 		drawColormap(g);
-//		drawVoronoi(g);
+		drawVoronoiOutline(g);
 		drawJndRegion(g);
 	}
 
@@ -263,16 +280,9 @@ public class JndViewPanel extends JPanel
 
 	private void drawColormap(Graphics2D g)
 	{
-		for (int y = 0; y < getScreenHeight(); y++)
-		{
-			double my = screenYtoMapY(y);
-			for (int x = 0; x < getScreenWidth(); x++)
-			{
-				double mx = screenXtoMapX(x);
-				g.setColor(colormap.getColor((float)mx, (float)my));
-				g.drawLine(x, y, x, y);
-			}
-		}
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		
+		g.drawImage(colormap.getImage(), 0, 0, getScreenWidth(), getScreenHeight(), null);
 	}
 	
 	private void drawVoronoiOutline(Graphics2D g)
@@ -356,3 +366,4 @@ public class JndViewPanel extends JPanel
 
 
 }
+

@@ -36,11 +36,6 @@ public class Guo30Cone extends GuoLabStyle {
 	}
 
 	@Override
-	public colormaps.ColorSpace getColorSpace() {
-		return colormaps.ColorSpace.GUO_2005_CONE;
-	}
-
-	@Override
 	public List<String> getReferences() {
 		return Arrays.asList("Guo05", "Guo06inquiry", "Guo06visualization");
 	}

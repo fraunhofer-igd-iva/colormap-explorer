@@ -76,7 +76,7 @@ class FourCornersAnchorColorMapParameterizable extends AbstractColormap2D {
 	
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.RGB;
+		return ColorSpace.sRGB;
 	}
 
 	private double interpolate(double start, double end, double position) {

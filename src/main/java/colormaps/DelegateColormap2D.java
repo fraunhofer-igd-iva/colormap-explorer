@@ -14,43 +14,55 @@
  * limitations under the License.
  */
 
-package colormaps.impl;
+
+package colormaps;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import colormaps.AbstractColormap2D;
-import colormaps.ColorSpace;
+/**
+ * Delegates all method calls to another implementation
+ * @author Martin Steiger
+ */
+public class DelegateColormap2D implements Colormap2D
+{
+	private final Colormap2D delegate;
 
-public class ConstantBlue extends AbstractColormap2D {
-
-	@Override
-	public Color getColor(float x, float y) {
-		checkRanges(x, y);
-
-		return new Color(x, y, 0.5f);
+	/**
+	 * @param colormap the underlying color map
+	 */
+	public DelegateColormap2D(Colormap2D colormap)
+	{
+		this.delegate = colormap;
 	}
 
 	@Override
-	public String getName() {
-		return "Constant Blue";
+	public Color getColor(float x, float y)
+	{
+		return delegate.getColor(x, y);
 	}
 
 	@Override
-	public String getDescription() {
-		return "RGB colormap with constant Blue. Red and Green span one axis each.";
+	public String getName()
+	{
+		return delegate.getName();
 	}
 
 	@Override
-	public ColorSpace getColorSpace() {
-		return ColorSpace.sRGB;
-	}
-	
-	@Override
-	public List<String> getReferences() {
-		return Arrays.asList("schreck2010techniques", "hein2010recognition", "Bremm2011", "kramer2011analysis", "kramer2013wind");
+	public String getDescription()
+	{
+		return delegate.getDescription();
 	}
 
+	@Override
+	public ColorSpace getColorSpace()
+	{
+		return delegate.getColorSpace();
+	}
+
+	@Override
+	public List<String> getReferences()
+	{
+		return delegate.getReferences();
+	}
 }
