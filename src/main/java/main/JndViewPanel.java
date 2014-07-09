@@ -20,13 +20,14 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
 import javax.swing.JPanel;
 
-import colormaps.Colormap2D;
+import colormaps.CachedColormap2D;
 
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
@@ -49,7 +50,7 @@ public class JndViewPanel extends JPanel
 	private static final ViewingConditions VIEW_ENV = ViewingConditions.sRGB_typical_envirnonment;
 	private static final ColorSpace COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_sRGB);
 
-	private Colormap2D colormap;
+	private CachedColormap2D colormap;
 	
 	private Map<Point2D, PColor> jndPoints = Maps.newHashMap();
 
@@ -70,7 +71,8 @@ public class JndViewPanel extends JPanel
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
-		colormap = event.getSelection();
+		colormap = new CachedColormap2D(event.getSelection(), 512, 512);
+		
 		updateRegions();
 		repaint();
 	}
@@ -79,7 +81,7 @@ public class JndViewPanel extends JPanel
 	{
 		jndPoints.clear();
 		
-		int sampleRate = 100;
+		int sampleRate = 20;
 		
 		for (int y = 0; y < sampleRate; y++)
 		{
@@ -151,15 +153,9 @@ public class JndViewPanel extends JPanel
 
 	private void drawColormap(Graphics2D g)
 	{
-		for (int y = 0; y < getScreenHeight(); y++)
-		{
-			double my = screenYtoMapY(y);
-			for (int x = 0; x < getScreenWidth(); x++)
-			{
-				double mx = screenXtoMapX(x);
-				g.setColor(colormap.getColor((float)mx, (float)my));
-				g.drawLine(x, y, x, y);
-			}
-		}
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		
+		g.drawImage(colormap.getImage(), 0, 0, getScreenWidth(), getScreenHeight(), null);
 	}
 }
+
