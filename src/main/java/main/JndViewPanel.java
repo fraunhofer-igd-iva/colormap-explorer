@@ -71,12 +71,26 @@ public class JndViewPanel extends JPanel
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
+		if (!this.isVisible())
+			return;
+
 		colormap = new CachedColormap2D(event.getSelection(), 512, 512);
-		
+
 		updateRegions();
 		repaint();
 	}
 
+	@Override
+	public void setVisible(boolean aFlag)
+	{
+		super.setVisible(aFlag);
+		
+		if (aFlag)
+		{
+			onSelect(MyEventBus.getLast(ColormapSelectionEvent.class));
+		}
+	}
+	
 	private void updateRegions()
 	{
 		jndPoints.clear();
