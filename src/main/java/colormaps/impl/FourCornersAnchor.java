@@ -71,7 +71,6 @@ public class FourCornersAnchor extends AbstractColormap2D {
 			System.out.println("undefined state. please refine parameters");
 			rot = 0;
 		}
-		int r = (int) rot;
 
 		// grün
 		double gx = x;
@@ -96,7 +95,6 @@ public class FourCornersAnchor extends AbstractColormap2D {
 			gruen = interpolate(160, 170, 50, 50, (gx - 0.25) * 4, (gy - 0.50) * 4);
 		else if (gx > 0.25 && gx <= 0.50 && gy > 0.75)
 			gruen = interpolate(50, 50, 0, 0, (gx - 0.25) * 4, (gy - 0.75) * 4);
-		int g = (int) gruen;
 
 		// blau
 		double blau;
@@ -139,9 +137,8 @@ public class FourCornersAnchor extends AbstractColormap2D {
 			System.out.println("undefined state. please refine parameters");
 			blau = 0;
 		}
-		int b = (int) blau;
 
-		return new Color(r, g, b);
+		return new Color((float)rot / 255f, (float)gruen / 255f, (float)blau / 255f);
 	}
 
 	@Override

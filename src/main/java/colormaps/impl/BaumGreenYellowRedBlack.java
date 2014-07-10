@@ -49,7 +49,7 @@ public class BaumGreenYellowRedBlack extends AbstractColormap2D {
 //			System.out.println("Blue: " + b);
 		b = Math.max(0, Math.min(255, b));
 
-		return new Color((int) r, (int) g, (int) b);
+		return new Color(r / 255f, g / 255f, b / 255f);
 	}
 
 	@Override
