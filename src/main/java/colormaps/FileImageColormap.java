@@ -14,51 +14,35 @@
  * limitations under the License.
  */
 
-package colormaps.impl;
 
-import java.awt.Color;
+package colormaps;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import colormaps.AbstractColormap2D;
-
 /**
- * An abstract colormap that is based on an image
+ * Loads a colormap from an image file
  * @author Martin Steiger
  */
-public abstract class ImageBasedColormap extends AbstractColormap2D {
-
-	private final BufferedImage image;
-
+public abstract class FileImageColormap extends ImageBasedColormap
+{
 	/**
 	 * @param imagePath the (relative) path to the image
 	 * @throws IOException if the image cannot be loaded
 	 */
-	public ImageBasedColormap(String imagePath) throws IOException
+	public FileImageColormap(String imagePath) throws IOException
 	{
-		URL imageUrl = getClass().getResource(imagePath);
-		
-		this.image = ImageIO.read(imageUrl);
+		super(loadImage(imagePath));
 	}
 	
-	@Override
-	public Color getColor(float x, float y) {
-		checkRanges(x, y);
-		
-		int imgX = (int) (x * (image.getWidth() - 1) + 0.5);
-		int imgY = (int) (y * (image.getHeight() - 1) + 0.5);
-		
-		return new Color(image.getRGB(imgX, imgY));
-	}
-
-	/**
-	 * @return the underlying image
-	 */
-	public BufferedImage getImage()
+	private static BufferedImage loadImage(String imagePath) throws IOException
 	{
+		URL imageUrl = FileImageColormap.class.getResource(imagePath);
+		
+		BufferedImage image = ImageIO.read(imageUrl);
 		return image;
 	}
 }

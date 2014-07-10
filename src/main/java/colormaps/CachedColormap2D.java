@@ -18,21 +18,17 @@
 package colormaps;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.List;
-
-import com.google.common.base.Preconditions;
 
 /**
  * A cached, but otherwise transparent {@link Colormap2D} 
  * wrapper implementation.
  * @author Martin Steiger
  */
-public class CachedColormap2D extends DelegateColormap2D
+public class CachedColormap2D extends ImageBasedColormap
 {
-	private final BufferedImage img;
+	private final Colormap2D delegate;
 
 	/**
 	 * @param colormap the underlying color map
@@ -41,9 +37,11 @@ public class CachedColormap2D extends DelegateColormap2D
 	 */
 	public CachedColormap2D(Colormap2D colormap, int imgWidth, int imgHeight)
 	{
-		super(colormap);
-		
-		this.img = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
+		super(new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB));
+
+		this.delegate = colormap;
+
+		BufferedImage img = getImage();
 
 		float maxY = imgHeight - 1;
 		float maxX = imgWidth - 1;
@@ -61,61 +59,26 @@ public class CachedColormap2D extends DelegateColormap2D
 	}
 	
 	@Override
-	public Color getColor(float mx, float my)
+	public String getName()
 	{
-		Preconditions.checkArgument(0 <= mx && mx <= 1, "X must in in range [0..1], but is %s", mx);
-		Preconditions.checkArgument(0 <= my && my <= 1, "Y must in in range [0..1], but is %s", my);
-
-		double x = mx * (img.getWidth() - 1);
-		double y = my * (img.getHeight() - 1);
-		
-		int minX = (int)Math.floor(x);
-        int maxX = (int)Math.ceil(x);
-
-        int minY = (int)Math.floor(y);
-        int maxY = (int)Math.ceil(y);
-
-        Color q00 = new Color(img.getRGB(minX, minY));
-        Color q10 = new Color(img.getRGB(maxX, minY));
-        Color q01 = new Color(img.getRGB(minX, maxY));
-        Color q11 = new Color(img.getRGB(maxX, maxY));
-
-        double ipx = x - minX;
-        double ipy = y - minY;
-
-        Color color = bilerp(q00, q10, q01, q11, ipx, ipy);
-
-        return color;
+		return delegate.getName();
 	}
 
-	private static Color bilerp(Color xt1, Color xt2, Color xb1, Color xb2, double p, double ipy) 
+	@Override
+	public String getDescription()
 	{
-		float[] arrt1 = xt1.getColorComponents(new float[3]);
-		float[] arrt2 = xt2.getColorComponents(new float[3]);
-		
-		double rt = arrt1[0] * (1.0 - p) + arrt2[0] * p;
-		double gt = arrt1[1] * (1.0 - p) + arrt2[1] * p;
-		double bt = arrt1[2] * (1.0 - p) + arrt2[2] * p;
-
-		float[] arrb1 = xb1.getColorComponents(new float[3]);
-		float[] arrb2 = xb2.getColorComponents(new float[3]);
-		
-		double rb = arrb1[0] * (1.0 - p) + arrb2[0] * p;
-		double gb = arrb1[1] * (1.0 - p) + arrb2[1] * p;
-		double bb = arrb1[2] * (1.0 - p) + arrb2[2] * p;
-
-		double r = rt * (1.0 - ipy) + rb * ipy;
-		double g = gt * (1.0 - ipy) + gb * ipy;
-		double b = bt * (1.0 - ipy) + bb * ipy;
-
-		return new Color((float)r, (float)g, (float)b);
-    }
-	
-	/**
-	 * @return the cached image
-	 */
-	public Image getImage()
-	{
-		return img;
+		return delegate.getDescription();
 	}
+
+	@Override
+	public ColorSpace getColorSpace()
+	{
+		return delegate.getColorSpace();
+	}
+
+	@Override
+	public List<String> getReferences()
+	{
+		return delegate.getReferences();
+	}	
 }

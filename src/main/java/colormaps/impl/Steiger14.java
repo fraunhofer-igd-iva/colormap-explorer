@@ -21,12 +21,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import colormaps.ColorSpace;
+import colormaps.FileImageColormap;
 
 /**
  * Steiger et al. (2014): CIELab cyan
  * @author Martin Steiger
  */
-public class Steiger14 extends ImageBasedColormap {
+public class Steiger14 extends FileImageColormap
+{
 
 	/**
 	 * @throws IOException if the image cannot be loaded
@@ -35,24 +37,28 @@ public class Steiger14 extends ImageBasedColormap {
 	{
 		super("/steiger_lab_tuerkis.png");
 	}
-	
+
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return "Steiger et al. (2014): CIELab cyan";
 	}
 
 	@Override
-	public String getDescription() {
+	public String getDescription()
+	{
 		return "CIELab-based colormap with perceptually (almost) equi-distant corners";
 	}
 
 	@Override
-	public ColorSpace getColorSpace() {
+	public ColorSpace getColorSpace()
+	{
 		return ColorSpace.CIE_Lab;
 	}
-	
+
 	@Override
-	public List<String> getReferences() {
+	public List<String> getReferences()
+	{
 		return Arrays.asList("steiger2014");
 	}
 }
