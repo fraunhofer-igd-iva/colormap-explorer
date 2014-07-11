@@ -22,6 +22,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import colormaps.CachedColormap2D;
+import colormaps.Colormap2D;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -54,8 +56,10 @@ public class JndViewPanel extends JPanel
 	private static final ColorSpace COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_sRGB);
 
 	private CachedColormap2D colormap;
+	private Colormap2D orgColormap;
 	
 	private Map<Point2D, PColor> jndPoints = Maps.newHashMap();
+	private Map<Point2D, Shape> jndRegions = Maps.newHashMap();
 
 	private double jndThreshold = 2.0;
 	
@@ -84,7 +88,12 @@ public class JndViewPanel extends JPanel
 		
 		if (aFlag)
 		{
-			onSelect(MyEventBus.getLast(ColormapSelectionEvent.class));
+			ColormapSelectionEvent event = MyEventBus.getLast(ColormapSelectionEvent.class);
+			if (event.getSelection() != orgColormap)
+			{
+				onSelect(event);
+				orgColormap = event.getSelection();
+			}
 		}
 	}
 	
@@ -178,13 +187,21 @@ public class JndViewPanel extends JPanel
 		drawColormap(g);
 		drawJndPoints(g);
 		
+		computeJndRegions();
+		drawJndRegions(g);
+	}
+	
+	private void computeJndRegions()
+	{
+		jndRegions.clear();
 		for (Point2D pt : jndPoints.keySet())
 		{
-			drawJndRegion(g, pt.getX(), pt.getY());
+			Polygon poly = computeJndRegion(pt.getX(), pt.getY());
+			jndRegions.put(pt, poly);
 		}
 	}
-
-	private void drawJndRegion(Graphics2D g, double mx, double my)
+	
+	private Polygon computeJndRegion(double mx, double my)
 	{
 		Color color = colormap.getColor((float)mx, (float)my);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
@@ -228,8 +245,7 @@ public class JndViewPanel extends JPanel
 		}
 		
 		Polygon poly = createPolygon(pts);
-		g.setColor(Color.BLACK);
-		g.draw(poly);
+		return poly;
 	}
 
 	private int getScreenWidth()
@@ -280,9 +296,18 @@ public class JndViewPanel extends JPanel
 			g.fillOval(wx - r, wy - r, 2 * r , 2 * r);
 		}
 	}
+	
+	private void drawJndRegions(Graphics2D g)
+	{
+		for (Shape shape : jndRegions.values())
+		{
+			g.setColor(Color.BLACK);
+			g.draw(shape);
+		}
+	}
 
-	 private Polygon createPolygon(List<Point2D> pts) 
-	 {
+	private Polygon createPolygon(List<Point2D> pts) 
+	{
         int[] x = new int[pts.size()];
         int[] y = new int[pts.size()];
         

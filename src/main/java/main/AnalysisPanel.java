@@ -41,6 +41,8 @@ public class AnalysisPanel extends JPanel
 
 	private final List<ColormapPanel> panels = Lists.newArrayList();
 	
+	private Colormap2D oldColormap;
+	
 	/**
 	 * Default constructor
 	 */
@@ -60,19 +62,31 @@ public class AnalysisPanel extends JPanel
 		add(mmPanelDirect);
 		add(mmPanelLog);
 		
-		// get last selection event and trigger it manually to be up to date
-		ColormapSelectionEvent selEvent = MyEventBus.getLast(ColormapSelectionEvent.class);
-		if (selEvent != null)
-		{
-			onSelect(selEvent);
-		}
-
 		MyEventBus.getInstance().register(this);
 	}
-	
+
+	@Override
+	public void setVisible(boolean aFlag)
+	{
+		super.setVisible(aFlag);
+		
+		if (aFlag)
+		{
+			ColormapSelectionEvent event = MyEventBus.getLast(ColormapSelectionEvent.class);
+			if (event.getSelection() != oldColormap)
+			{
+				onSelect(event);
+				oldColormap = event.getSelection();
+			}
+		}
+	}
+
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
+		if (!this.isVisible())
+			return;
+
 		Colormap2D colormap = event.getSelection();
 		for (ColormapPanel panel : panels)
 		{
