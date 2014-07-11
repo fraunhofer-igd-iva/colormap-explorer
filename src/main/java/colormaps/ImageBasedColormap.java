@@ -18,14 +18,14 @@ package colormaps;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-
-import com.google.common.base.Preconditions;
+import java.awt.image.DataBuffer;
+import java.awt.image.WritableRaster;
 
 /**
  * An abstract colormap that is based on an image
  * @author Martin Steiger
  */
-public abstract class ImageBasedColormap implements Colormap2D 
+public abstract class ImageBasedColormap extends AbstractColormap2D 
 {
 	private final BufferedImage image;
 
@@ -40,24 +40,21 @@ public abstract class ImageBasedColormap implements Colormap2D
 	@Override
 	public Color getColor(float mx, float my)
 	{
-		Preconditions.checkArgument(0 <= mx && mx <= 1, "X must in in range [0..1], but is %s", mx);
-		Preconditions.checkArgument(0 <= my && my <= 1, "Y must in in range [0..1], but is %s", my);
+		checkRanges(mx, my);
 
-		BufferedImage img = getImage();
-		
-		double x = mx * (img.getWidth() - 1);
-		double y = my * (img.getHeight() - 1);
+		double x = mx * (image.getWidth() - 1);
+		double y = my * (image.getHeight() - 1);
 		
 		int minX = (int)Math.floor(x);
         int maxX = (int)Math.ceil(x);
 
         int minY = (int)Math.floor(y);
         int maxY = (int)Math.ceil(y);
-
-        Color q00 = new Color(img.getRGB(minX, minY));
-        Color q10 = new Color(img.getRGB(maxX, minY));
-        Color q01 = new Color(img.getRGB(minX, maxY));
-        Color q11 = new Color(img.getRGB(maxX, maxY));
+        
+        Color q00 = readColor(minX, minY);
+        Color q10 = readColor(maxX, minY);
+        Color q01 = readColor(minX, maxY);
+        Color q11 = readColor(maxX, maxY);
 
         double ipx = x - minX;
         double ipy = y - minY;
@@ -67,21 +64,47 @@ public abstract class ImageBasedColormap implements Colormap2D
         return color;
 	}
 
-	private static Color bilerp(Color xt1, Color xt2, Color xb1, Color xb2, double p, double ipy) 
+	private Color readColor(int x, int y)
+	{
+		WritableRaster raster = image.getRaster();
+		
+		// TODO: make this more general
+		if (raster.getSampleModel().getDataType() == DataBuffer.TYPE_FLOAT)
+		{		
+			float r = raster.getSampleFloat(x, y, 0);
+			float g = raster.getSampleFloat(x, y, 1);
+			float b = raster.getSampleFloat(x, y, 2);
+		
+			return new Color(r, g, b);
+		}
+		
+		if (raster.getSampleModel().getDataType() == DataBuffer.TYPE_BYTE)
+		{		
+			int r = raster.getSample(x, y, 0);
+			int g = raster.getSample(x, y, 1);
+			int b = raster.getSample(x, y, 2);
+		
+			return new Color(r, g, b);
+		}
+		
+		throw new UnsupportedOperationException();
+	}
+
+	protected static Color bilerp(Color xt1, Color xt2, Color xb1, Color xb2, double ipx, double ipy) 
 	{
 		float[] arrt1 = xt1.getColorComponents(new float[3]);
 		float[] arrt2 = xt2.getColorComponents(new float[3]);
 		
-		double rt = arrt1[0] * (1.0 - p) + arrt2[0] * p;
-		double gt = arrt1[1] * (1.0 - p) + arrt2[1] * p;
-		double bt = arrt1[2] * (1.0 - p) + arrt2[2] * p;
+		double rt = arrt1[0] * (1.0 - ipx) + arrt2[0] * ipx;
+		double gt = arrt1[1] * (1.0 - ipx) + arrt2[1] * ipx;
+		double bt = arrt1[2] * (1.0 - ipx) + arrt2[2] * ipx;
 
 		float[] arrb1 = xb1.getColorComponents(new float[3]);
 		float[] arrb2 = xb2.getColorComponents(new float[3]);
 		
-		double rb = arrb1[0] * (1.0 - p) + arrb2[0] * p;
-		double gb = arrb1[1] * (1.0 - p) + arrb2[1] * p;
-		double bb = arrb1[2] * (1.0 - p) + arrb2[2] * p;
+		double rb = arrb1[0] * (1.0 - ipx) + arrb2[0] * ipx;
+		double gb = arrb1[1] * (1.0 - ipx) + arrb2[1] * ipx;
+		double bb = arrb1[2] * (1.0 - ipx) + arrb2[2] * ipx;
 
 		double r = rt * (1.0 - ipy) + rb * ipy;
 		double g = gt * (1.0 - ipy) + gb * ipy;
@@ -93,7 +116,7 @@ public abstract class ImageBasedColormap implements Colormap2D
 	/**
 	 * @return the underlying image
 	 */
-	public BufferedImage getImage()
+	public final BufferedImage getImage()
 	{
 		return image;
 	}

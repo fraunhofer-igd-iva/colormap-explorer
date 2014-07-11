@@ -18,7 +18,13 @@
 package colormaps;
 
 import java.awt.Color;
+import java.awt.image.BandedSampleModel;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.util.List;
 
 /**
@@ -37,14 +43,16 @@ public class CachedColormap2D extends ImageBasedColormap
 	 */
 	public CachedColormap2D(Colormap2D colormap, int imgWidth, int imgHeight)
 	{
-		super(new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB));
-
+		super(createImage(imgWidth, imgHeight));
+		
 		this.delegate = colormap;
-
-		BufferedImage img = getImage();
 
 		float maxY = imgHeight - 1;
 		float maxX = imgWidth - 1;
+
+		float[] compArray = new float[3];
+		
+		WritableRaster raster = getImage().getRaster();
 
 		for (int y = 0; y < imgHeight; y++)
 		{
@@ -53,9 +61,38 @@ public class CachedColormap2D extends ImageBasedColormap
 			{
 				float mx = x / maxX;
 				Color color = colormap.getColor(mx, my);
-				img.setRGB(x, y, color.getRGB());
+				color.getColorComponents(compArray);
+				
+				raster.setSample(x, y, 0, compArray[0]);
+				raster.setSample(x, y, 1, compArray[1]);
+				raster.setSample(x, y, 2, compArray[2]);
 			}
 		}
+	}
+	
+	private static BufferedImage createImage(int imgWidth, int imgHeight)
+	{
+		java.awt.color.ColorSpace space = java.awt.color.ColorSpace.getInstance(java.awt.color.ColorSpace.CS_sRGB);
+		ColorModel colorModel = new ComponentColorModel(space, false, false, ColorModel.OPAQUE, DataBuffer.TYPE_FLOAT);
+		BandedSampleModel model = new BandedSampleModel(DataBuffer.TYPE_FLOAT, imgWidth, imgHeight, 3);
+		DataBuffer buffer = model.createDataBuffer();
+		WritableRaster raster = Raster.createWritableRaster(model, buffer, null);
+		BufferedImage image = new BufferedImage(colorModel, raster, false, null);
+		
+//		BufferedImage image = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
+		
+		return image;
+	}
+
+	@Override
+	public Color getColor(float mx, float my)
+	{
+		return delegate.getColor(mx, my);
+	}
+	
+	public Color getUncachedColor(float mx, float my)
+	{
+		return delegate.getColor(mx, my);
 	}
 	
 	@Override
