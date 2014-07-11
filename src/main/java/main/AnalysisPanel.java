@@ -51,8 +51,10 @@ public class AnalysisPanel extends JPanel
 	
 	private int lines = 10000;
 	
+	private Colormap2D oldColormap;
+	
 	// list of lines across which to compare as pairs of pairs of floats
-	List<Float> makeLinePoints() {
+	private List<Float> makeLinePoints() {
 		List<Float> list = new ArrayList<>(lines*4);
 		Random r = new Random(123456);
 		
@@ -113,9 +115,6 @@ public class AnalysisPanel extends JPanel
 		return ratios[lines/2];
 	}
 
-	
-	private Colormap2D oldColormap;
-	
 	/**
 	 * Default constructor
 	 */
