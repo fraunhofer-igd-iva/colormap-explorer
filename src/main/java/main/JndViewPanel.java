@@ -17,18 +17,33 @@
 
 package main;
 
+import java.awt.BorderLayout;
+import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.color.ColorSpace;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import colormaps.CachedColormap2D;
 import colormaps.Colormap2D;
@@ -50,6 +65,8 @@ import events.MyEventBus;
  */
 public class JndViewPanel extends JPanel
 {
+	private static final Logger logger = LoggerFactory.getLogger(JndViewPanel.class);
+	
 	private static final long serialVersionUID = 5994307533367447487L;
 
 	private static final ViewingConditions VIEW_ENV = ViewingConditions.sRGB_typical_envirnonment;
@@ -59,13 +76,53 @@ public class JndViewPanel extends JPanel
 	private Colormap2D orgColormap;
 	
 	private Map<Point2D, PColor> jndPoints = Maps.newHashMap();
-	private Map<Point2D, Shape> jndRegions = Maps.newHashMap();
+	private Map<Point2D, List<Point2D>> jndRegions = Maps.newHashMap();
 
-	private double jndThreshold = 2.0;
+	private double jndThreshold = 3.0;
+
+	private final JCheckBox drawColormap;
+	private final JCheckBox drawRegions;
 	
 	public JndViewPanel()
 	{
 		MyEventBus.getInstance().register(this);
+		
+		setLayout(new BorderLayout());
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		ActionListener repaintListener = new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				JndViewPanel.this.repaint();
+			}
+		};
+
+		Component jndView = new JComponent()
+		{
+			private static final long serialVersionUID = 240761518096949199L;
+			
+			@Override
+			protected void paintComponent(Graphics g)
+			{
+				drawJndView(g);
+			}
+		};
+
+		
+		drawColormap = new JCheckBox("Draw colormap", true);
+		drawColormap.addActionListener(repaintListener);
+		panel.add(drawColormap);
+
+		drawRegions = new JCheckBox("Draw regions", true);
+		drawRegions.addActionListener(repaintListener);
+		panel.add(drawRegions);
+		
+		panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		add(panel, BorderLayout.NORTH);
+		add(jndView, BorderLayout.CENTER);
 	}
 	
 	@Subscribe
@@ -77,6 +134,7 @@ public class JndViewPanel extends JPanel
 		colormap = new CachedColormap2D(event.getSelection(), 256, 256);
 
 		probeCircular();
+		computeJndRegions();
 
 		repaint();
 	}
@@ -125,19 +183,29 @@ public class JndViewPanel extends JPanel
 	{
 		jndPoints.clear();
 		
+		int idx = 0;
+		
 		double cx = 0.5;
 		double cy = 0.5;
 		
+		double maxDist = 0.5 * Math.sqrt(2.0);
 		double sampleDist = 0.01;
 		double dist = sampleDist;
+		
+		int size = (int) (maxDist / dist);
 
 		// add center point
 		Color color = colormap.getColor((float)cx, (float)cy);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 		jndPoints.put(new Point2D.Double(cx, cy), pcolor);
 		
-		while (dist < 0.5 * Math.sqrt(2.0))
+		while (dist < maxDist)
 		{
+			if (idx % (size / 12) == 0)
+			{
+				logger.debug(String.format("Sampling: %3.0f%%", 100d * dist / maxDist));
+			}
+			
 			int sampleRate = (int) (2.0 * Math.PI * dist / sampleDist); 
 			for (int i = 0; i < sampleRate; i++)
 			{
@@ -160,7 +228,10 @@ public class JndViewPanel extends JPanel
 			}
 			
 			dist += sampleDist;
+			idx++;
 		}
+		
+		logger.debug("Sampling: 100%");
 	}
 	
 
@@ -178,36 +249,56 @@ public class JndViewPanel extends JPanel
 		return true;
 	}
 
-	@Override
-	protected void paintComponent(Graphics g1)
+	protected void drawJndView(Graphics g1)
 	{
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
 		
-		drawColormap(g);
-		drawJndPoints(g);
+		if (drawColormap.isSelected())
+		{
+			drawColormap(g);
+		}
 		
-		computeJndRegions();
-		drawJndRegions(g);
+		drawJndPoints(g);
+
+		if (drawRegions.isSelected())
+		{
+			drawJndRegions(g);
+		}
+		else
+		{
+			fillJndRegions(g);
+		}
 	}
 	
 	private void computeJndRegions()
 	{
 		jndRegions.clear();
+		int idx = 0;
+		int size = jndPoints.keySet().size();
+		
 		for (Point2D pt : jndPoints.keySet())
 		{
-			Polygon poly = computeJndRegion(pt.getX(), pt.getY());
-			jndRegions.put(pt, poly);
+			if (idx % (size / 12) == 0)
+			{
+				logger.debug(String.format("Computing jnd regions: %3.0f%%", 100d * idx / size));
+			}
+			
+			List<Point2D> pts = computeJndRegion(pt.getX(), pt.getY());
+			jndRegions.put(pt, pts);
+			idx++;
 		}
+		
+		logger.debug("Computing jnd regions: 100%");
 	}
 	
-	private Polygon computeJndRegion(double mx, double my)
+	private List<Point2D> computeJndRegion(double mx, double my)
 	{
 		Color color = colormap.getColor((float)mx, (float)my);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 		
-		int angleSteps = 64;
-		double sampleRateDist = 0.002;
+		int angleSteps = 96;
+		double sampleRateDist = 0.0005;
 		
 		List<Point2D> pts = Lists.newArrayList();
 		
@@ -244,8 +335,7 @@ public class JndViewPanel extends JPanel
 			pts.add(best);
 		}
 		
-		Polygon poly = createPolygon(pts);
-		return poly;
+		return pts;
 	}
 
 	private int getScreenWidth()
@@ -297,13 +387,30 @@ public class JndViewPanel extends JPanel
 		}
 	}
 	
+	private void fillJndRegions(Graphics2D g)
+	{
+		for (Point2D jndPt : jndRegions.keySet())
+		{
+			List<Point2D> pts = jndRegions.get(jndPt);
+			Polygon poly = createPolygon(pts);
+			g.setColor(new Color(jndPoints.get(jndPt).getARGB()));
+			g.fill(poly);
+		}
+	}
+	
 	private void drawJndRegions(Graphics2D g)
 	{
-		for (Shape shape : jndRegions.values())
+		g.setColor(Color.BLACK);
+
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		for (List<Point2D> pts : jndRegions.values())
 		{
-			g.setColor(Color.BLACK);
-			g.draw(shape);
+			Polygon poly = createPolygon(pts);
+			g.draw(poly);
 		}
+		
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
 	}
 
 	private Polygon createPolygon(List<Point2D> pts) 
