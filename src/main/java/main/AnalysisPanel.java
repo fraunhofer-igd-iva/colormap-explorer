@@ -61,7 +61,8 @@ public class AnalysisPanel extends JPanel
 			float ax = r.nextFloat();
 			float ay = r.nextFloat();
 			
-			float bx = 0, by = 0;
+			float bx = 0;
+			float by = 0;
 			
 			final float dist = r.nextFloat();
 			

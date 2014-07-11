@@ -48,7 +48,8 @@ public abstract class TeulingStyle extends AbstractColormap2D
 	}
 	
 	float getChannel(float x, float y, Direction d, float a) {
-		float xd, yd;
+		float xd;
+		float yd;
 		switch (d) {
 		case SOUTH_WEST:
 			xd = 1-x;
@@ -99,13 +100,12 @@ public abstract class TeulingStyle extends AbstractColormap2D
 	 * @return the whitening at x, y for w
 	 */
 	float getWhitening(float x ,float y, float w) {
-		x -= 0.5; y-= 0.5;
-		return (float) (w * (1-(Math.hypot(x, y) / WK_MAX_HYPOT)));
+		return (float) (w * (1-(Math.hypot(x - 0.5, y - 0.5) / WK_MAX_HYPOT)));
 	}
 	
 	@Override
 	public colormaps.ColorSpace getColorSpace() {
-		return colormaps.ColorSpace.RGB;
+		return colormaps.ColorSpace.sRGB;
 	}
 
 	@Override
