@@ -20,26 +20,14 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JPanel;
-
-import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Rect2d;
-import org.terasology.math.geom.Vector2d;
 
 import colormaps.CachedColormap2D;
 
@@ -69,47 +57,10 @@ public class JndViewPanel extends JPanel
 	
 	private Map<Point2D, PColor> jndPoints = Maps.newHashMap();
 
-	private double jndThreshold = 5.0;
+	private double jndThreshold = 2.0;
 	
-	private Voronoi delaunay;
-	
-	private Point curPos;
-
 	public JndViewPanel()
 	{
-		// get last selection event and trigger it manually to be up to date
-		ColormapSelectionEvent selEvent = MyEventBus.getLast(ColormapSelectionEvent.class);
-		if (selEvent != null)
-		{
-			onSelect(selEvent);
-		}
-		
-		addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-				curPos = null;
-			}
-		});
-		
-		addMouseMotionListener(new MouseMotionListener()
-		{
-			@Override
-			public void mouseMoved(MouseEvent e)
-			{
-				curPos = new Point(e.getX(), e.getY());
-				JndViewPanel.this.repaint();
-			}
-			
-			@Override
-			public void mouseDragged(MouseEvent e)
-			{
-				curPos = new Point(e.getX(), e.getY());
-				JndViewPanel.this.repaint();
-			}
-		});
-
 		MyEventBus.getInstance().register(this);
 	}
 	
@@ -119,10 +70,9 @@ public class JndViewPanel extends JPanel
 		if (!this.isVisible())
 			return;
 
-		colormap = new CachedColormap2D(event.getSelection(), 512, 512);
+		colormap = new CachedColormap2D(event.getSelection(), 256, 256);
 
-		updateRegions();
-//		updateDelaunay();
+		probeCircular();
 
 		repaint();
 	}
@@ -138,11 +88,11 @@ public class JndViewPanel extends JPanel
 		}
 	}
 	
-	private void updateRegions()
+	private void probeRectGrid()
 	{
 		jndPoints.clear();
 		
-		int sampleRate = 20;
+		int sampleRate = 50;
 		
 		for (int y = 1; y < sampleRate-1; y++)
 		{
@@ -150,22 +100,11 @@ public class JndViewPanel extends JPanel
 			for (int x = 1; x < sampleRate-1; x++)
 			{
 				float mx = x / (float)(sampleRate - 1);
-				boolean ok = true;
 				
 				Color color = colormap.getColor(mx, my);
 				PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 
-				for (PColor expcolor : jndPoints.values())
-				{
-					double dist = ColorTools.distance(pcolor, expcolor, VIEW_ENV);
-					if (dist < jndThreshold)
-					{
-						ok = false;
-						break;
-					}
-				}
-				
-				if (ok)
+				if (testColorDistance(pcolor))
 				{
 					jndPoints.put(new Point2D.Double(mx, my), pcolor);
 				}
@@ -173,16 +112,63 @@ public class JndViewPanel extends JPanel
 		}
 	}
 	
-	private void updateDelaunay()
+	private void probeCircular()
 	{
-		List<Vector2d> pts = new ArrayList<>(jndPoints.size());
-		for (Point2D pt : jndPoints.keySet())
+		jndPoints.clear();
+		
+		double cx = 0.5;
+		double cy = 0.5;
+		
+		double sampleDist = 0.01;
+		double dist = sampleDist;
+
+		// add center point
+		Color color = colormap.getColor((float)cx, (float)cy);
+		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
+		jndPoints.put(new Point2D.Double(cx, cy), pcolor);
+		
+		while (dist < 0.5 * Math.sqrt(2.0))
 		{
-			pts.add(new Vector2d(pt.getX(), pt.getY()));
+			int sampleRate = (int) (2.0 * Math.PI * dist / sampleDist); 
+			for (int i = 0; i < sampleRate; i++)
+			{
+				double dx = Math.cos(i * 2.0 * Math.PI / sampleRate + dist);
+				double dy = Math.sin(i * 2.0 * Math.PI / sampleRate + dist);
+
+				double px = cx + dx * dist; 
+				double py = cy + dy * dist;
+				
+				if (px < 0 || px > 1 || py < 0 || py > 1)
+					continue;
+
+				color = colormap.getColor((float)px, (float)py);
+				pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
+
+				if (testColorDistance(pcolor))
+				{
+					jndPoints.put(new Point2D.Double(px, py), pcolor);
+				}
+			}
+			
+			dist += sampleDist;
 		}
-		delaunay = new Voronoi(pts, Rect2d.createFromMinAndMax(0, 0, 1, 1));
 	}
 	
+
+	private boolean testColorDistance(PColor pcolor)
+	{
+		for (PColor expcolor : jndPoints.values())
+		{
+			double dist = ColorTools.distance(pcolor, expcolor, VIEW_ENV);
+			if (dist < jndThreshold)
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 	@Override
 	protected void paintComponent(Graphics g1)
 	{
@@ -190,25 +176,23 @@ public class JndViewPanel extends JPanel
 		Graphics2D g = (Graphics2D)g1;
 		
 		drawColormap(g);
-		drawVoronoiOutline(g);
-		drawJndRegion(g);
+		drawJndPoints(g);
+		
+		for (Point2D pt : jndPoints.keySet())
+		{
+			drawJndRegion(g, pt.getX(), pt.getY());
+		}
 	}
 
-	private void drawJndRegion(Graphics2D g)
+	private void drawJndRegion(Graphics2D g, double mx, double my)
 	{
-		if (curPos == null)
-			return;
-		
-		double mx = screenXtoMapX(curPos.getX());
-		double my = screenYtoMapY(curPos.getY());
-		
 		Color color = colormap.getColor((float)mx, (float)my);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 		
 		int angleSteps = 64;
-		double sampleRateDist = 0.005;
+		double sampleRateDist = 0.002;
 		
-		List<Vector2d> pts = Lists.newArrayList();
+		List<Point2D> pts = Lists.newArrayList();
 		
 		for (int i = 0; i < angleSteps; i++)
 		{
@@ -217,7 +201,7 @@ public class JndViewPanel extends JPanel
 			
 			double jndDist = 0;
 			double mapDist = 0;
-			Vector2d best = new Vector2d(mx, my);
+			Point2D best = new Point2D.Double(mx, my);
 			
 			while (true)
 			{
@@ -234,8 +218,8 @@ public class JndViewPanel extends JPanel
 
 				jndDist = ColorTools.distance(pcolor, ptcolor, VIEW_ENV);
 				
-				if (jndDist < 2.0)
-					best = new Vector2d(px, py); 
+				if (jndDist < jndThreshold * 0.5)
+					best = new Point2D.Double(px, py); 
 				else 
 					break;
 			}
@@ -285,70 +269,19 @@ public class JndViewPanel extends JPanel
 		g.drawImage(colormap.getImage(), 0, 0, getScreenWidth(), getScreenHeight(), null);
 	}
 	
-	private void drawVoronoiOutline(Graphics2D g)
+	private void drawJndPoints(Graphics2D g)
 	{
-		List<LineSegment> segs = delaunay.voronoiDiagram();
-
-		g.setColor(Color.BLACK);
-		for (LineSegment seg : segs)
-		{
-			double x1 = mapXtoScreenX(seg.getP0().getX());
-			double y1 = mapYtoScreenY(seg.getP0().getY());
-			double x2 = mapXtoScreenX(seg.getP1().getX());
-			double y2 = mapYtoScreenY(seg.getP1().getY());
-			
-			g.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
-		}
-	}
-	
-	/**
-	 * Draws Voronoi diagram based on current triangulation
-	 * A Voronoi diagram can be created from a Delaunay triangulation by
-	 * connecting the circumcenters of neighboring triangles
-	 */
-	private void drawVoronoiRegions(Graphics2D g)
-	{
-		for (final Vector2d center : delaunay.siteCoords())
-		{
-			List<Vector2d> corners = Lists.newArrayList(delaunay.region(center));
-			
-            Collections.sort(corners, new Comparator<Vector2d>() {
-
-                @Override
-                public int compare(Vector2d o0, Vector2d o1) {
-                	Vector2d a = new Vector2d(o0).sub(center).normalize();
-                    Vector2d b = new Vector2d(o1).sub(center).normalize();
-
-                    if (a.y() > 0) { //a between 0 and 180
-                        if (b.y() < 0) //b between 180 and 360
-                            return -1;
-                        return a.x() < b.x() ? 1 : -1;
-                    } else { // a between 180 and 360
-                        if (b.y() > 0) //b between 0 and 180
-                            return 1;
-                        return a.x() > b.x() ? 1 : -1;
-                    }
-                }
-            });
-            
-            Color color = colormap.getColor((float)center.getX(), (float)center.getY());
-            g.setColor(color);
-            
-            Polygon poly = createPolygon(corners);
-            g.fill(poly);
-        }
-
 		g.setColor(Color.WHITE);
-		for (Vector2d pt : delaunay.siteCoords())
+		for (Point2D pt : jndPoints.keySet())
 		{
-			int r = 1;
+			int r = 2;
 			int wx = (int) mapXtoScreenX(pt.getX());
 			int wy = (int) mapYtoScreenY(pt.getY());
 			g.fillOval(wx - r, wy - r, 2 * r , 2 * r);
 		}
 	}
 
-	 private Polygon createPolygon(List<Vector2d> pts) 
+	 private Polygon createPolygon(List<Point2D> pts) 
 	 {
         int[] x = new int[pts.size()];
         int[] y = new int[pts.size()];
