@@ -52,7 +52,7 @@ public class MetricColormap
 	public void addMetric(Metric metric, Integer val)
 	{
 		metrics.put(metric, val);
-		colors.put(metric, "quality" + val / 5);		// 100 / 20
+		colors.put(metric, "quality" + val);
 	}
 
 	public Map<Metric, Integer> getValues()

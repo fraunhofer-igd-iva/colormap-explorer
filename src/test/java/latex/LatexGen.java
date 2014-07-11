@@ -59,13 +59,13 @@ public final class LatexGen
 	
 	public static void main(String[] args) throws IOException
 	{
-//		List<Colormap2D> colorMaps = Lists.newArrayList();
-//		colorMaps.add(new BCP37());
-//		colorMaps.add(new Himberg98());
-//		colorMaps.add(new FourCornersAnchor());
-//		colorMaps.add(new TeulingFig2());
+		List<Colormap2D> colorMaps = Lists.newArrayList();
+		colorMaps.add(new BCP37());
+		colorMaps.add(new Himberg98());
+		colorMaps.add(new FourCornersAnchor());
+		colorMaps.add(new TeulingFig2());
 		
-		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+//		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
@@ -203,13 +203,15 @@ public final class LatexGen
 
 		List<LatexColor> colors = Lists.newArrayList();
 		
-		for (int i=0; i<=20; i++)
+		ColorRampBGLY colorramp = new ColorRampBGLY();
+		
+		for (int i=0; i<=100; i++)
 		{
-			float red = 1f - i / 20f;
-			float green = i / 20f;
-			float blue = 0.1f;
+			double val = 1.0 - i / 100d;
 			
-			colors.add(new LatexColor(new Color(red, green, blue), "quality" + i));
+			Color col = colorramp.getColor(val);
+			
+			colors.add(new LatexColor(col, "quality" + i));
 		}
 
         ST st = templateDir.getInstanceOf("MetricTable");
