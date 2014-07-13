@@ -44,6 +44,8 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 
 	private static final Color MEDIAN_LINE_COLOR = new Color(0, 0, 0, 0.8f);
 
+	private static final Color HELPER_LINE_COLOR = new Color(0, 0, 0, 0.5f);
+
 	private static final Color BORDERLINE_DOT_COLOR = new Color(1,0,0,0.5f);
 	
 
@@ -132,29 +134,45 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			cdist /= medianRatio;
 			
 			int xCoord = (int)(maxX * dist);
-			int yCoord;
-			if (useLog)
-				yCoord = (int)((Math.log(cdist / dist)/Math.log(2))*maxY + (maxY/2));
-			else
-				yCoord = (int)(maxY * cdist * 2 / 3);
+			int yCoord = getYPos(maxY, dist, cdist);
 			g.fillOval(xCoord, yCoord, dia, dia);
 		}
 		
 		
 		if (useLog) {
-			g.setColor(NORMAL_DOT_COLOR);
-			int yc = (int)((Math.log(2)/Math.log(2))*maxY + (maxY/2));
-			g.drawLine(0, yc, (int)maxX, yc);
-			yc = (int)((Math.log(1/2f)/Math.log(2))*maxY + (maxY/2));
-			g.drawLine(0, yc, (int)maxX, yc);
 			g.setColor(MEDIAN_LINE_COLOR);
-			yc = (int)(maxY/2);
+			int yc = getYPos(maxY, 1, 1);
+			g.drawLine(0, yc, (int)maxX, yc);
+
+			g.setColor(HELPER_LINE_COLOR);
+			yc = getYPos(maxY, 1, 3f/2f);
+			g.drawLine(0, yc, (int)maxX, yc);
+			yc = getYPos(maxY, 1, 2f/3f);
 			g.drawLine(0, yc, (int)maxX, yc);
 		} else {
 			g.setColor(MEDIAN_LINE_COLOR);
-			g.drawLine(0, 0, (int)maxX, (int)(maxY * 2 / 3));
+			int yc = getYPos(maxY, 1, 1);
+			g.drawLine(0, (int)maxY, (int)maxX, yc);
+			
+			g.setColor(HELPER_LINE_COLOR);
+			yc = getYPos(maxY, 1, 3f/2f);
+			g.drawLine(0, (int)maxY, (int)maxX, yc);
+			yc = getYPos(maxY, 1, 2f/3f);
+			g.drawLine(0, (int)maxY, (int)maxX, yc);
+			
+			g.drawString(String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f", medianRatio, medianRatio * 2f/3f, medianRatio * 3f/2f), 50, 50);
 		}
+
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAhint);
+	}
+
+	private int getYPos(double maxY, float dist, double cdist) {
+		int yCoord;
+		if (useLog)
+			yCoord = (int)((maxY/2) - (Math.log(cdist / dist)/Math.log(4))*maxY);
+		else
+			yCoord = (int)(maxY - (maxY * cdist * 2 / 3));
+		return yCoord;
 	}
 	
 	public static PColor convert(Color color) {
