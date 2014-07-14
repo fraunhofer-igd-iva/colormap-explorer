@@ -18,6 +18,7 @@ package colormaps;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
 
@@ -68,13 +69,12 @@ public abstract class ImageBasedColormap extends AbstractColormap2D
 	{
 		WritableRaster raster = image.getRaster();
 		
-		// TODO: make this more general
 		if (raster.getSampleModel().getDataType() == DataBuffer.TYPE_FLOAT)
 		{		
 			float r = raster.getSampleFloat(x, y, 0);
 			float g = raster.getSampleFloat(x, y, 1);
 			float b = raster.getSampleFloat(x, y, 2);
-		
+			
 			return new Color(r, g, b);
 		}
 		
@@ -87,7 +87,15 @@ public abstract class ImageBasedColormap extends AbstractColormap2D
 			return new Color(r, g, b);
 		}
 		
-		throw new UnsupportedOperationException();
+		// use this more general (and slower approach) if necessary
+
+		ColorModel colorModel = image.getColorModel();
+		
+		Object inData = raster.getDataElements(x, y, null);
+		float[] norm = colorModel.getNormalizedComponents(inData, null, 0);
+        float[] rgb = colorModel.getColorSpace().toRGB(norm);
+
+        return new Color(rgb[0], rgb[1], rgb[2]);
 	}
 
 	protected static Color bilerp(Color xt1, Color xt2, Color xb1, Color xb2, double ipx, double ipy) 
