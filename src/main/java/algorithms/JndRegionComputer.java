@@ -20,8 +20,10 @@ package algorithms;
 import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Point2D;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,7 +83,7 @@ public class JndRegionComputer
 				Color color = colormap.getColor(mx, my);
 				PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 
-				if (testColorDistance(pcolor, result))
+				if (testColorDistance(pcolor, result.values()))
 				{
 					result.put(new Point2D.Double(mx, my), pcolor);
 				}
@@ -98,7 +100,8 @@ public class JndRegionComputer
 	private Map<Point2D, PColor> probeCircular()
 	{
 		Map<Point2D, PColor> result = Maps.newHashMap();
-
+		Deque<PColor> list = new LinkedList<PColor>();
+		
 		int idx = 0;
 		
 		double cx = 0.5;
@@ -114,6 +117,7 @@ public class JndRegionComputer
 		Color color = colormap.getColor((float)cx, (float)cy);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 		result.put(new Point2D.Double(cx, cy), pcolor);
+		list.add(pcolor);
 		
 		while (dist < maxDist)
 		{
@@ -137,9 +141,10 @@ public class JndRegionComputer
 				color = colormap.getColor((float)px, (float)py);
 				pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 
-				if (testColorDistance(pcolor, result))
+				if (testColorDistance(pcolor, list))
 				{
 					result.put(new Point2D.Double(px, py), pcolor);
+					list.addFirst(pcolor);
 				}
 			}
 			
@@ -152,9 +157,9 @@ public class JndRegionComputer
 		return result;
 	}
 
-	private boolean testColorDistance(PColor pcolor, Map<Point2D, PColor> result)
+	private boolean testColorDistance(PColor pcolor, Collection<? extends PColor> others)
 	{
-		for (PColor expcolor : result.values())
+		for (PColor expcolor : others)
 		{
 			double dist = ColorTools.distance(pcolor, expcolor, VIEW_ENV);
 			if (dist < jndThreshold)
