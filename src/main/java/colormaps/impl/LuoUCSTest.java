@@ -40,6 +40,6 @@ public class LuoUCSTest extends GuoLabStyle
 
 	@Override
 	public List<String> getReferences() {
-		return Collections.emptyList();
+		return Collections.singletonList("Luo06");
 	}
 }
