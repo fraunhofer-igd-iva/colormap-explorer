@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -33,10 +34,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -114,7 +122,29 @@ public class JndViewPanel extends JPanel
 		drawRegions = new JCheckBox("Draw regions", true);
 		drawRegions.addActionListener(repaintListener);
 		panel.add(drawRegions);
-		
+
+		JButton saveImageBtn = new JButton("Save Image");
+		saveImageBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent event)
+			{
+				try
+				{
+					String safeFilename = colormap.getName().replaceAll("\\W+", "_");
+					File tmpFile = Files.createTempFile("colormap_explorer_" + safeFilename + "_", ".png").toFile();
+					renderToImage(tmpFile);
+					Desktop dt = Desktop.getDesktop();
+				    dt.open(tmpFile);
+				}
+				catch (IOException e)
+				{
+					logger.error("Could not save file", e);
+				}
+			}
+		});
+		panel.add(saveImageBtn);
+
 		panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		add(panel, BorderLayout.NORTH);
 		add(jndView, BorderLayout.CENTER);
@@ -126,7 +156,7 @@ public class JndViewPanel extends JPanel
 		if (!this.isVisible())
 			return;
 
-		colormap = new CachedColormap2D(event.getSelection(), 256, 256);
+		colormap = new CachedColormap2D(event.getSelection(), 512, 512);
 
 		regionComputer = new JndRegionComputer(colormap, 3.0);
 
@@ -170,9 +200,28 @@ public class JndViewPanel extends JPanel
 		{
 			fillJndRegions(g);
 		}
+		
+	}
+
+	private void renderToImage(File file)
+	{
+		BufferedImage bi = new BufferedImage(getScreenWidth(), getScreenHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics2D gi = bi.createGraphics();
+		
+		drawColormap(gi);
+		drawJndPoints(gi);
+		drawJndRegions(gi);
+		
+		gi.dispose();
+		
+		try {
+			ImageIO.write(bi, "png", file);
+		}
+		catch (IOException e) {
+			logger.error("Could not save to file", e);
+		}
 	}
 	
-
 	private int getScreenWidth()
 	{
 		return Math.min(getWidth(), getHeight());

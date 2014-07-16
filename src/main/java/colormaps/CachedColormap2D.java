@@ -87,12 +87,18 @@ public class CachedColormap2D extends ImageBasedColormap
 	@Override
 	public Color getColor(float mx, float my)
 	{
-		return delegate.getColor(mx, my);
+		return super.getColor(mx, my);
 	}
 	
-	public Color getUncachedColor(float mx, float my)
+	/**
+	 * Returns the color as defined in the original colormap
+	 * @param x the x coordinate in the range [0..1]
+	 * @param y the x coordinate in the range [0..1]
+	 * @return the uncached color
+	 */
+	public Color getUncachedColor(float x, float y)
 	{
-		return delegate.getColor(mx, my);
+		return delegate.getColor(x, y);
 	}
 	
 	@Override

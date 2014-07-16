@@ -261,9 +261,9 @@ public final class LatexGen
 	private static String toFilename(String name)
 	{
 		return name
-			.replaceAll(" ", "_")
 			.replaceAll("\\.", "") 
 			.replaceAll(":", "") 
+			.replaceAll("\\W", "_")	// NOT a number, letter or underscore 
 			+ ".png";
 	}
 
