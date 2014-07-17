@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
+import algorithms.ColorDynamic;
 import colormaps.Colormap2D;
 import colorspaces.CIELABLch;
 import colorspaces.RGB;
@@ -54,7 +55,6 @@ import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_CIECAM02;
 import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
-
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 import events.TileSelectionEvent;
@@ -91,7 +91,12 @@ public class ConfigPanel extends JPanel
 		descLabel.setBorder(BorderFactory.createTitledBorder("Description"));
 		final JLabel refsLabel = new JLabel();
 		refsLabel.setBorder(BorderFactory.createTitledBorder("References"));
+		
+		final JLabel statsLabel = new JLabel();
+		statsLabel.setBorder(BorderFactory.createTitledBorder("Statistics"));
+		
 		cmInfoPanel.add(descLabel, BorderLayout.NORTH);
+		cmInfoPanel.add(statsLabel, BorderLayout.CENTER);
 		cmInfoPanel.add(refsLabel, BorderLayout.SOUTH);
 
 		cmPanel.add(cmInfoPanel, BorderLayout.SOUTH);
@@ -132,6 +137,14 @@ public class ConfigPanel extends JPanel
 				}
 				
 				String refs = Joiner.on("<br/>").skipNulls().join(entries);
+				
+				// update Statistics
+				ColorDynamic cd = new ColorDynamic(colormap, 50);
+				cd.computeStats();
+				String statStr = String.format("<html>min dE white: %.1f<br>", cd.getdE_white());
+				      statStr += String.format("min dE black: %.1f<br>", cd.getdE_black());
+				      statStr += String.format("Y min, max: [%.1f, %.1f]<br>", cd.getDarkestY(), cd.getBrightestY());
+				statsLabel.setText(statStr);
 				
 				refsLabel.setText("<html>" + refs + "</html>");
 				MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
