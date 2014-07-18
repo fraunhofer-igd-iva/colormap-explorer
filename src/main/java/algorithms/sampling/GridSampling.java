@@ -17,15 +17,10 @@
 
 package algorithms.sampling;
 
-import java.awt.Color;
 import java.awt.geom.Point2D;
-import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Lists;
-
-import de.fhg.igd.pcolor.PColor;
 
 /**
  * Defines a sampling strategy for a square [0..1] x [0..1]

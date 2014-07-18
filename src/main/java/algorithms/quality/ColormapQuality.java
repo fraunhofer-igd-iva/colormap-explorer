@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package algorithms;
+package algorithms.quality;
 
 import colormaps.Colormap2D;
 

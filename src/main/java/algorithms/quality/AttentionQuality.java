@@ -15,7 +15,7 @@
  */
 
 
-package algorithms;
+package algorithms.quality;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
