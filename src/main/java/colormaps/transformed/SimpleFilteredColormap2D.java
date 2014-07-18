@@ -22,6 +22,7 @@ import colormaps.Colormap2D;
 import colorspaces.CIELAB;
 import colorspaces.CIELABLch;
 import colorspaces.RGB;
+
 import de.fhg.igd.pcolor.CIELab;
 
 /**
@@ -40,8 +41,7 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 		HUE,
 		SATURATION,
 		VALUE,
-		
-		TEST;
+		ATTENTION;
 	}
 	
 	private ViewType viewType;
@@ -61,10 +61,8 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	{
 		Color color = getColormap().getColor(mx, my);
 		
+//		double[] lab = new CIELAB().fromColor(color);
 		
-		double[] lab = new CIELAB().fromColor(color);
-		double[] lch = new CIELABLch().fromColor(color);
-	
 		int red = color.getRed();
 		int green = color.getGreen();
 		int blue = color.getBlue();
@@ -93,7 +91,14 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 		case VALUE:
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			return new Color(hsv[2], hsv[2], hsv[2]);
+		case ATTENTION:
+		{
+			double[] lch = new CIELABLch().fromColor(color);
 
+			float attention = (float) ((float) Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]) / Math.sqrt(100*100 + 150*150));
+			return new Color(attention, attention, attention);
+		}
+		
 		default:
 			return Color.LIGHT_GRAY;
 		}
