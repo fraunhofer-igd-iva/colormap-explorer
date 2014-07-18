@@ -14,13 +14,29 @@
  * limitations under the License.
  */
 
-package colormaps;
+package algorithms;
 
+import colormaps.Colormap2D;
+
+/**
+ * TODO Type description
+ * @author Martin Steiger
+ */
 public interface ColormapQuality 
 {
+	/**
+	 * @param colormap2d the colormap to use
+	 * @return the quality in [0..1]
+	 */
 	double getQuality(Colormap2D colormap2d);
 
+	/**
+	 * @return the name (id)
+	 */
 	String getName();
 
+	/**
+	 * @return a proper description of what it does
+	 */
 	String getDescription();
 }

@@ -18,7 +18,6 @@
 package main;
 
 import java.awt.BorderLayout;
-import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -27,20 +26,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -57,13 +50,7 @@ import algorithms.JndRegionComputer;
 import colormaps.CachedColormap2D;
 import colormaps.Colormap2D;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
-
-import de.fhg.igd.pcolor.PColor;
-import de.fhg.igd.pcolor.colorspace.ViewingConditions;
-import de.fhg.igd.pcolor.util.ColorTools;
 
 import events.ColormapSelectionEvent;
 import events.MyEventBus;

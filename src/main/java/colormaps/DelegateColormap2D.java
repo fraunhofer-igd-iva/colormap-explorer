@@ -37,7 +37,7 @@ public class DelegateColormap2D implements Colormap2D
 	}
 
 	@Override
-	public Color getColor(float x, float y)
+	public Color getColor(double x, double y)
 	{
 		return delegate.getColor(x, y);
 	}

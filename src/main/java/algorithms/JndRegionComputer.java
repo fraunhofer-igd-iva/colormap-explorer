@@ -31,6 +31,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import algorithms.sampling.CircularSampling;
+import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
 
 import com.google.common.collect.Lists;
@@ -67,96 +69,35 @@ public class JndRegionComputer
 		this.jndThreshold = jndThreshold;
 	}
 
-	private Map<Point2D, PColor> probeRectGrid()
+	private Map<Point2D, PColor> probe(SamplingStrategy sampling)
 	{
 		Map<Point2D, PColor> result = Maps.newHashMap();
-		
-		int sampleRate = 50;
-		
-		for (int y = 0; y < sampleRate; y++)
-		{
-			float my = y / (float)(sampleRate - 1);
-			for (int x = 0; x < sampleRate; x++)
-			{
-				float mx = x / (float)(sampleRate - 1);
-				
-				Color color = colormap.getColor(mx, my);
-				PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
+		Deque<PColor> list = new LinkedList<PColor>();
 
-				if (testColorDistance(pcolor, result.values()))
-				{
-					result.put(new Point2D.Double(mx, my), pcolor);
-				}
-			}
-			
-			logger.debug(String.format("Sampling: %3.0f%%", 100d * y / sampleRate));
-		}
+		int idx = 0;
 		
-		logger.debug("Sampling: 100%");
+		List<Point2D> samples = Lists.newArrayList(sampling.getPoints()); 
+
+		int logRate = samples.size() / 12;
+
+		for (Point2D pt : samples)
+		{
+			Color color = colormap.getColor(pt.getX(), pt.getY());
+			PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
+
+			if (testColorDistance(pcolor, list))
+			{
+				result.put(pt, pcolor);
+				list.addFirst(pcolor);
+			}
+
+			if (idx++ % logRate == 0)
+				logger.debug(String.format("Sampling: %3.0f%%", 100d * idx / samples.size()));
+		}
 		
 		return result;
 	}
 	
-	private Map<Point2D, PColor> probeCircular()
-	{
-		Map<Point2D, PColor> result = Maps.newHashMap();
-		Deque<PColor> list = new LinkedList<PColor>();
-		
-		int idx = 0;
-		
-		double cx = 0.5;
-		double cy = 0.5;
-		
-		double maxDist = 0.5 * Math.sqrt(2.0);
-		double sampleDist = 0.01;
-		double dist = sampleDist;
-		
-		int size = (int) (maxDist / dist);
-
-		// add center point
-		Color color = colormap.getColor((float)cx, (float)cy);
-		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
-		result.put(new Point2D.Double(cx, cy), pcolor);
-		list.add(pcolor);
-		
-		while (dist < maxDist)
-		{
-			if (idx % (size / 12) == 0)
-			{
-				logger.debug(String.format("Sampling: %3.0f%%", 100d * dist / maxDist));
-			}
-			
-			int sampleRate = (int) (2.0 * Math.PI * dist / sampleDist); 
-			for (int i = 0; i < sampleRate; i++)
-			{
-				double dx = Math.cos(i * 2.0 * Math.PI / sampleRate + dist);
-				double dy = Math.sin(i * 2.0 * Math.PI / sampleRate + dist);
-
-				double px = cx + dx * dist; 
-				double py = cy + dy * dist;
-				
-				if (px < 0 || px > 1 || py < 0 || py > 1)
-					continue;
-
-				color = colormap.getColor((float)px, (float)py);
-				pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
-
-				if (testColorDistance(pcolor, list))
-				{
-					result.put(new Point2D.Double(px, py), pcolor);
-					list.addFirst(pcolor);
-				}
-			}
-			
-			dist += sampleDist;
-			idx++;
-		}
-		
-		logger.debug("Sampling: 100%");
-		
-		return result;
-	}
-
 	private boolean testColorDistance(PColor pcolor, Collection<? extends PColor> others)
 	{
 		for (PColor expcolor : others)
@@ -248,7 +189,10 @@ public class JndRegionComputer
 	{
 		if (jndPoints == null)
 		{
-			jndPoints = probeCircular();
+			int sampleRate = 100;
+//			GridSampling sampling = new GridSampling(sampleRate);
+			CircularSampling sampling = new CircularSampling(sampleRate);
+			jndPoints = probe(sampling);
 		}
 		
 		return Collections.unmodifiableSet(jndPoints.keySet());

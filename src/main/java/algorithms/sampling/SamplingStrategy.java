@@ -14,41 +14,20 @@
  * limitations under the License.
  */
 
-package colormaps;
 
-import java.awt.Color;
-import java.util.List;
+package algorithms.sampling;
+
+import java.awt.geom.Point2D;
 
 /**
- * Defines a color map in 2D space
+ * Defines a sampling strategy for a square [0..1] x [0..1]
  * @author Martin Steiger
  */
-public interface Colormap2D 
+public interface SamplingStrategy
 {
 	/**
-	 * @param x the x coordinate in the range [0..1]
-	 * @param y the x coordinate in the range [0..1]
-	 * @return the 
+	 * @return a order-preserving iterable for the sampling points
 	 */
-	Color getColor(double x, double y);
+	Iterable<Point2D> getPoints();
 
-	/**
-	 * @return the short name of the color map
-	 */
-	String getName();
-
-	/**
-	 * @return the full description
-	 */
-	String getDescription();
-
-	/**
-	 * @return the color space
-	 */
-	ColorSpace getColorSpace();
-
-	/**
-	 * @return a list of full BibTeX entries
-	 */
-	List<String> getReferences();
 }
