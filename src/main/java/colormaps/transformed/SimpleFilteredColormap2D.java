@@ -34,14 +34,14 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	public enum ViewType
 	{
 		REAL,
-		LUMINANCE,
+		LUM,
 		RED,
 		GREEN,
 		BLUE,
 		HUE,
-		SATURATION,
-		VALUE,
-		ATTENTION;
+		SAT,
+		VAL,
+		ATT;
 	}
 	
 	private ViewType viewType;
@@ -72,7 +72,7 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 		{
 		case REAL:
 			return color;
-		case LUMINANCE:
+		case LUM:
 			int y = RGB.getLumaByte(color);
 			return new Color(y, y ,y);
 		case RED:
@@ -85,13 +85,13 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			Color rgb = new Color(Color.HSBtoRGB(hsv[0], 1, 1));
 			return new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), (int)(hsv[1] * 255 + 0.5));
-		case SATURATION:
+		case SAT:
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			return new Color(hsv[1], hsv[1], hsv[1]);
-		case VALUE:
+		case VAL:
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			return new Color(hsv[2], hsv[2], hsv[2]);
-		case ATTENTION:
+		case ATT:
 		{
 			double[] lch = new CIELABLch().fromColor(color);
 

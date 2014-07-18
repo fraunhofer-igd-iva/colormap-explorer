@@ -48,7 +48,7 @@ public class DecomposedViewPanel extends JPanel
 	private int cols = 3;
 	
 	private final DecomposedPanel[][] panels = new DecomposedPanel[rows][cols];
-	private final List<ViewType> types = ImmutableList.of(REAL, LUMINANCE, ATTENTION, RED, GREEN, BLUE, HUE, SATURATION, VALUE);
+	private final List<ViewType> types = ImmutableList.of(REAL, LUM, ATT, RED, GREEN, BLUE, HUE, SAT, VAL);
 
 	/**
 	 * Default constructor
