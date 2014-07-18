@@ -58,7 +58,7 @@ public class ColorDynamicDistBlack extends ColorDynamic
 	@Override
 	public String getName()
 	{
-		return "ColorDynamics - BlackDistance";
+		return "BlackDistance";
 	}
 
 	@Override

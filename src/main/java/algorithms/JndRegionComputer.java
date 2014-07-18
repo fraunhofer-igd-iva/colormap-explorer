@@ -31,7 +31,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import algorithms.sampling.CircularSampling;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
 
@@ -43,7 +42,8 @@ import de.fhg.igd.pcolor.colorspace.ViewingConditions;
 import de.fhg.igd.pcolor.util.ColorTools;
 
 /**
- * TODO Type description
+ * Finds a set of points with a pair-wise perceptual distance of at least jndTheshold
+ * and their corresponding regions
  * @author Martin Steiger
  */
 public class JndRegionComputer
@@ -57,19 +57,22 @@ public class JndRegionComputer
 	private Map<Point2D, List<Point2D>> jndRegions;
 
 	private final double jndThreshold;
+	private final SamplingStrategy sampling;
 	private final Colormap2D colormap;
 
 	/**
 	 * @param colormap the colormap to use
+	 * @param sampling the sampling strategy for finding the jnd points
 	 * @param jndThreshold the jnd threshold for the set of distinguishable points
 	 */
-	public JndRegionComputer(Colormap2D colormap, double jndThreshold)
+	public JndRegionComputer(Colormap2D colormap, SamplingStrategy sampling, double jndThreshold)
 	{
 		this.colormap = colormap;
+		this.sampling = sampling;
 		this.jndThreshold = jndThreshold;
 	}
 
-	private Map<Point2D, PColor> probe(SamplingStrategy sampling)
+	private Map<Point2D, PColor> probe()
 	{
 		Map<Point2D, PColor> result = Maps.newHashMap();
 		Deque<PColor> list = new LinkedList<PColor>();
@@ -189,10 +192,7 @@ public class JndRegionComputer
 	{
 		if (jndPoints == null)
 		{
-			int sampleRate = 100;
-//			GridSampling sampling = new GridSampling(sampleRate);
-			CircularSampling sampling = new CircularSampling(sampleRate);
-			jndPoints = probe(sampling);
+			jndPoints = probe();
 		}
 		
 		return Collections.unmodifiableSet(jndPoints.keySet());

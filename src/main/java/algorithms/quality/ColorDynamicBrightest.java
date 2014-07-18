@@ -54,7 +54,7 @@ public class ColorDynamicBrightest extends ColorDynamic
 	@Override
 	public String getName()
 	{
-		return "ColorDynamics - Brightest";
+		return "Brightest";
 	}
 
 	@Override

@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import algorithms.JndRegionComputer;
+import algorithms.sampling.CircularSampling;
 import colormaps.CachedColormap2D;
 import colormaps.Colormap2D;
 
@@ -145,7 +146,10 @@ public class JndViewPanel extends JPanel
 
 		colormap = new CachedColormap2D(event.getSelection(), 512, 512);
 
-		regionComputer = new JndRegionComputer(colormap, 3.0);
+		int sampleRate = 100;
+//		GridSampling sampling = new GridSampling(sampleRate);
+		CircularSampling sampling = new CircularSampling(sampleRate);
+		regionComputer = new JndRegionComputer(colormap, sampling, 3.0);
 
 		repaint();
 	}

@@ -58,7 +58,7 @@ public class ColorDynamicDistWhite extends ColorDynamic
 	@Override
 	public String getName()
 	{
-		return "ColorDynamics - WhiteDistance";
+		return "WhiteDistance";
 	}
 
 	@Override
