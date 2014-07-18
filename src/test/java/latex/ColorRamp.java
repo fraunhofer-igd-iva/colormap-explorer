@@ -24,15 +24,17 @@ import java.awt.Color;
  * http://tristen.ca/hcl-picker/#/hlc/9/1/2E4052/F9E261 
  * @author Juergen Bernard
  */
-public class ColorRampBGLY
+public class ColorRamp
 {
 	private final Color[] colors = new Color[] 
 	{ 
-		new Color(46, 64, 82), new Color(42, 86, 101), new Color(35, 110, 114),
-		new Color(39, 133, 120), new Color(63, 155, 120), new Color(99, 177, 114), 
-		new Color(143, 196, 105), new Color(193, 213, 98), new Color(249, 226, 97) 
-	};
+//		new Color(46, 64, 82), new Color(42, 86, 101), new Color(35, 110, 114),
+//		new Color(39, 133, 120), new Color(63, 155, 120), new Color(99, 177, 114), 
+//		new Color(143, 196, 105), new Color(193, 213, 98), new Color(249, 226, 97) 
 
+		new Color(20, 140, 60), new Color(220, 220, 220)
+	};
+	
 	/** 
 	 * linear min/max scaling; assumes value in [0.0 .. 1.0]
 	 * @param value

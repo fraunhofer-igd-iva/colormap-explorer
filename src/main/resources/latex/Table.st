@@ -36,18 +36,6 @@
 \end{tabular}
 }
 
-\newpage
-
-\begin{tabular}{l|$colormap:{ignored|c}; separator = "|"$}
-	Title & $colormap:{cm|\begin{turn\}{70\} $cm.name$ \end{turn\}}; separator = " & "$  \\\\
-	\\hline
-	
-	$metrics:{metric|
-	 $metric.name$ & $colormap:{cm|$metric.compute($cm.colormap$)$}; separator = " & "$  \\\\
-	
-\end{tabular}
-
-
 
 \bibliographystyle{alpha}
 
