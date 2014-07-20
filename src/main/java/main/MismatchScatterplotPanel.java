@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -59,7 +60,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	
 	private boolean useLog;
 
-	private List<Float> floats;
+	private List<Point2D> points;
 
 	private double medianRatio;
 	
@@ -86,10 +87,10 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	/**
 	 * @param num the number of points
 	 */
-	public void setPointSource(List<Float> floats, int num, double medianRatio)
+	public void setPointSource(List<Point2D> points, int num, double medianRatio)
 	{
 		this.lines = num;
-		this.floats = floats;
+		this.points = points;
 		this.medianRatio = medianRatio;
 	}
 	
@@ -107,19 +108,17 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 		Object oldAAhint = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		Iterator<Float> flt = floats.iterator();
+		Iterator<Point2D> pstr = points.iterator();
 
 		for (int i = 0; i < lines; i++)
 		{
-			float ax = flt.next();
-			float ay = flt.next();
-			float bx = flt.next();
-			float by = flt.next();
-			float dist = (float) Math.hypot(ax-bx, ay-by);
+			Point2D p1 = pstr.next();
+			Point2D p2 = pstr.next();
+	
+			float dist = (float) p1.distance(p2);
 			
-			
-			Color colorA = colormap.getColor(ax, ay);
-			Color colorB = colormap.getColor(bx, by);
+			Color colorA = colormap.getColor(p1.getX(), p1.getY());
+			Color colorB = colormap.getColor(p2.getX(), p2.getY());
 			
 			// roughly 0-100
 			double cdist = colorDiff(colorA, colorB);
