@@ -26,7 +26,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STRawGroupDir;
 import org.stringtemplate.v4.misc.ErrorManager;
 
-import algorithms.JndRegionComputer;
+import algorithms.quality.ColorDivergenceQuantile;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
 import algorithms.quality.ColorDynamicWhiteContrast;
@@ -76,6 +76,9 @@ public final class LatexTableQuality
 		measures.add(new ColorDynamicDistBlack(sampling));
         measures.add(new ColorDynamicDistWhite(sampling));
         measures.add(new ColorDynamicWhiteContrast(sampling));
+        measures.add(new ColorDivergenceQuantile(0.5));
+        measures.add(new ColorDivergenceQuantile(0.1));
+        measures.add(new ColorDivergenceQuantile(0.9));
 
         for (ColormapQuality measure : measures)
         {
