@@ -16,21 +16,15 @@
 
 package main;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.hypot;
-import static java.lang.Math.sin;
-
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
+import algorithms.MedianDivergenceComputer;
 import algorithms.sampling.EvenDistributedDistancePoints;
 import colormaps.Colormap2D;
 import colormaps.ConstantColormap2D;
@@ -55,31 +49,6 @@ public class AnalysisPanel extends JPanel
 	
 	private Colormap2D oldColormap;
 	
-	double deriveMedianColormapToJNDRatio(Colormap2D colormap, Iterator<Point2D> points, int lines) {
-		if (lines == 0)
-			return Double.NaN;
-		double[] ratios = new double[lines];
-	
-		for (int i = 0; i < lines; i++)
-		{
-			Point2D p1 = points.next();
-			Point2D p2 = points.next();
-	
-			float dist = (float) p1.distance(p2);
-			
-			Color colorA = colormap.getColor(p1.getX(), p1.getY());
-			Color colorB = colormap.getColor(p2.getX(), p2.getY());
-			
-			// roughly 0-100
-			double cdist = MismatchScatterplotPanel.colorDiff(colorA, colorB);
-			
-			double ratio = cdist / dist;
-			ratios[i] = ratio;
-		}
-		Arrays.sort(ratios);
-		return ratios[lines/2];
-	}
-
 	/**
 	 * Default constructor
 	 */
@@ -126,7 +95,7 @@ public class AnalysisPanel extends JPanel
 
 		Colormap2D colormap = event.getSelection();
 		List<Point2D> points = Lists.newArrayList(new EvenDistributedDistancePoints(new Random(123), lines).getPoints());
-		double median = deriveMedianColormapToJNDRatio(colormap, points.iterator(), points.size()/2);
+		MedianDivergenceComputer median = MedianDivergenceComputer.fromPoints(colormap, points);
 		for (MismatchScatterplotPanel panel : panels)
 		{
 			panel.setPointSource(points, points.size()/2, median);

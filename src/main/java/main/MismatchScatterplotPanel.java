@@ -23,10 +23,10 @@ import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JPanel;
 
+import algorithms.MedianDivergenceComputer;
 import colormaps.Colormap2D;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
@@ -62,7 +62,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 
 	private List<Point2D> points;
 
-	private double medianRatio;
+	private MedianDivergenceComputer ratioStats;
 	
 	/**
 	 * @param colormap the colormap for the points
@@ -87,11 +87,11 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	/**
 	 * @param num the number of points
 	 */
-	public void setPointSource(List<Point2D> points, int num, double medianRatio)
+	public void setPointSource(List<Point2D> points, int num, MedianDivergenceComputer stats)
 	{
 		this.lines = num;
 		this.points = points;
-		this.medianRatio = medianRatio;
+		this.ratioStats = stats;
 	}
 	
 	@Override
@@ -109,6 +109,8 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		Iterator<Point2D> pstr = points.iterator();
+		
+		double medianRatio = ratioStats.getQuantile(0.5);
 
 		for (int i = 0; i < lines; i++)
 		{
@@ -137,6 +139,9 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			g.fillOval(xCoord, yCoord, dia, dia);
 		}
 		
+		double upperQuantile = ratioStats.getQuantile(0.9);
+		double lowerQuantile = ratioStats.getQuantile(0.1);
+		
 		
 		if (useLog) {
 			g.setColor(MEDIAN_LINE_COLOR);
@@ -144,9 +149,9 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			g.drawLine(0, yc, (int)maxX, yc);
 
 			g.setColor(HELPER_LINE_COLOR);
-			yc = getYPos(maxY, 1, 3f/2f);
+			yc = getYPos(maxY, 1, lowerQuantile/medianRatio);
 			g.drawLine(0, yc, (int)maxX, yc);
-			yc = getYPos(maxY, 1, 2f/3f);
+			yc = getYPos(maxY, 1, upperQuantile/medianRatio);
 			g.drawLine(0, yc, (int)maxX, yc);
 		} else {
 			g.setColor(MEDIAN_LINE_COLOR);
@@ -154,12 +159,12 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			g.drawLine(0, (int)maxY, (int)maxX, yc);
 			
 			g.setColor(HELPER_LINE_COLOR);
-			yc = getYPos(maxY, 1, 3f/2f);
+			yc = getYPos(maxY, 1, lowerQuantile/medianRatio);
 			g.drawLine(0, (int)maxY, (int)maxX, yc);
-			yc = getYPos(maxY, 1, 2f/3f);
+			yc = getYPos(maxY, 1, upperQuantile/medianRatio);
 			g.drawLine(0, (int)maxY, (int)maxX, yc);
 			
-			g.drawString(String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f", medianRatio, medianRatio * 2f/3f, medianRatio * 3f/2f), 50, 50);
+			g.drawString(String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f", medianRatio, lowerQuantile, upperQuantile), 50, 50);
 		}
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAhint);
@@ -168,7 +173,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	private int getYPos(double maxY, float dist, double cdist) {
 		int yCoord;
 		if (useLog)
-			yCoord = (int)((maxY/2) - (Math.log(cdist / dist)/Math.log(4))*maxY);
+			yCoord = (int)((maxY/2) - (Math.log(cdist / dist)/Math.log(6))*maxY);
 		else
 			yCoord = (int)(maxY - (maxY * cdist * 2 / 3));
 		return yCoord;
