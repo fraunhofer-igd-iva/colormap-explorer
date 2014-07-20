@@ -45,6 +45,7 @@ import algorithms.quality.ColorDynamicBrightest;
 import algorithms.quality.ColorDynamicDarkest;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
+import algorithms.quality.ColorDynamicWhiteContrast;
 import algorithms.quality.ColormapQuality;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
@@ -61,7 +62,6 @@ import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_CIECAM02;
 import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
-
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 import events.TileSelectionEvent;
@@ -157,6 +157,7 @@ public class ConfigPanel extends JPanel
 		measures.add(new ColorDynamicDarkest(sampling));
 		measures.add(new ColorDynamicDistBlack(sampling));
 		measures.add(new ColorDynamicDistWhite(sampling));
+		measures.add(new ColorDynamicWhiteContrast(sampling));
 		
 		for (ColormapQuality measure : measures)
 		{

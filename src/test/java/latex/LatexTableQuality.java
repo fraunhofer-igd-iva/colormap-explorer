@@ -29,6 +29,7 @@ import org.stringtemplate.v4.misc.ErrorManager;
 import algorithms.JndRegionComputer;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
+import algorithms.quality.ColorDynamicWhiteContrast;
 import algorithms.quality.ColorExploitation;
 import algorithms.quality.ColormapQuality;
 import algorithms.sampling.CircularSampling;
@@ -74,6 +75,7 @@ public final class LatexTableQuality
         measures.add(new ColorExploitation(sampling));
 		measures.add(new ColorDynamicDistBlack(sampling));
         measures.add(new ColorDynamicDistWhite(sampling));
+        measures.add(new ColorDynamicWhiteContrast(sampling));
 
         for (ColormapQuality measure : measures)
         {
