@@ -28,7 +28,7 @@ import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
  */
 public class ColorDynamicBrightest extends ColorDynamic
 {
-	private float brightestY = Float.MIN_VALUE;
+	private float brightestY = -Float.MAX_VALUE;
 
 	/**
 	 * @param sampling the sampling strategy to use
