@@ -43,7 +43,7 @@ public class PointsExampleViewPanel extends JPanel
 	private final List<Color> backgrounds = ImmutableList.of(Color.WHITE, Color.GRAY, Color.BLACK);
 	private final List<Integer> alphas = ImmutableList.of(64, 128, 192, 255);
 
-	private final List<PointsExamplePanel> panels = Lists.newArrayList();
+	private final List<ColormapPanel> panels = Lists.newArrayList();
 	
 	/**
 	 * Default constructor
@@ -81,7 +81,7 @@ public class PointsExampleViewPanel extends JPanel
 	public void onSelect(ColormapSelectionEvent event)
 	{
 		Colormap2D colormap = event.getSelection();
-		for (PointsExamplePanel panel : panels)
+		for (ColormapPanel panel : panels)
 		{
 			panel.setColormap(colormap);
 		}

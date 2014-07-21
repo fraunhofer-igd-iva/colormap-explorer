@@ -63,13 +63,17 @@ public class ColorMapExplorer extends JFrame
 		final ConfigPanel configPane = new ConfigPanel(colorMaps, database);
 		
 		final DecomposedViewPanel viewPanel = new DecomposedViewPanel();
-		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel(); 
-		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel(); 
+		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel();
+		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel();
+		final AnalysisPanel analysisPanel = new AnalysisPanel();
+		final JndViewPanel jndViewPanel = new JndViewPanel();
 		
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Decomposed Colormap", viewPanel);
 		tabPane.add("Points Example View", pointsExampleView);
 		tabPane.add("Overlay Example View", overlayExampleView);
+		tabPane.add("Analysis View", analysisPanel);
+		tabPane.add("JND View", jndViewPanel);
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);
 		splitPane.setDividerLocation(250);
@@ -99,7 +103,7 @@ public class ColorMapExplorer extends JFrame
 		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		BibTeXDatabase database = new BibTeXDatabase();
-		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/colorBib.bib"))
+		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib"))
 		{
 			BibTeXParser bibtexParser = new BibTeXParser();
 			InputStreamReader reader = new InputStreamReader(bibtex, Charsets.ISO_8859_1);

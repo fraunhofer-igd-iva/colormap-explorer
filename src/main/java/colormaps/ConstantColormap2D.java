@@ -62,6 +62,6 @@ public class ConstantColormap2D extends AbstractColormap2D
 	@Override
 	public ColorSpace getColorSpace()
 	{
-		return ColorSpace.CONSTANT_GRAY;
+		return ColorSpace.sRGB;
 	}
 }

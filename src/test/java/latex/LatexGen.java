@@ -15,27 +15,27 @@
  */
 package latex;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import main.ColorMapFinder;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STRawGroupDir;
-import org.stringtemplate.v4.misc.ErrorManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import colormaps.Colormap2D;
-import colormaps.transformed.SimpleFilteredColormap2D;
-import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
+import colormaps.impl.BCP37;
+import colormaps.impl.FourCornersAnchor;
+import colormaps.impl.Himberg98;
+import colormaps.impl.TeulingFig2;
 
 import com.google.common.collect.Lists;
 
@@ -45,156 +45,112 @@ import com.google.common.collect.Lists;
  */
 public final class LatexGen
 {
+	private static final String MIKTEX_PATH = "C:\\Program Files (x86)\\MiKTeX 2.9\\";
+	private static final Logger logger = LoggerFactory.getLogger(LatexGen.class);
+	
 	private LatexGen()
 	{
 		// private
 	}
 	
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws Exception
 	{
 //		List<Colormap2D> colorMaps = Lists.newArrayList();
-//		colorMaps.add(new BCR37());
-//		colorMaps.add(new Himberg98RGB());
+//		colorMaps.add(new BCP37());
+//		colorMaps.add(new Himberg98());
+//		colorMaps.add(new FourCornersAnchor());
+//		colorMaps.add(new TeulingFig2());
 		
 		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
-		generateTable(colorMaps, output);
+
+		createDecomposedTable(colorMaps, output);
+		createQualityTable(colorMaps, output);
+	}
+
+	private static void createQualityTable(List<Colormap2D> colorMaps, File output) throws Exception
+	{
+		File texFile = LatexTableQuality.generateTable(colorMaps, output);
+		File pdf = compileLaTeX(texFile);
 		
-		generateBibTex(colorMaps, output);
+		logger.info("PDF file created at " + pdf.getCanonicalPath());
+	}
+
+	private static void createDecomposedTable(List<Colormap2D> colorMaps, File output) throws IOException, Exception
+	{
+		File texFile = LatexTableDecomp.generateTable(colorMaps, output);
+
+		// first run creates .aux file 
+		compileLaTeX(texFile);
 		
-		compileLaTeX(new File(output, "colormaps.tex"));
+		// read .aux file
+		runBibTex(output);
+		
+		// create pdf with correct refs
+		File decompTablePdf = compileLaTeX(texFile);
+		
+		logger.info("PDF file created at " + decompTablePdf.getCanonicalPath());
 	}
 	
-	private static void generateBibTex(List<Colormap2D> colormaps, File folder)
+	private static void runBibTex(File folder) throws Exception
 	{
-		File bibtex = new File(folder, "colormaps.bib");
+		String bibName = "colormaps";
 		
-		try (PrintWriter out = new PrintWriter(bibtex))
+		Path target = Paths.get(folder.getAbsolutePath(), bibName + ".bib");
+		try (InputStream is = LatexGen.class.getResource("/latex/colorBib.bib").openStream())
 		{
-			for (Colormap2D cm : colormaps)
-	        {
-				for (String ref : cm.getReferences())
-				{
-					out.println(ref);
-					out.println();
-				}
-	        }
-			
-			System.out.println("Created file " + bibtex);
+			Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
 		}
-		catch (FileNotFoundException e)
-		{
-			System.err.println("Could not write to " + bibtex);
-		}
-	}
-
-	private static void compileLaTeX(File texFile)
-	{
-		String compiler = "C:\\Program Files (x86)\\MiKTeX 2.9\\miktex\\bin\\pdflatex.exe";
-		ProcessBuilder pb = new ProcessBuilder(compiler, "-max-print-line=220", "-synctex=-1", "-interaction=nonstopmode", texFile.getAbsolutePath());
-		File workingDir = texFile.getParentFile();
-		System.out.println("Working directory: " + workingDir);
+		
+		String compiler = MIKTEX_PATH + "miktex\\bin\\bibtex.exe";
+		ProcessBuilder pb = new ProcessBuilder(compiler, bibName);
+		File workingDir = target.getParent().toFile();
+		logger.debug("Working directory: " + workingDir);
 		pb.directory(workingDir);
 		
-		try
-		{
-			Process process = pb.start();
-			BufferedReader stdOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-			 
-            String line=null;
-
-            while((line=stdOutput.readLine()) != null) {
-                System.out.println(line);
-            }
-
-            while((line=stdError.readLine()) != null) {
-                System.err.println(line);
-            }
-
-			int exitCode = process.waitFor();
-			System.out.println("Compiler has terminated with " + exitCode);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return;
-		}
-		
+		int exitCode = runCommand(pb, LoggerFactory.getLogger("BibTeX"));
+		logger.debug("BibTeX has terminated with " + exitCode);
 	}
 
-	private static void generateTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
-    {
-    	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources");
-        templateDir.delimiterStartChar = '$';
-        templateDir.delimiterStopChar = '$';
-        
-        List<LatexColormap> lcms = Lists.newArrayList();
-        
-        File imageFolder = new File(outputFolder, "images");
-        imageFolder.mkdir();
-        
-        for (Colormap2D cm : colormaps)
-        {
-        	LatexColormap lcm = new LatexColormap(cm);
-			lcms.add(lcm);
-			
-			for (ViewType viewType : ViewType.values())
-			{
-	        	String fname = cm.getName() + "_" + viewType.toString();
-				File imgFile = new File(imageFolder, toFilename(fname));
-	        	
-				if (!imgFile.exists())
-				{
-					SimpleFilteredColormap2D filtered = new SimpleFilteredColormap2D(cm, viewType);
-					saveToFile(filtered, imgFile);
-				}
-
-	        	String relativePath = "images/" + imgFile.getName();	// TODO: make it pretty
-				lcm.addImage(relativePath);
-			} 
-			
-        }
-        
-        ST st = templateDir.getInstanceOf("Table");
-        st.add("columns", ViewType.values());
-		st.add("colormap", lcms);
-
-        File fname = new File(outputFolder, "colormaps.tex");
-        st.write(fname, ErrorManager.DEFAULT_ERROR_LISTENER);
-        System.out.println("Created file " + fname);
-    }
-    
-	private static String toFilename(String name)
+	private static File compileLaTeX(File texFile) throws Exception
 	{
-		return name
-			.replaceAll(" ", "_")
-			.replaceAll("\\.", "") 
-			.replaceAll(":", "") 
-			+ ".png";
+		String compiler = MIKTEX_PATH + "miktex\\bin\\pdflatex.exe";
+		String texPath = texFile.getAbsolutePath();
+		ProcessBuilder pb = new ProcessBuilder(compiler, "-max-print-line=220", "-synctex=-1", "-interaction=nonstopmode", texPath);
+		File workingDir = texFile.getParentFile();
+		logger.debug("Working directory: " + workingDir);
+		pb.directory(workingDir);
+		
+		Logger latexLogger = LoggerFactory.getLogger("LaTeX");
+		
+		int exitCode = runCommand(pb, latexLogger);
+		logger.debug("Compiler has terminated with " + exitCode);
+	
+		return new File(texPath.substring(0, texPath.lastIndexOf('.')) + ".pdf");
 	}
 
-	private static void saveToFile(Colormap2D map, File file) throws IOException
-    {
-    	int width = 128;
-    	int height = 128;
-		float fw = width - 1;		// width-1 -> 1.0
-		float fh = height - 1;		// height-1 -> 1.0
-		BufferedImage img = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
-    		
-		for (int y = 0; y < height; y++)
+	private static int runCommand(ProcessBuilder pb, Logger log) throws IOException, InterruptedException
+	{
+		Process process = pb.start();
+		BufferedReader stdOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+		 
+        String line=null;
+
+		while ((line = stdOutput.readLine()) != null)
 		{
-			for (int x = 0; x < width; x++)
-			{
-				Color color = map.getColor(x / fw, y / fh);
-				int rgb = color.getRGB();
-				img.setRGB(x, y, rgb);
-			}
+			log.debug(line);
 		}
-		
-		ImageIO.write(img, "png", file);
-		System.out.println("Created image " + file);
-    }
+
+		while ((line = stdError.readLine()) != null)
+		{
+			log.warn(line);
+		}
+
+		int exitCode = process.waitFor();
+		return exitCode;
+	}
 }
+

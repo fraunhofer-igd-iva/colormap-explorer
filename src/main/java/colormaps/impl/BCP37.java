@@ -59,7 +59,7 @@ public class BCP37 extends AbstractColormap2D {
 		// blue
 		float b = 145.9f - 36.3f * x + 12.7f * y;
 
-		return new Color((int) r, (int) g, (int) b);
+		return new Color(r / 255f, g / 255f, b / 255f);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class BCP37 extends AbstractColormap2D {
 
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.BCP37_CIE;
+		return ColorSpace.sRGB;
 	}
 
 	@Override

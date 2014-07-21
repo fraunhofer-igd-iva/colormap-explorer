@@ -61,7 +61,7 @@ class FourCornersAnchorColorMapParameterizable extends AbstractColormap2D {
 		double b = interpolate(upperLeft.getBlue(), upperRight.getBlue(),
 				lowerLeft.getBlue(), lowerRight.getBlue(), x, y);
 
-		return new Color((int) r, (int) g, (int) b);
+		return new Color((float)r / 255f, (float)g / 255f, (float)b / 255f);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ class FourCornersAnchorColorMapParameterizable extends AbstractColormap2D {
 	
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.RGB;
+		return ColorSpace.sRGB;
 	}
 
 	private double interpolate(double start, double end, double position) {

@@ -30,7 +30,7 @@ public interface Colormap2D
 	 * @param y the x coordinate in the range [0..1]
 	 * @return the 
 	 */
-	Color getColor(float x, float y);
+	Color getColor(double x, double y);
 
 	/**
 	 * @return the short name of the color map

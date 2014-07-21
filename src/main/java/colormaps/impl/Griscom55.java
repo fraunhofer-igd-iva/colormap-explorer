@@ -15,7 +15,7 @@ package colormaps.impl;
 public class Griscom55 extends GuoLabStyle {
 	
 	public Griscom55() {
-		super(constant_1f(0.55f), linear_ba(-4, 40, -10, -25));
+		super(constant1f(0.55f), linearBa(-4, 40, -10, -25));
 	}
 
 	@Override
@@ -26,11 +26,6 @@ public class Griscom55 extends GuoLabStyle {
 	@Override
 	public String getDescription() {
 		return "Griscom and Palmer 2013 - not really a 2D color map, maybe not Lab.";
-	}
-
-	@Override
-	public colormaps.ColorSpace getColorSpace() {
-		return colormaps.ColorSpace.GRISCOM;
 	}
 	
 }

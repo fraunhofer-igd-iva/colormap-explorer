@@ -80,7 +80,7 @@ public final class ColorMapFinder
 
 				colorMaps.add(clazz.newInstance());
 			}
-			catch (InstantiationException | IllegalAccessException e)
+			catch (Exception e)
 			{
 				logger.error("Could not run default constructor of " + clazz.getName(), e);
 			}
