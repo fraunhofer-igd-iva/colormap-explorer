@@ -29,22 +29,14 @@ import com.google.common.collect.Lists;
 public class GridSampling implements SamplingStrategy
 {
 	private int sampleRate;
-
+	private List<Point2D> pts = Lists.newArrayList();
+	
+	/**
+	 * @param resolution the resolution of the grid in rows/cols
+	 */
 	public GridSampling(int resolution)
 	{
 		this.sampleRate = resolution;
-	}
-	
-	/**
-	 * @return a order-preserving iterable for the sampling points
-	 */
-	@Override
-	public Iterable<Point2D> getPoints()
-	{
-		// TODO: convert into AbstractIterator and compute next point on-the-fly
-		
-		List<Point2D> pts = Lists.newArrayList();
-		
 		for (int y = 0; y < sampleRate; y++)
 		{
 			float my = y / (float)(sampleRate - 1);
@@ -54,7 +46,11 @@ public class GridSampling implements SamplingStrategy
 				pts.add(new Point2D.Double(mx, my));
 			}
 		}
-
+	}
+	
+	@Override
+	public Iterable<Point2D> getPoints()
+	{
 		return pts;
 	}
 

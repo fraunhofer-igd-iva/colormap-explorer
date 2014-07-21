@@ -28,23 +28,13 @@ import com.google.common.collect.Lists;
  */
 public class CircularSampling implements SamplingStrategy
 {
-	private int resolution;
+	private	List<Point2D> pts = Lists.newArrayList();
 
+	/**
+	 * @param resolution relates to the number of sampling circles
+	 */
 	public CircularSampling(int resolution)
 	{
-		this.resolution = resolution;
-	}
-	
-	/**
-	 * @return a order-preserving iterable for the sampling points
-	 */
-	@Override
-	public Iterable<Point2D> getPoints()
-	{
-		// TODO: convert into AbstractIterator and compute next point on-the-fly
-		
-		List<Point2D> pts = Lists.newArrayList();
-		
 		double cx = 0.5;
 		double cy = 0.5;
 		
@@ -74,9 +64,12 @@ public class CircularSampling implements SamplingStrategy
 			
 			dist += sampleDist;
 		}
-		
+	}
+	
+	@Override
+	public Iterable<Point2D> getPoints()
+	{
 		return pts;
 	}
-
 }
 

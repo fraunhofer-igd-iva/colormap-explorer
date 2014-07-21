@@ -25,7 +25,7 @@ $colors:{color|
 	\\hline
 	
 	$metrics:{metric|
-	 $metric$ & $colormaps:{cm|\cellcolor{$cm.colors.(metric)$\} $cm.values.(metric)$}; separator = " & "$  \\\\
+	 $metric.name$ & $colormaps:{cm|\cellcolor{$cm.colors.(metric)$\} $cm.values.(metric)$}; separator = " & "$  \\\\
 	}$
 \end{tabular}
 }

@@ -41,10 +41,12 @@ import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
+import algorithms.quality.ColorDivergenceQuantile;
 import algorithms.quality.ColorDynamicBrightest;
 import algorithms.quality.ColorDynamicDarkest;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
+import algorithms.quality.ColorDynamicWhiteContrast;
 import algorithms.quality.ColormapQuality;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
@@ -157,6 +159,10 @@ public class ConfigPanel extends JPanel
 		measures.add(new ColorDynamicDarkest(sampling));
 		measures.add(new ColorDynamicDistBlack(sampling));
 		measures.add(new ColorDynamicDistWhite(sampling));
+		measures.add(new ColorDynamicWhiteContrast(sampling));
+        measures.add(new ColorDivergenceQuantile(0.5));
+        measures.add(new ColorDivergenceQuantile(0.1));
+        measures.add(new ColorDivergenceQuantile(0.9));
 		
 		for (ColormapQuality measure : measures)
 		{

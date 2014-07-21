@@ -21,51 +21,54 @@ import java.util.List;
 
 import algorithms.sampling.SamplingStrategy;
 
-import de.fhg.igd.pcolor.CIEXYZ;
 import de.fhg.igd.pcolor.PColor;
-import de.fhg.igd.pcolor.colorspace.ViewingConditions;
-import de.fhg.igd.pcolor.util.ColorTools;
+import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
 
 /**
- * Compute global statistics for a color maps
- * @author simon
+ * Finds the brightest color, but returns the contrast to white as a quality measure.
+ * This is believed to be more relevant than dE in the whites; see
+ * WCAG 1.4.3 Contrast (Minimum): The visual presentation of text and images of
+ * text has a contrast ratio of at least 4.5:1, except for the following: (Level AA)
+ * Large Text: Large-scale text and images of large-scale text have a contrast ratio of at least 3:1;
+ * @author Simon Thum
  */
-public class ColorDynamicDistBlack extends ColorDynamic
+public class ColorDynamicWhiteContrast extends ColorDynamic
 {
-	private static final ViewingConditions VIEW_ENV = ViewingConditions.sRGB_typical_envirnonment;
-	private static final CIEXYZ BLACK = CIEXYZ.fromCIEXYZ100(0, 0, 0);
-
 	/**
 	 * @param sampling the sampling strategy to use
 	 */
-	public ColorDynamicDistBlack(SamplingStrategy sampling)
+	public ColorDynamicWhiteContrast(SamplingStrategy sampling)
 	{
 		super(sampling);
 	}
 	
+
+	/**
+	 * @return the first figure in a contrast specification (the n in n:1)
+	 */
 	@Override
 	protected double getResult(List<PColor> colors)
 	{
-		float distBlack = Float.MAX_VALUE;
-
-		for (PColor color : colors)
+		float brightestY = -Float.MAX_VALUE;
+		
+		for (PColor pcolor : colors)
 		{
-			distBlack = Math.min(distBlack, ColorTools.distance(color, BLACK, VIEW_ENV));
+			float valY = PColor.convert(pcolor, CS_CIEXYZ.instance).get(CS_CIEXYZ.Y);
+			brightestY = Math.max(brightestY, valY);
 		}
 	
-		return distBlack;
+		return 1d / brightestY;
 	}
 
 	@Override
 	public String getName()
 	{
-		return "BlackDistance";
+		return "White Contrast";
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Finds the smallest distance to black";
+		return "Finds the contrast to white";
 	}
-
 }

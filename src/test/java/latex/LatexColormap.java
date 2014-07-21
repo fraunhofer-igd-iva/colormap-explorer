@@ -65,27 +65,28 @@ public class LatexColormap
 
 	public List<String> getShortRefs()
 	{
-		List<String> refs = Lists.newArrayList();
-		
-		// we match "@" followed by 1+ alphanumeric chars, "{" a 
-		// group with 1+ alphanumeric chars, "," and anything that follows  
-		// e.g. @inproceedings{himberg1998enhancing,
-		Pattern refPattern = Pattern.compile("@\\w+\\{(\\w+),.*");
-		
-		for (String bibtex : colormap.getReferences())
-		{
-			Matcher match = refPattern.matcher(bibtex);
-			if (match.matches())
-			{
-				String shortRef = match.group(1);
-				refs.add(shortRef);
-			}
-			else
-			{
-				System.out.println("Warning: Could not match BibTeX entry: " + bibtex);
-			}
-		}
-		
-		return refs;
+		return colormap.getReferences();
+//		List<String> refs = Lists.newArrayList();
+//		
+//		// we match "@" followed by 1+ alphanumeric chars, "{" a 
+//		// group with 1+ alphanumeric chars, "," and anything that follows  
+//		// e.g. @inproceedings{himberg1998enhancing,
+//		Pattern refPattern = Pattern.compile("@\\w+\\{(\\w+),.*");
+//		
+//		for (String bibtex : colormap.getReferences())
+//		{
+//			Matcher match = refPattern.matcher(bibtex);
+//			if (match.matches())
+//			{
+//				String shortRef = match.group(1);
+//				refs.add(shortRef);
+//			}
+//			else
+//			{
+//				System.out.println("Warning: Could not match BibTeX entry: " + bibtex);
+//			}
+//		}
+//		
+//		return refs;
 	}
 }

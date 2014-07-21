@@ -17,27 +17,27 @@
 
 package algorithms.quality;
 
-import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import algorithms.JndRegionComputer;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
-import colorspaces.CIELABLch;
 
 /**
- * Computes the variance in attention steering
+ * Computes the variance in jnd region size
  * @author Martin Steiger
  */
-public class AttentionQuality implements ColormapQuality
+public class JndRegionSize implements ColormapQuality
 {
 	private final SamplingStrategy sampling;
 
 	/**
 	 * @param sampling the sampling to use
 	 */
-	public AttentionQuality(SamplingStrategy sampling)
+	public JndRegionSize(SamplingStrategy sampling)
 	{
 		this.sampling = sampling;
 	}
@@ -45,32 +45,46 @@ public class AttentionQuality implements ColormapQuality
 	@Override
 	public double getQuality(Colormap2D colormap)
 	{
-		// max L + max c (which is the same as a or b)
-		double normFac = Math.sqrt(100*100 + 150*150);
+		JndRegionComputer computer = new JndRegionComputer(colormap, sampling, 3.0);
 
 		DescriptiveStatistics stats = new DescriptiveStatistics();
-		
-		for (Point2D pt : sampling.getPoints())
+
+		for (Point2D center : computer.getPoints())
 		{
-			Color color = colormap.getColor(pt.getX(), pt.getY());
-			double[] lch = new CIELABLch().fromColor(color);
-			double attention = Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]) / normFac;
-			
-			stats.addValue(attention);
+			List<Point2D> poly = computer.getRegion(center);
+			double area = computeArea(poly, center);
+	        
+	        stats.addValue(area);
 		}
 		
-		return stats.getVariance();
+		// TODO: find a better scaling factor
+		return stats.getVariance() * 10000000.d;
+	}
+
+	private double computeArea(List<Point2D> poly, Point2D center)
+	{
+		double sum = 0;
+		for (int i = 0; i < poly.size(); i++)
+		{
+		    Point2D p0 = poly.get(i);
+		    Point2D p1 = poly.get((i + 1) % poly.size());
+		    
+			sum = sum + p0.getX() * p1.getY() - p0.getY() * p1.getX();
+		}
+
+		double area = Math.abs(sum / 2);
+		return area;
 	}
 
 	@Override
 	public String getName()
 	{
-		return "Attention";
+		return "Region Size";
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Compute the attention values based on a sampling strategy and returns the variance across the colormap";
+		return "Compute the jnd regions values based on a sampling strategy and returns the variance of the jnd region size across the colormap";
 	}
 }
