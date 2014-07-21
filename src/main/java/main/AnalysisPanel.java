@@ -16,20 +16,16 @@
 
 package main;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.hypot;
-import static java.lang.Math.sin;
-
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
+import algorithms.MedianDivergenceComputer;
+import algorithms.sampling.EvenDistributedDistancePoints;
 import colormaps.Colormap2D;
 import colormaps.ConstantColormap2D;
 
@@ -53,68 +49,6 @@ public class AnalysisPanel extends JPanel
 	
 	private Colormap2D oldColormap;
 	
-	// list of lines across which to compare as pairs of pairs of floats
-	private List<Float> makeLinePoints() {
-		List<Float> list = new ArrayList<>(lines*4);
-		Random r = new Random(123456);
-		
-		for (int i = 0; i < lines; i++)
-		{
-			float ax = r.nextFloat();
-			float ay = r.nextFloat();
-			
-			float bx = 0;
-			float by = 0;
-			
-			final float dist = r.nextFloat();
-			
-			int tries = 10;
-			while (tries >= 1) {
-				float angle = (float) (r.nextFloat() * Math.PI * 2.0);
-				
-				bx = (float) (ax + sin(angle) * dist); 
-				by = (float) (ay + cos(angle) * dist);
-				if (bx >= 0.0 && bx <= 1.0 && by >= 0.0 && by <= 1.0)
-					break;
-				tries --;
-			}
-			if (tries == 0)
-				continue;  // should not happen often, distorts scatterplot
-			list.add(ax);
-			list.add(ay);
-			list.add(bx);
-			list.add(by);
-		}
-		return list;
-	}
-	
-	double deriveMedianColormapToJNDRatio(Colormap2D colormap, Iterator<Float> floats, int lines) {
-		if (lines == 0)
-			return Double.NaN;
-		double[] ratios = new double[lines];
-	
-		for (int i = 0; i < lines; i++)
-		{
-			float ax = floats.next();
-			float ay = floats.next();
-			float bx = floats.next();
-			float by = floats.next();
-	
-			float dist = (float) hypot(ax-bx, ay-by);
-			
-			Color colorA = colormap.getColor(ax, ay);
-			Color colorB = colormap.getColor(bx, by);
-			
-			// roughly 0-100
-			double cdist = MismatchScatterplotPanel.colorDiff(colorA, colorB);
-			
-			double ratio = cdist / dist;
-			ratios[i] = ratio;
-		}
-		Arrays.sort(ratios);
-		return ratios[lines/2];
-	}
-
 	/**
 	 * Default constructor
 	 */
@@ -160,12 +94,11 @@ public class AnalysisPanel extends JPanel
 			return;
 
 		Colormap2D colormap = event.getSelection();
-		List<Float> linePoints = makeLinePoints();
-		int actualLines = linePoints.size()/4;
-		double median = deriveMedianColormapToJNDRatio(colormap, linePoints.iterator(), actualLines);
+		List<Point2D> points = Lists.newArrayList(new EvenDistributedDistancePoints(new Random(123), lines).getPoints());
+		MedianDivergenceComputer median = MedianDivergenceComputer.fromPoints(colormap, points);
 		for (MismatchScatterplotPanel panel : panels)
 		{
-			panel.setPointSource(linePoints, actualLines, median);
+			panel.setPointSource(points, points.size()/2, median);
 			panel.setColormap(colormap);
 		}
 	}

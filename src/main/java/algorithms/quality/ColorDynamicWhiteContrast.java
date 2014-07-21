@@ -23,17 +23,21 @@ import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
 
 /**
- * Finds the brightest color
- * @author simon
+ * Finds the brightest color, but returns the contrast to white as a quality measure.
+ * This is believed to be more relevant than dE in the whites; see
+ * WCAG 1.4.3 Contrast (Minimum): The visual presentation of text and images of
+ * text has a contrast ratio of at least 4.5:1, except for the following: (Level AA)
+ * Large Text: Large-scale text and images of large-scale text have a contrast ratio of at least 3:1;
+ * @author Simon Thum
  */
-public class ColorDynamicBrightest extends ColorDynamic
+public class ColorDynamicWhiteContrast extends ColorDynamic
 {
 	private float brightestY = -Float.MAX_VALUE;
 
 	/**
 	 * @param sampling the sampling strategy to use
 	 */
-	public ColorDynamicBrightest(SamplingStrategy sampling)
+	public ColorDynamicWhiteContrast(SamplingStrategy sampling)
 	{
 		super(sampling);
 	}
@@ -45,21 +49,24 @@ public class ColorDynamicBrightest extends ColorDynamic
 		brightestY = Math.max(brightestY, valY);
 	}
 
+	/**
+	 * @return the first figure in a contrast specificatrion (the n in n:1)
+	 */
 	@Override
 	protected double getResult()
 	{
-		return brightestY * 100d;
+		return 1d / brightestY;
 	}
 
 	@Override
 	public String getName()
 	{
-		return "Brightest";
+		return "Contrast against white";
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Finds the brightest color";
+		return "Finds the contrast to white";
 	}
 }
