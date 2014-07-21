@@ -37,7 +37,7 @@ public class Guo30Cone extends GuoLabStyle {
 
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList("Guo05", "Guo06inquiry", "Guo06visualization");
+		return Arrays.asList("Guo05", "Guo06visualization");
 	}
 
 }

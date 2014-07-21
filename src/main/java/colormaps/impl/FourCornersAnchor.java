@@ -158,7 +158,7 @@ public class FourCornersAnchor extends AbstractColormap2D {
 	
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList("ziegler2007visual", "bernard2013");
+		return Arrays.asList("ziegler2007visual", "bernard2013", "bernardEuroVis2014");
 	}
 
 	private double interpolate(double start, double end, double position) {

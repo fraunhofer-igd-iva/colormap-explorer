@@ -57,7 +57,7 @@ public class WainerAndFrancolini extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Wainer and Francolini 1980";
+		return "Wainer and Francolini";
 	}
 
 	@Override

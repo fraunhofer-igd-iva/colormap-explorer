@@ -17,28 +17,25 @@
 package colormaps.impl;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class BremmFig9a extends GuoLabStyle {
-	public BremmFig9a() {
-		super(constant1f(55f), linearBa(0, -55, 10, 55));
+public class BremmCIELabStretched extends GuoLabStyle {
+	public BremmCIELabStretched() {
+		super(constant1f(55f), linearBa(-10, 40, -20, 35));
 	}
 
 	@Override
 	public String getName() {
-		return "Bremm 2011 Fig. 9a";
+		return "Bremm et al. CIELab stretched";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Bremm 2011 Fig. 9a: Numbers are guessed but it seems accurate"
-				+ " and fits with description except for a shift.";
+		return "Bremm et al. 2011 Fig. 9b: Numbers are guessed and still seem slighly off.";
 	}
 
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList();
+		return Arrays.asList("Bremm2011");
 	}
-
 }

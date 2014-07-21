@@ -34,12 +34,12 @@ public class Baum2DLookupTable extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Baum et al. 2006";
+		return "Baum et al. Blue-Yellow";
 	}
 
 	@Override
 	public String getDescription() {
-		return "2D color lookup table by Baum et al. used for the fusion of multimodal images.";
+		return "2D color lookup table by Baum et al. Colors: Blue, White, Yellow, Black";
 	}
 
 	@Override

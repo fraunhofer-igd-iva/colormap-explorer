@@ -54,7 +54,7 @@ public class BaumMagentaGreen extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Baum et al. 2006: Magenta-Green (CIELab)";
+		return "Baum et al. Magenta-Green";
 	}
 
 	@Override
@@ -69,6 +69,6 @@ public class BaumMagentaGreen extends AbstractColormap2D {
 
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList("baum2006techniques", "baum2007investigation");
+		return Arrays.asList("baum2006genetic", "baum2007investigation");
 	}
 }

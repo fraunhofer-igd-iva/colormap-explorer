@@ -20,24 +20,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class BremmFig9b extends GuoLabStyle {
-	public BremmFig9b() {
-		super(constant1f(55f), linearBa(-10, 40, -20, 35));
+public class BremmCIELabRegular extends GuoLabStyle {
+	public BremmCIELabRegular() {
+		super(constant1f(55f), linearBa(0, -55, 10, 55));
 	}
 
 	@Override
 	public String getName() {
-		return "Bremm 2011 Fig. 9b";
+		return "Bremm et al. CIELab regular";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Bremm 2011 Fig. 9b: Numbers are guessed and still seem slighly off.";
+		return "Bremm et al. 2011 Fig. 9a: Numbers are guessed but it seems accurate" + " and fits with description except for a shift.";
 	}
 
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList();
+		return Arrays.asList("Bremm2011");
 	}
-
 }

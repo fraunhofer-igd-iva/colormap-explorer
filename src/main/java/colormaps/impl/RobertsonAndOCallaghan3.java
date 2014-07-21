@@ -59,7 +59,7 @@ public class RobertsonAndOCallaghan3 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Robertson and OCallaghan 1988 Blue-Pink";
+		return "Robertson and OCallaghan 3";
 	}
 
 	@Override
