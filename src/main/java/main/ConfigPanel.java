@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
+import algorithms.quality.ColorDivergenceQuantile;
 import algorithms.quality.ColorDynamicBrightest;
 import algorithms.quality.ColorDynamicDarkest;
 import algorithms.quality.ColorDynamicDistBlack;
@@ -62,6 +63,7 @@ import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_CIECAM02;
 import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
+
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 import events.TileSelectionEvent;
@@ -158,6 +160,9 @@ public class ConfigPanel extends JPanel
 		measures.add(new ColorDynamicDistBlack(sampling));
 		measures.add(new ColorDynamicDistWhite(sampling));
 		measures.add(new ColorDynamicWhiteContrast(sampling));
+        measures.add(new ColorDivergenceQuantile(0.5));
+        measures.add(new ColorDivergenceQuantile(0.1));
+        measures.add(new ColorDivergenceQuantile(0.9));
 		
 		for (ColormapQuality measure : measures)
 		{

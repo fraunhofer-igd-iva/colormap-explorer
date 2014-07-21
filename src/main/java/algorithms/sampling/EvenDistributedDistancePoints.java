@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014 Fraunhofer IGD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package algorithms.sampling;
 
 import static java.lang.Math.cos;
@@ -15,14 +31,13 @@ import java.util.Random;
  */
 public class EvenDistributedDistancePoints implements SamplingStrategy {
 
-	private final Random _random;
+	private final Random random;
 	
-	private int _countdown;
+	private int countdown;
 	
 	public EvenDistributedDistancePoints(Random random, int number) {
-		super();
-		this._random = random;
-		this._countdown = number;
+		this.random = random;
+		this.countdown = number;
 	}
 
 	@Override
@@ -32,21 +47,21 @@ public class EvenDistributedDistancePoints implements SamplingStrategy {
 			public Iterator<Point2D> iterator() {
 				return new Iterator<Point2D>() {
 					
+					private List<Float> buffer;
+					private boolean partial;
+
 					@Override
 					public void remove() {
 						throw new UnsupportedOperationException();
 					}
 					
-					List<Float> buffer = null;
-					
-					boolean partial = false;
 					
 					@Override
 					public Point2D next() {
 						if (!hasNext())
 							throw new IllegalStateException("iterator exhausted");
 
-						_countdown--;
+						countdown--;
 						
 						if (buffer == null) {
 							partial = false;
@@ -65,7 +80,7 @@ public class EvenDistributedDistancePoints implements SamplingStrategy {
 					
 					@Override
 					public boolean hasNext() {
-						return _countdown > 0;
+						return countdown > 0;
 					}
 				};
 			}
@@ -76,17 +91,17 @@ public class EvenDistributedDistancePoints implements SamplingStrategy {
 	private List<Float> makePair() {
 		List<Float> list = new ArrayList<>(4);
 		
-		float ax = _random.nextFloat();
-		float ay = _random.nextFloat();
+		float ax = random.nextFloat();
+		float ay = random.nextFloat();
 		
 		float bx = 0;
 		float by = 0;
 		
-		final float dist = _random.nextFloat();
+		final float dist = random.nextFloat();
 		
 		int tries = 20;
 		while (tries >= 1) {
-			float angle = (float) (_random.nextFloat() * Math.PI * 2.0);
+			float angle = (float) (random.nextFloat() * Math.PI * 2.0);
 			
 			bx = (float) (ax + sin(angle) * dist); 
 			by = (float) (ay + cos(angle) * dist);

@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 
 import algorithms.MedianDivergenceComputer;
 import colormaps.Colormap2D;
+
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
@@ -56,7 +57,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 
 	private Colormap2D colormap;
 
-	private int lines = 0;
+	private int lines;
 	
 	private boolean useLog;
 
@@ -87,10 +88,10 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	/**
 	 * @param num the number of points
 	 */
-	public void setPointSource(List<Point2D> points, int num, MedianDivergenceComputer stats)
+	public void setPointSource(List<Point2D> newPoints, int num, MedianDivergenceComputer stats)
 	{
 		this.lines = num;
-		this.points = points;
+		this.points = newPoints;
 		this.ratioStats = stats;
 	}
 	
@@ -164,7 +165,10 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			yc = getYPos(maxY, 1, upperQuantile/medianRatio);
 			g.drawLine(0, (int)maxY, (int)maxX, yc);
 			
-			g.drawString(String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f", medianRatio, lowerQuantile, upperQuantile), 50, 50);
+			String text = String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f", 
+					medianRatio, lowerQuantile, upperQuantile);
+			
+			g.drawString(text, 50, 50);
 		}
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAhint);
