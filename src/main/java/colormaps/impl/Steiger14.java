@@ -35,7 +35,7 @@ public class Steiger14 extends FileImageColormap
 	 */
 	public Steiger14() throws IOException
 	{
-		super("/steiger_lab_tuerkis.png");
+		super("/images/steiger_lab_tuerkis.png");
 	}
 
 	@Override

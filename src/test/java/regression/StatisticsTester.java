@@ -34,7 +34,7 @@ public class StatisticsTester {
 
 		BufferedImageAnalyzer
 				.analyzeBufferedImage(
-						"src/main/java/colormapRegression/images/LespinasGreenPurple.png",
+						"/images/LespinasGreenPurple.png",
 						"output.txt");
 	}
 
