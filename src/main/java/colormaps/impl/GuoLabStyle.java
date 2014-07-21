@@ -47,7 +47,7 @@ public abstract class GuoLabStyle extends PColorBased
 		this.chromaFunc = chromaFunc;
 	}
 	
-	public static Function<Float, Float> constant_1f(final float constant) {
+	public static Function<Float, Float> constant1f(final float constant) {
 		return new Function<Float, Float>() {
 			
 			@Override
@@ -97,17 +97,17 @@ public abstract class GuoLabStyle extends PColorBased
 		};
 	}
 
-	public static Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>> linear_ba(
-			final float x_offset,
-			final float x_factor,
-			final float y_offset,
-			final float y_factor) {
+	public static Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>> linearBa(
+			final float xOffset,
+			final float xFactor,
+			final float yOffset,
+			final float yFactor) {
 		return new Function<Map.Entry<Float,Float>, Map.Entry<Float,Float>>() {
 			@Override
 			public Entry<Float, Float> apply(Entry<Float, Float> input) {
 				return new AbstractMap.SimpleEntry<>(
-						y_offset + input.getValue() * y_factor,
-						x_offset + input.getKey() * x_factor);
+						yOffset + input.getValue() * yFactor,
+						xOffset + input.getKey() * xFactor);
 			}
 		};
 	}
@@ -123,4 +123,10 @@ public abstract class GuoLabStyle extends PColorBased
 		Map.Entry<Float, Float> ab = chromaFunc.apply(new AbstractMap.SimpleEntry<>(nx, ny));
 		return PColor.create(CS_CIELab.instance, new float[] { light, ab.getKey(), ab.getValue() });
 	}
+	
+	@Override
+	public colormaps.ColorSpace getColorSpace() {
+		return colormaps.ColorSpace.CIE_Lab;
+	}
+	
 }

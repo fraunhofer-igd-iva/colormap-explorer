@@ -1,7 +1,8 @@
-\documentclass[landscape]{article}
-\usepackage[landscape]{geometry}   % use landscape format 
+\documentclass{article}
 \usepackage{graphicx}
+\usepackage{geometry}
 \usepackage{array}
+\usepackage{rotating}
 
 % Manually adjust page margins to gain more space for the table
 \geometry{a4paper, top=15mm, left=10mm, right=15mm, bottom=25mm,headsep=10mm, footskip=12mm}
@@ -13,11 +14,13 @@
 
 \begin{document}
 
-\section*{Appendix}
+%\section*{Appendix}
 
 % The first column is a paragraph (allows for linebreaks with \newline) - all others are c
+{
+\renewcommand{\tabcolsep}{0.5mm}
 \begin{tabular}{p{7cm}|c|$columns:{ignored|c}$}
-	Title & Colorspace & $columns:{c|$c$}; separator = " & "$ \\\\
+	Title & Space & $columns:{c|$c$}; separator = " & "$ \\\\
 	\\hline
 	
     $colormap:{cm|$cm.name$ $\\$
@@ -25,11 +28,26 @@
     		\\cite{$cm.shortRefs:{ref|$ref$}; separator = ","$\} $\\$ 
     	$endif$ $\\$
     \\newline 
-    \\scriptsize $cm.desc$ & $cm.colorspace$ & 
+    \\scriptsize $cm.desc$ & 
+        $cm.colorspace$ & 
     	$cm.images:{img| \\topincludegraphics[height=1cm]{$img$\} }; separator = "& \n"$
     }; separator = "\\\\ \n\\hline \n"$
     
 \end{tabular}
+}
+
+\newpage
+
+\begin{tabular}{l|$colormap:{ignored|c}; separator = "|"$}
+	Title & $colormap:{cm|\begin{turn\}{70\} $cm.name$ \end{turn\}}; separator = " & "$  \\\\
+	\\hline
+	
+	$metrics:{metric|
+	 $metric.name$ & $colormap:{cm|$metric.compute($cm.colormap$)$}; separator = " & "$  \\\\
+	
+\end{tabular}
+
+
 
 \bibliographystyle{alpha}
 

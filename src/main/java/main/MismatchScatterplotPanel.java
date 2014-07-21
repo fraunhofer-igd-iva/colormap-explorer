@@ -20,6 +20,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -38,21 +40,37 @@ import de.fhg.igd.pcolor.util.ColorTools;
  */
 public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 {
+	private static final Color NORMAL_DOT_COLOR = new Color(0, 0, 0, 0.1f);
+
+	private static final Color MEDIAN_LINE_COLOR = new Color(0, 0, 0, 0.8f);
+
+	private static final Color HELPER_LINE_COLOR = new Color(0, 0, 0, 0.5f);
+
+	private static final Color BORDERLINE_DOT_COLOR = new Color(1,0,0,0.5f);
+	
+
 	private static final long serialVersionUID = 4842610449905121603L;
+
+	private static ViewingConditions comparisonVc = ViewingConditions.sRGB_typical_envirnonment;
 
 	private Colormap2D colormap;
 
-	private int points = 10000;
+	private int lines = 0;
 	
-	private boolean log = false;
+	private boolean useLog;
+
+	private List<Float> floats;
+
+	private double medianRatio;
 	
 	/**
 	 * @param colormap the colormap for the points
+	 * @param useLog use logarithmic scale
 	 */
-	public MismatchScatterplotPanel(Colormap2D colormap, boolean log)
+	public MismatchScatterplotPanel(Colormap2D colormap, boolean useLog)
 	{
 		this.colormap = colormap;
-		this.log = log;
+		this.useLog = useLog;
 	}
 
 	/**
@@ -66,14 +84,14 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	}
 	
 	/**
-	 * @param points the number of points
+	 * @param num the number of points
 	 */
-	public void setPointNumber(int points)
+	public void setPointSource(List<Float> floats, int num, double medianRatio)
 	{
-		this.points = points;
+		this.lines = num;
+		this.floats = floats;
+		this.medianRatio = medianRatio;
 	}
-	
-	static ViewingConditions comparisonVc = ViewingConditions.sRGB_typical_envirnonment;
 	
 	@Override
 	protected void paintComponent(Graphics g1)
@@ -81,7 +99,6 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
 		
-		Random r = new Random(123456);
 		int dia = 3;
 
 		double maxX = getWidth() - dia;
@@ -89,43 +106,83 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 
 		Object oldAAhint = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		Iterator<Float> flt = floats.iterator();
 
-		for (int i = 0; i < points; i++)
+		for (int i = 0; i < lines; i++)
 		{
-			float ax = r.nextFloat();
-			float ay = r.nextFloat();
+			float ax = flt.next();
+			float ay = flt.next();
+			float bx = flt.next();
+			float by = flt.next();
+			float dist = (float) Math.hypot(ax-bx, ay-by);
 			
-			float bx = r.nextFloat();
-			float by = r.nextFloat();
-			
-			// distance on color map - 0 to 1
-			double mapdistance = Math.hypot(bx - ax, by - ay) / Math.sqrt(2.0);
 			
 			Color colorA = colormap.getColor(ax, ay);
 			Color colorB = colormap.getColor(bx, by);
 			
 			// roughly 0-100
-			double cdist = colorDiff(colorA, colorB) / 120f;
+			double cdist = colorDiff(colorA, colorB);
 			
-			g.setColor(new Color(0, 0, 0, 0.1f));
-			int xCoord = (int)(maxX * mapdistance);
-			int yCoord;
-			if (log)
-				yCoord = (int)((Math.log(cdist / mapdistance)/3)*maxY + (maxY/2));
+			// make less relevant dots red
+			if (cdist < 1.0 || dist == 0 || dist > 1.0f)
+				g.setColor(BORDERLINE_DOT_COLOR);
 			else
-				yCoord = (int)(maxY * cdist);
+				g.setColor(NORMAL_DOT_COLOR);
+			
+			// normalize
+			cdist /= medianRatio;
+			
+			int xCoord = (int)(maxX * dist);
+			int yCoord = getYPos(maxY, dist, cdist);
 			g.fillOval(xCoord, yCoord, dia, dia);
 		}
 		
+		
+		if (useLog) {
+			g.setColor(MEDIAN_LINE_COLOR);
+			int yc = getYPos(maxY, 1, 1);
+			g.drawLine(0, yc, (int)maxX, yc);
+
+			g.setColor(HELPER_LINE_COLOR);
+			yc = getYPos(maxY, 1, 3f/2f);
+			g.drawLine(0, yc, (int)maxX, yc);
+			yc = getYPos(maxY, 1, 2f/3f);
+			g.drawLine(0, yc, (int)maxX, yc);
+		} else {
+			g.setColor(MEDIAN_LINE_COLOR);
+			int yc = getYPos(maxY, 1, 1);
+			g.drawLine(0, (int)maxY, (int)maxX, yc);
+			
+			g.setColor(HELPER_LINE_COLOR);
+			yc = getYPos(maxY, 1, 3f/2f);
+			g.drawLine(0, (int)maxY, (int)maxX, yc);
+			yc = getYPos(maxY, 1, 2f/3f);
+			g.drawLine(0, (int)maxY, (int)maxX, yc);
+			
+			g.drawString(String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f", medianRatio, medianRatio * 2f/3f, medianRatio * 3f/2f), 50, 50);
+		}
+
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAhint);
 	}
+
+	private int getYPos(double maxY, float dist, double cdist) {
+		int yCoord;
+		if (useLog)
+			yCoord = (int)((maxY/2) - (Math.log(cdist / dist)/Math.log(4))*maxY);
+		else
+			yCoord = (int)(maxY - (maxY * cdist * 2 / 3));
+		return yCoord;
+	}
 	
-	private PColor convert(Color color) {
+	public static PColor convert(Color color) {
 		return PColor.create(CS_sRGB.instance, color.getColorComponents(new float[3]));
 	}
 	
-	private double colorDiff(Color c1, Color c2) {
+	public static double colorDiff(Color c1, Color c2) {
 		return ColorTools.distance(convert(c1), convert(c2), comparisonVc);
 	}
+	
+
 
 }

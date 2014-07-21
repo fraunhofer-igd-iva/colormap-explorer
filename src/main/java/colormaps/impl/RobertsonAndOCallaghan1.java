@@ -68,7 +68,7 @@ public class RobertsonAndOCallaghan1 extends AbstractColormap2D {
 
 	@Override
 	public ColorSpace getColorSpace() {
-		return ColorSpace.RGB;
+		return ColorSpace.sRGB;
 	}
 	
 	@Override

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -33,11 +34,17 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STRawGroupDir;
 import org.stringtemplate.v4.misc.ErrorManager;
 
+import algorithms.JndRegionComputer;
 import colormaps.Colormap2D;
+import colormaps.impl.BCP37;
+import colormaps.impl.FourCornersAnchor;
+import colormaps.impl.Himberg98;
+import colormaps.impl.TeulingFig2;
 import colormaps.transformed.SimpleFilteredColormap2D;
 import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Generates LaTeX table output for a list of colormaps 
@@ -52,19 +59,24 @@ public final class LatexGen
 	
 	public static void main(String[] args) throws IOException
 	{
-//		List<Colormap2D> colorMaps = Lists.newArrayList();
-//		colorMaps.add(new BCR37());
-//		colorMaps.add(new Himberg98RGB());
+		List<Colormap2D> colorMaps = Lists.newArrayList();
+		colorMaps.add(new BCP37());
+		colorMaps.add(new Himberg98());
+		colorMaps.add(new FourCornersAnchor());
+		colorMaps.add(new TeulingFig2());
 		
-		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+//		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
-		generateTable(colorMaps, output);
+//		generateTable(colorMaps, output);
 		
-		generateBibTex(colorMaps, output);
+		generateMetricTable(colorMaps, output);
 		
-		compileLaTeX(new File(output, "colormaps.tex"));
+//		generateBibTex(colorMaps, output);
+		
+//		compileLaTeX(new File(output, "colormaps.tex"));
+		compileLaTeX(new File(output, "metric_table.tex"));
 	}
 	
 	private static void generateBibTex(List<Colormap2D> colormaps, File folder)
@@ -167,12 +179,91 @@ public final class LatexGen
         System.out.println("Created file " + fname);
     }
     
+
+	private static void generateMetricTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
+    {
+    	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources");
+        templateDir.delimiterStartChar = '$';
+        templateDir.delimiterStopChar = '$';
+        
+        List<MetricColormap> mcms = Lists.newArrayList();
+        
+        Map<Colormap2D, Integer> jndQuality = computeJndMetrics(colormaps);
+        
+        for (Colormap2D cm : colormaps)
+        {
+        	String fname = cm.getName() + "_" + ViewType.REAL.toString();
+        	String relativePath = "images/" + toFilename(fname);	// TODO: make it pretty
+
+        	MetricColormap mcm = new MetricColormap(cm, relativePath);
+			mcms.add(mcm);
+			
+			mcm.addMetric(Metric.JND_POINT_COUNT, jndQuality.get(cm));
+        }
+
+		List<LatexColor> colors = Lists.newArrayList();
+		
+		ColorRampBGLY colorramp = new ColorRampBGLY();
+		
+		for (int i=0; i<=100; i++)
+		{
+			double val = 1.0 - i / 100d;
+			
+			Color col = colorramp.getColor(val);
+			
+			colors.add(new LatexColor(col, "quality" + i));
+		}
+
+        ST st = templateDir.getInstanceOf("MetricTable");
+        st.add("metrics", Metric.values());
+		st.add("colors", colors);
+		st.add("colormaps", mcms);
+
+        File fname = new File(outputFolder, "metric_table.tex");
+        st.write(fname, ErrorManager.DEFAULT_ERROR_LISTENER);
+        System.out.println("Created file " + fname);
+    }
+	
+	private static Map<Colormap2D, Integer> computeJndMetrics(List<Colormap2D> colormaps)
+	{
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+		
+		Map<Colormap2D, Integer> jndPointCount = Maps.newHashMap();
+        for (Colormap2D cm : colormaps)
+        {
+        	JndRegionComputer jndRegionComp = new JndRegionComputer(cm, 5.0);
+        	int cnt = jndRegionComp.getPoints().size();
+        	
+        	if (cnt > max)
+        		max = cnt;
+        	
+        	if (cnt < min)
+        		min = cnt;
+        	
+        	jndPointCount.put(cm, Integer.valueOf(cnt));
+        }
+        
+		Map<Colormap2D, Integer> result = Maps.newHashMap();
+
+		double range = max - min;
+        for (Colormap2D cm : colormaps)
+        {
+        	int val = jndPointCount.get(cm);
+        	double quality = (val - min) / range;
+        	int percent = (int)(quality * 100d);
+			result.put(cm, Integer.valueOf(percent));
+        }
+        
+        return result;
+	}
+    
 	private static String toFilename(String name)
 	{
 		return name
-			.replaceAll(" ", "_")
 			.replaceAll("\\.", "") 
 			.replaceAll(":", "") 
+			.replaceAll("\\W", "_")	// NOT a number, letter or underscore 
 			+ ".png";
 	}
 

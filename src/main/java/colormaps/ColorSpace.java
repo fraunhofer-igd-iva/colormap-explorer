@@ -18,5 +18,5 @@ package colormaps;
 
 public enum ColorSpace 
 {
-	RGB, HSV, BCP37_CIE, CONSTANT_GRAY, GUO_2005_GAUSS, NONE, GUO_2005_CONE, CIE_Lab, GRISCOM
+	NONE, sRGB, HSV, CIE_XYZ, CIE_Lab
 }

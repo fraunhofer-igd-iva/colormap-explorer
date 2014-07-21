@@ -14,13 +14,32 @@
  * limitations under the License.
  */
 
-package colormaps;
+package colormaps.impl;
 
-public interface ColormapQuality 
+import java.util.Collections;
+import java.util.List;
+
+public class LuoUCSTest extends GuoLabStyle
 {
-	double getQuality(Colormap2D colormap2d);
+	public LuoUCSTest()
+	{
+		super(constant1f(70f), linearAB(20, 80, 30, -60));
+	}
 
-	String getName();
+	@Override
+	public String getName()
+	{
+		return "Test Scale like Luo UCS paper fig. 3a";
+	}
 
-	String getDescription();
+	@Override
+	public String getDescription()
+	{
+		return "CAM02-UCS, Luo 2006 ";
+	}
+
+	@Override
+	public List<String> getReferences() {
+		return Collections.singletonList("Luo06");
+	}
 }

@@ -16,6 +16,7 @@
 
 package colormaps;
 
+import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,4 +49,13 @@ public abstract class AbstractColormap2D implements Colormap2D {
 	{
 		return Collections.emptyList();
 	}
+	
+	@Override
+	public Color getColor(double x, double y)
+	{
+		return getColor((float)x, (float)y);
+	}
+	
+	// TODO: remove by fixing all implementations
+	protected abstract Color getColor(float x, float y);
 }
