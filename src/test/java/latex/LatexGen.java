@@ -26,6 +26,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import main.ColorMapFinder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,18 +55,18 @@ public final class LatexGen
 	
 	public static void main(String[] args) throws Exception
 	{
-		List<Colormap2D> colorMaps = Lists.newArrayList();
-		colorMaps.add(new BCP37());
-		colorMaps.add(new Himberg98());
-		colorMaps.add(new FourCornersAnchor());
-		colorMaps.add(new TeulingFig2());
+//		List<Colormap2D> colorMaps = Lists.newArrayList();
+//		colorMaps.add(new BCP37());
+//		colorMaps.add(new Himberg98());
+//		colorMaps.add(new FourCornersAnchor());
+//		colorMaps.add(new TeulingFig2());
 		
-//		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
 
-//		createDecomposedTable(colorMaps, output);
+		createDecomposedTable(colorMaps, output);
 		createQualityTable(colorMaps, output);
 	}
 

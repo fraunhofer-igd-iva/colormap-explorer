@@ -17,6 +17,8 @@
 
 package algorithms.quality;
 
+import java.util.List;
+
 import algorithms.sampling.SamplingStrategy;
 
 import de.fhg.igd.pcolor.PColor;
@@ -32,8 +34,6 @@ import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
  */
 public class ColorDynamicWhiteContrast extends ColorDynamic
 {
-	private float brightestY = -Float.MAX_VALUE;
-
 	/**
 	 * @param sampling the sampling strategy to use
 	 */
@@ -42,26 +42,28 @@ public class ColorDynamicWhiteContrast extends ColorDynamic
 		super(sampling);
 	}
 	
-	@Override
-	protected void addColor(PColor pcolor)
-	{
-		float valY = PColor.convert(pcolor, CS_CIEXYZ.instance).get(CS_CIEXYZ.Y);
-		brightestY = Math.max(brightestY, valY);
-	}
 
 	/**
-	 * @return the first figure in a contrast specificatrion (the n in n:1)
+	 * @return the first figure in a contrast specification (the n in n:1)
 	 */
 	@Override
-	protected double getResult()
+	protected double getResult(List<PColor> colors)
 	{
+		float brightestY = -Float.MAX_VALUE;
+		
+		for (PColor pcolor : colors)
+		{
+			float valY = PColor.convert(pcolor, CS_CIEXYZ.instance).get(CS_CIEXYZ.Y);
+			brightestY = Math.max(brightestY, valY);
+		}
+	
 		return 1d / brightestY;
 	}
 
 	@Override
 	public String getName()
 	{
-		return "Contrast against white";
+		return "White Contrast";
 	}
 
 	@Override

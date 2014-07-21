@@ -20,6 +20,9 @@ package algorithms.quality;
 import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Point2D;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
@@ -47,16 +50,16 @@ public abstract class ColorDynamic implements ColormapQuality
 	@Override
 	public double getQuality(Colormap2D colormap)
 	{
+		List<PColor> colors = Lists.newArrayList();
 		for (Point2D pt : sampling.getPoints())
 		{
 			Color color = colormap.getColor(pt.getX(), pt.getY());
 			PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
-			addColor(pcolor);
+			colors.add(pcolor);
 		}
 		
-		return getResult();
+		return getResult(colors);
 	}
 
-	protected abstract double getResult();
-	protected abstract void addColor(PColor pcolor);
+	protected abstract double getResult(List<PColor> colors);
 }

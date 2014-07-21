@@ -16,6 +16,7 @@
 package latex;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 import algorithms.quality.ColormapQuality;
@@ -30,7 +31,7 @@ import com.google.common.collect.Maps;
 public class MetricColormap
 {
 	private final Colormap2D colormap;
-	private final Map<ColormapQuality, Double> metrics = Maps.newHashMap();
+	private final Map<ColormapQuality, String> metrics = Maps.newHashMap();
 	private final Map<ColormapQuality, String> colors = Maps.newHashMap();
 	private final String imagePath;
 
@@ -52,11 +53,11 @@ public class MetricColormap
 
 	public void addMetric(ColormapQuality metric, Double quality, Integer points)
 	{
-		metrics.put(metric, quality);
+		metrics.put(metric, String.format(Locale.ENGLISH, "%.1f", quality));
 		colors.put(metric, "quality" + points);
 	}
 
-	public Map<ColormapQuality, Double> getValues()
+	public Map<ColormapQuality, String> getValues()
 	{
 		return Collections.unmodifiableMap(metrics);
 	}

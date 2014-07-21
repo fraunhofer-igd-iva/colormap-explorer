@@ -17,6 +17,8 @@
 
 package algorithms.quality;
 
+import java.util.List;
+
 import algorithms.sampling.SamplingStrategy;
 
 import de.fhg.igd.pcolor.CIEXYZ;
@@ -33,8 +35,6 @@ public class ColorDynamicDistWhite extends ColorDynamic
 	private static final ViewingConditions VIEW_ENV = ViewingConditions.sRGB_typical_envirnonment;
 	private static final CIEXYZ WHITE = CIEXYZ.fromCIEXYZ100(100, 100, 100);
 
-	private float distWhite = Float.MAX_VALUE;
-
 	/**
 	 * @param sampling the sampling strategy to use
 	 */
@@ -43,15 +43,17 @@ public class ColorDynamicDistWhite extends ColorDynamic
 		super(sampling);
 	}
 	
-	@Override
-	protected void addColor(PColor pcolor)
-	{
-		distWhite = Math.min(distWhite, ColorTools.distance(pcolor, WHITE, VIEW_ENV));
-	}
 
 	@Override
-	protected double getResult()
+	protected double getResult(List<PColor> colors)
 	{
+		float distWhite = Float.MAX_VALUE;
+
+		for (PColor pcolor : colors)
+		{
+			distWhite = Math.min(distWhite, ColorTools.distance(pcolor, WHITE, VIEW_ENV));
+		}
+		
 		return distWhite;
 	}
 

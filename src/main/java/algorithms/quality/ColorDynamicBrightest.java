@@ -17,6 +17,8 @@
 
 package algorithms.quality;
 
+import java.util.List;
+
 import algorithms.sampling.SamplingStrategy;
 
 import de.fhg.igd.pcolor.PColor;
@@ -28,8 +30,6 @@ import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
  */
 public class ColorDynamicBrightest extends ColorDynamic
 {
-	private float brightestY = -Float.MAX_VALUE;
-
 	/**
 	 * @param sampling the sampling strategy to use
 	 */
@@ -39,15 +39,15 @@ public class ColorDynamicBrightest extends ColorDynamic
 	}
 	
 	@Override
-	protected void addColor(PColor pcolor)
+	protected double getResult(List<PColor> colors)
 	{
-		float valY = PColor.convert(pcolor, CS_CIEXYZ.instance).get(CS_CIEXYZ.Y);
-		brightestY = Math.max(brightestY, valY);
-	}
+		float brightestY = -Float.MAX_VALUE;
 
-	@Override
-	protected double getResult()
-	{
+		for (PColor color : colors)
+		{
+			float valY = PColor.convert(color, CS_CIEXYZ.instance).get(CS_CIEXYZ.Y);
+			brightestY = Math.max(brightestY, valY);
+		}
 		return brightestY * 100d;
 	}
 

@@ -16,6 +16,7 @@
 
 package algorithms.quality;
 
+import java.util.Locale;
 import java.util.Random;
 
 import algorithms.MedianDivergenceComputer;
@@ -42,8 +43,8 @@ public class ColorDivergenceQuantile implements ColormapQuality {
 
 	private String quantileName() {
 		if (quantile == 0.5)
-			return "median ";
-		else return String.format("%.0f%%-quantile of ", 100*quantile);
+			return "median";
+		else return String.format(Locale.ENGLISH, "%.1f-quant.", quantile);
 	}
 
 	@Override
@@ -54,12 +55,12 @@ public class ColorDivergenceQuantile implements ColormapQuality {
 
 	@Override
 	public String getName() {
-		return quantileName() + " color appearance divergence ratio";
+		return "Color div. (" + quantileName() + ")";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Color appearance divergence ratio; higher ratio means " +
+		return "The " + quantileName() + " color appearance divergence ratio; higher ratio means " +
 		"higher visual change of color appearence for a given color map distance.";
 	}
 

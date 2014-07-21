@@ -89,8 +89,7 @@ public final class LatexTableQuality
         
             for (Colormap2D cm : colormaps)
             {
-            	// TODO: find a better way to truncate
-            	double quality = mapQualities.get(cm).intValue();
+            	double quality = mapQualities.get(cm);
             	Integer points = mapPoints.get(cm);
 				mcms.get(cm).addMetric(measure, quality, points);
 	        }

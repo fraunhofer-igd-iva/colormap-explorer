@@ -45,7 +45,7 @@ public class JndRegionSize implements ColormapQuality
 	@Override
 	public double getQuality(Colormap2D colormap)
 	{
-		JndRegionComputer computer = new JndRegionComputer(colormap, sampling, 5.0);
+		JndRegionComputer computer = new JndRegionComputer(colormap, sampling, 3.0);
 
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 
