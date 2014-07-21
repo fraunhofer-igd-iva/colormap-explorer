@@ -31,6 +31,7 @@ import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
 import algorithms.quality.ColorExploitation;
 import algorithms.quality.ColormapQuality;
+import algorithms.quality.JndRegionSize;
 import algorithms.sampling.CircularSampling;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
@@ -72,6 +73,7 @@ public final class LatexTableQuality
 
         List<ColormapQuality> measures = Lists.newArrayList();
         measures.add(new ColorExploitation(sampling));
+        measures.add(new JndRegionSize(sampling));
 		measures.add(new ColorDynamicDistBlack(sampling));
         measures.add(new ColorDynamicDistWhite(sampling));
 
