@@ -103,7 +103,7 @@ public class ColorMapExplorer extends JFrame
 		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		BibTeXDatabase database = new BibTeXDatabase();
-		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/colorBib.bib"))
+		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib"))
 		{
 			BibTeXParser bibtexParser = new BibTeXParser();
 			InputStreamReader reader = new InputStreamReader(bibtex, Charsets.ISO_8859_1);
