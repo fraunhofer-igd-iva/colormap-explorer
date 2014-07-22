@@ -35,7 +35,7 @@ public class CubeDiagonalCuttingRedCyan extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "RGB Cube Diagonal Cutting 2";
+		return "Cube Diagonal Cut B-C-Y-R";
 	}
 
 	@Override

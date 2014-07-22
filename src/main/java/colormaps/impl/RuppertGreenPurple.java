@@ -7,9 +7,17 @@ import java.util.List;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
+/**
+ * 
+ * @author jubernar
+ * @deprecated Zwei mal Ruppert brauchen wir fürs Paper nicht, da die beiden
+ *             colormaps nicht für unsere Tasks geeignet sind. die Orange Blue
+ *             schneidet etwas besser ab, daher bleibt die drin.
+ * 
+ */
 public class RuppertGreenPurple extends AbstractColormap2D {
 
-	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(new Color(59,197,85), new Color(128,128,128), new Color(128,128,128), new Color(181,75,160));
+	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(new Color(59, 197, 85), new Color(128, 128, 128), new Color(128, 128, 128), new Color(181, 75, 160));
 
 	@Override
 	public Color getColor(float x, float y) {
@@ -20,7 +28,7 @@ public class RuppertGreenPurple extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Ruppert et al. Green Purple";
+		return "Ruppert et al. G-P";
 	}
 
 	@Override

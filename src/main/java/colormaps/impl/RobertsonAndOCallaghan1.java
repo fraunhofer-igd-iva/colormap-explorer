@@ -58,7 +58,7 @@ public class RobertsonAndOCallaghan1 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Robertson and OCallaghan 1";
+		return "Robertson and OCallaghan";
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class RobertsonAndOCallaghan1 extends AbstractColormap2D {
 	public ColorSpace getColorSpace() {
 		return ColorSpace.sRGB;
 	}
-	
+
 	@Override
 	public List<String> getReferences() {
 		return Collections.singletonList("robertson1986generation");
@@ -100,32 +100,22 @@ public class RobertsonAndOCallaghan1 extends AbstractColormap2D {
 
 		colorMaps = new FourCornersAnchorColorMapParameterizable[3][3];
 
-		colorMaps[0][0] = new FourCornersAnchorColorMapParameterizable(nullnull, nulleins,
-				einsnull, einseins);
-		colorMaps[1][0] = new FourCornersAnchorColorMapParameterizable(nulleins, nullzwo,
-				einseins, einszwo);
-		colorMaps[2][0] = new FourCornersAnchorColorMapParameterizable(nullzwo, nulldrei,
-				einszwo, einsdrei);
-		colorMaps[0][1] = new FourCornersAnchorColorMapParameterizable(einsnull, einseins,
-				zwonull, zwoeins);
-		colorMaps[1][1] = new FourCornersAnchorColorMapParameterizable(einseins, einszwo,
-				zwoeins, zwozwo);
-		colorMaps[2][1] = new FourCornersAnchorColorMapParameterizable(einszwo, einsdrei,
-				zwozwo, zwodrei);
-		colorMaps[0][2] = new FourCornersAnchorColorMapParameterizable(zwonull, zwoeins,
-				dreinull, dreieins);
-		colorMaps[1][2] = new FourCornersAnchorColorMapParameterizable(zwoeins, zwozwo,
-				dreieins, dreizwo);
-		colorMaps[2][2] = new FourCornersAnchorColorMapParameterizable(zwozwo, zwodrei,
-				dreizwo, dreidrei);
+		colorMaps[0][0] = new FourCornersAnchorColorMapParameterizable(nullnull, nulleins, einsnull, einseins);
+		colorMaps[1][0] = new FourCornersAnchorColorMapParameterizable(nulleins, nullzwo, einseins, einszwo);
+		colorMaps[2][0] = new FourCornersAnchorColorMapParameterizable(nullzwo, nulldrei, einszwo, einsdrei);
+		colorMaps[0][1] = new FourCornersAnchorColorMapParameterizable(einsnull, einseins, zwonull, zwoeins);
+		colorMaps[1][1] = new FourCornersAnchorColorMapParameterizable(einseins, einszwo, zwoeins, zwozwo);
+		colorMaps[2][1] = new FourCornersAnchorColorMapParameterizable(einszwo, einsdrei, zwozwo, zwodrei);
+		colorMaps[0][2] = new FourCornersAnchorColorMapParameterizable(zwonull, zwoeins, dreinull, dreieins);
+		colorMaps[1][2] = new FourCornersAnchorColorMapParameterizable(zwoeins, zwozwo, dreieins, dreizwo);
+		colorMaps[2][2] = new FourCornersAnchorColorMapParameterizable(zwozwo, zwodrei, dreizwo, dreidrei);
 	}
 
 	private double interpolate(double start, double end, double position) {
 		return start + (end - start) * position;
 	}
 
-	private double interpolate(double lo, double ro, double lu, double ru,
-			double positionX, double positionY) {
+	private double interpolate(double lo, double ro, double lu, double ru, double positionX, double positionY) {
 		// TODO: needs testing!
 		double o = interpolate(lo, ro, positionX);
 		double u = interpolate(lu, ru, positionX);

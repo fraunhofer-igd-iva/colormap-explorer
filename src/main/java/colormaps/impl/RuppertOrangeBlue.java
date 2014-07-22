@@ -20,7 +20,7 @@ public class RuppertOrangeBlue extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Ruppert et al. Orange Blue";
+		return "Ruppert et al. O-B";
 	}
 
 	@Override

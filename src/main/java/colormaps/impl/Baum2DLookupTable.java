@@ -34,7 +34,7 @@ public class Baum2DLookupTable extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Baum et al. Blue-Yellow";
+		return "Baum et al. B-Y";
 	}
 
 	@Override

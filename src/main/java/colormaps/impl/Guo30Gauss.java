@@ -30,7 +30,7 @@ public class Guo30Gauss extends GuoLabStyle
 	@Override
 	public String getName()
 	{
-		return "Guo 2005 (Gaussian)";
+		return "Guo et al. (Gaussian)";
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class LespintasPurpleGreen extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Lespintas et al. Green-Purple";
+		return "Lespintas et al. G-P";
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class BaumMagentaGreen extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Baum et al. Magenta-Green";
+		return "Baum et al. M-G";
 	}
 
 	@Override

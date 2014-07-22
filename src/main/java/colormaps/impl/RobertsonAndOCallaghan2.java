@@ -24,6 +24,13 @@ import java.util.List;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
+/**
+ * 
+ * @author jubernar
+ * @deprecated we had three of these. The decision was made to use the variant
+ *             with Light-Orange, Brown, Dark-Brown, Blue colors since it
+ *             performed slightly better. [JB]
+ */
 public class RobertsonAndOCallaghan2 extends AbstractColormap2D {
 
 	private FourCornersAnchorColorMapParameterizable[][] colorMaps;
@@ -70,7 +77,7 @@ public class RobertsonAndOCallaghan2 extends AbstractColormap2D {
 	public ColorSpace getColorSpace() {
 		return ColorSpace.sRGB;
 	}
-	
+
 	@Override
 	public List<String> getReferences() {
 		return Collections.singletonList("robertson1986generation");
@@ -78,54 +85,44 @@ public class RobertsonAndOCallaghan2 extends AbstractColormap2D {
 
 	private void initializeColorMap() {
 
-		Color nullnull = new Color(113,80,79);
-		Color nulleins = new Color(90,76,75);
-		Color nullzwo = new Color(66,66,69);
-		Color nulldrei = new Color(73,88,84);
+		Color nullnull = new Color(113, 80, 79);
+		Color nulleins = new Color(90, 76, 75);
+		Color nullzwo = new Color(66, 66, 69);
+		Color nulldrei = new Color(73, 88, 84);
 
-		Color einsnull = new Color(162,110,98);
-		Color einseins = new Color(127,96,91);
-		Color einszwo = new Color(86,82,81);
-		Color einsdrei = new Color(77,108,93);
+		Color einsnull = new Color(162, 110, 98);
+		Color einseins = new Color(127, 96, 91);
+		Color einszwo = new Color(86, 82, 81);
+		Color einsdrei = new Color(77, 108, 93);
 
-		Color zwonull = new Color(180,113,93);
-		Color zwoeins = new Color(145,101,84);
-		Color zwozwo = new Color(113,98,92);
-		Color zwodrei = new Color(79,123,99);
+		Color zwonull = new Color(180, 113, 93);
+		Color zwoeins = new Color(145, 101, 84);
+		Color zwozwo = new Color(113, 98, 92);
+		Color zwodrei = new Color(79, 123, 99);
 
-		Color dreinull = new Color(235,128,94);
-		Color dreieins = new Color(182,114,88);
-		Color dreizwo = new Color(134,103,86);
-		Color dreidrei = new Color(91,132,102);
+		Color dreinull = new Color(235, 128, 94);
+		Color dreieins = new Color(182, 114, 88);
+		Color dreizwo = new Color(134, 103, 86);
+		Color dreidrei = new Color(91, 132, 102);
 
 		colorMaps = new FourCornersAnchorColorMapParameterizable[3][3];
 
-		colorMaps[0][0] = new FourCornersAnchorColorMapParameterizable(nullnull, nulleins,
-				einsnull, einseins);
-		colorMaps[1][0] = new FourCornersAnchorColorMapParameterizable(nulleins, nullzwo,
-				einseins, einszwo);
-		colorMaps[2][0] = new FourCornersAnchorColorMapParameterizable(nullzwo, nulldrei,
-				einszwo, einsdrei);
-		colorMaps[0][1] = new FourCornersAnchorColorMapParameterizable(einsnull, einseins,
-				zwonull, zwoeins);
-		colorMaps[1][1] = new FourCornersAnchorColorMapParameterizable(einseins, einszwo,
-				zwoeins, zwozwo);
-		colorMaps[2][1] = new FourCornersAnchorColorMapParameterizable(einszwo, einsdrei,
-				zwozwo, zwodrei);
-		colorMaps[0][2] = new FourCornersAnchorColorMapParameterizable(zwonull, zwoeins,
-				dreinull, dreieins);
-		colorMaps[1][2] = new FourCornersAnchorColorMapParameterizable(zwoeins, zwozwo,
-				dreieins, dreizwo);
-		colorMaps[2][2] = new FourCornersAnchorColorMapParameterizable(zwozwo, zwodrei,
-				dreizwo, dreidrei);
+		colorMaps[0][0] = new FourCornersAnchorColorMapParameterizable(nullnull, nulleins, einsnull, einseins);
+		colorMaps[1][0] = new FourCornersAnchorColorMapParameterizable(nulleins, nullzwo, einseins, einszwo);
+		colorMaps[2][0] = new FourCornersAnchorColorMapParameterizable(nullzwo, nulldrei, einszwo, einsdrei);
+		colorMaps[0][1] = new FourCornersAnchorColorMapParameterizable(einsnull, einseins, zwonull, zwoeins);
+		colorMaps[1][1] = new FourCornersAnchorColorMapParameterizable(einseins, einszwo, zwoeins, zwozwo);
+		colorMaps[2][1] = new FourCornersAnchorColorMapParameterizable(einszwo, einsdrei, zwozwo, zwodrei);
+		colorMaps[0][2] = new FourCornersAnchorColorMapParameterizable(zwonull, zwoeins, dreinull, dreieins);
+		colorMaps[1][2] = new FourCornersAnchorColorMapParameterizable(zwoeins, zwozwo, dreieins, dreizwo);
+		colorMaps[2][2] = new FourCornersAnchorColorMapParameterizable(zwozwo, zwodrei, dreizwo, dreidrei);
 	}
 
 	private double interpolate(double start, double end, double position) {
 		return start + (end - start) * position;
 	}
 
-	private double interpolate(double lo, double ro, double lu, double ru,
-			double positionX, double positionY) {
+	private double interpolate(double lo, double ro, double lu, double ru, double positionX, double positionY) {
 		// TODO: needs testing!
 		double o = interpolate(lo, ro, positionX);
 		double u = interpolate(lu, ru, positionX);

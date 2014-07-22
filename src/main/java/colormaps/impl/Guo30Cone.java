@@ -20,6 +20,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 
+ * @author jubernar
+ * @deprecated Ähnlich zu Guo30Gauss aber etwas schlechter in den
+ *             Qualitätswerten. Daher meine Empfehlung: raus aus dem Paper [JB]
+ * 
+ */
 public class Guo30Cone extends GuoLabStyle {
 	public Guo30Cone() {
 		super(cone(60f), linearAB(0, 80, 0, -80));
@@ -27,7 +34,7 @@ public class Guo30Cone extends GuoLabStyle {
 
 	@Override
 	public String getName() {
-		return "Guo 2005 (Cone)";
+		return "Guo et al. (Cone)";
 	}
 
 	@Override

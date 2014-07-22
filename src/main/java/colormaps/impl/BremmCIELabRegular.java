@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import colormaps.ColorSpace;
+
 public class BremmCIELabRegular extends GuoLabStyle {
 	public BremmCIELabRegular() {
 		super(constant1f(55f), linearBa(0, -55, 10, 55));
@@ -27,12 +29,17 @@ public class BremmCIELabRegular extends GuoLabStyle {
 
 	@Override
 	public String getName() {
-		return "Bremm et al. CIELab regular";
+		return "Bremm et al. (regular)";
 	}
 
 	@Override
 	public String getDescription() {
 		return "Bremm et al. 2011 Fig. 9a: Numbers are guessed but it seems accurate" + " and fits with description except for a shift.";
+	}
+
+	@Override
+	public ColorSpace getColorSpace() {
+		return ColorSpace.CIE_Lab;
 	}
 
 	@Override

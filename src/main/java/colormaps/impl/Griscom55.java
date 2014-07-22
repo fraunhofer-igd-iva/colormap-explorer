@@ -20,7 +20,7 @@ public class Griscom55 extends GuoLabStyle {
 
 	@Override
 	public String getName() {
-		return "Griscom and Palmer (not that close)";
+		return "Griscom and Palmer";
 	}
 
 	@Override

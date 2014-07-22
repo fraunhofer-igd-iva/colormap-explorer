@@ -19,6 +19,12 @@ package colormaps.impl;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 
+ * @author jubernar
+ * @deprecated sollte nicht ins Paper. War für Debug issues gedacht (validierung der Metriken) 
+ *
+ */
 public class LuoUCSTest extends GuoLabStyle
 {
 	public LuoUCSTest()

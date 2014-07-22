@@ -19,6 +19,8 @@ package colormaps.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import colormaps.ColorSpace;
+
 public class BremmCIELabStretched extends GuoLabStyle {
 	public BremmCIELabStretched() {
 		super(constant1f(55f), linearBa(-10, 40, -20, 35));
@@ -26,12 +28,17 @@ public class BremmCIELabStretched extends GuoLabStyle {
 
 	@Override
 	public String getName() {
-		return "Bremm et al. CIELab stretched";
+		return "Bremm et al. (stretched)";
 	}
 
 	@Override
 	public String getDescription() {
 		return "Bremm et al. 2011 Fig. 9b: Numbers are guessed and still seem slighly off.";
+	}
+
+	@Override
+	public ColorSpace getColorSpace() {
+		return ColorSpace.CIE_Lab;
 	}
 
 	@Override

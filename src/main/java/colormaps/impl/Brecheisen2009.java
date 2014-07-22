@@ -21,7 +21,7 @@ public class Brecheisen2009 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Brecheisen et al. 2009: Magenta-Green (RGB)";
+		return "Brecheisen et al.";
 	}
 
 	@Override

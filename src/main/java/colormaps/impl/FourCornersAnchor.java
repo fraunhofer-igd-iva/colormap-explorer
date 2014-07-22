@@ -143,7 +143,7 @@ public class FourCornersAnchor extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Four Corners Anchor";
+		return "Four Corners R-B-G-Y";
 	}
 
 	@Override
