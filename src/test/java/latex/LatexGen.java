@@ -33,8 +33,11 @@ import org.slf4j.LoggerFactory;
 
 import colormaps.Colormap2D;
 import colormaps.impl.BCP37;
+import colormaps.impl.BaumOrangeCyan;
 import colormaps.impl.FourCornersAnchor;
-import colormaps.impl.Himberg98;
+import colormaps.impl.LespintasPurpleGreen;
+import colormaps.impl.RuppertGreenPurple;
+import colormaps.impl.Steiger2014Generic;
 import colormaps.impl.TeulingFig2;
 
 import com.google.common.collect.Lists;
@@ -56,9 +59,12 @@ public final class LatexGen
 	public static void main(String[] args) throws Exception
 	{
 //		List<Colormap2D> colorMaps = Lists.newArrayList();
+//		colorMaps.add(new BaumOrangeCyan());
 //		colorMaps.add(new BCP37());
-//		colorMaps.add(new Himberg98());
 //		colorMaps.add(new FourCornersAnchor());
+//		colorMaps.add(new LespintasPurpleGreen());
+//		colorMaps.add(new RuppertGreenPurple());
+//		colorMaps.add(new Steiger2014Generic());
 //		colorMaps.add(new TeulingFig2());
 		
 		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");

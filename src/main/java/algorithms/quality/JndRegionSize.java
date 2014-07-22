@@ -58,7 +58,7 @@ public class JndRegionSize implements ColormapQuality
 		}
 		
 		// TODO: find a better scaling factor
-		return stats.getVariance() * 10000000.d;
+		return 1.0 / (stats.getVariance() * 10000.d);		// "good" should be > "bad"
 	}
 
 	private double computeArea(List<Point2D> poly, Point2D center)

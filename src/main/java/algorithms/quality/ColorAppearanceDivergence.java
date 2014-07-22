@@ -16,13 +16,13 @@
 
 package algorithms.quality;
 
-import java.util.Locale;
+import static java.lang.Math.log;
+
 import java.util.Random;
 
 import algorithms.MedianDivergenceComputer;
 import algorithms.sampling.EvenDistributedDistancePoints;
 import colormaps.Colormap2D;
-import static java.lang.Math.log;
 
 /**
  * Represents the color appearance to value divergence ratio as a quality measure.
@@ -33,28 +33,20 @@ import static java.lang.Math.log;
  */
 public class ColorAppearanceDivergence implements ColormapQuality {
 	
-	double quantile;
-	
-	public ColorAppearanceDivergence(double quantile) {
+	public ColorAppearanceDivergence() {
 		super();
-		this.quantile = quantile;
-	}
-
-	private String quantileName() {
-		if (quantile == 0.5)
-			return "median";
-		else return String.format(Locale.ENGLISH, "%.1f-quant.", quantile);
 	}
 
 	@Override
 	public double getQuality(Colormap2D colormap2d) {
 		MedianDivergenceComputer comp = MedianDivergenceComputer.fromSamplingStrategy(colormap2d, new EvenDistributedDistancePoints(new Random(123), 10000));
-		return (log(comp.getQuantile(0.9))-log(comp.getQuantile(0.9))) / log(2);
+		double d = (log(comp.getQuantile(0.9))-log(comp.getQuantile(0.1))) / log(2);
+		return 1.0 / d;		// "good" should be > "bad"
 	}
 
 	@Override
 	public String getName() {
-		return "Color div. (" + quantileName() + ")";
+		return "ColorAppearanceDivergence";
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -41,13 +42,20 @@ import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
+import algorithms.quality.AttentionQuality;
+import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceQuantile;
+import algorithms.quality.ColorDivergenceVariance;
 import algorithms.quality.ColorDynamicBrightest;
 import algorithms.quality.ColorDynamicDarkest;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
 import algorithms.quality.ColorDynamicWhiteContrast;
+import algorithms.quality.ColorExploitation;
 import algorithms.quality.ColormapQuality;
+import algorithms.quality.JndRegionSize;
+import algorithms.sampling.CircularSampling;
+import algorithms.sampling.EvenDistributedDistancePoints;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
@@ -149,20 +157,27 @@ public class ConfigPanel extends JPanel
 
 	private String getStats(Colormap2D colormap)
 	{
-		SamplingStrategy sampling = new GridSampling(50);	// 50x50 = 2500 sample points
+        SamplingStrategy circSampling = new CircularSampling(30);
+        SamplingStrategy rectSampling = new GridSampling(50);	// 50x50 = 2500 sample points
+		EvenDistributedDistancePoints distSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
 		
 		// TODO: iterate over all available quality measures
 		List<ColormapQuality> measures = Lists.newArrayList();
 		List<String> results = Lists.newArrayList();
 		
-		measures.add(new ColorDynamicBrightest(sampling));
-		measures.add(new ColorDynamicDarkest(sampling));
-		measures.add(new ColorDynamicDistBlack(sampling));
-		measures.add(new ColorDynamicDistWhite(sampling));
-		measures.add(new ColorDynamicWhiteContrast(sampling));
-        measures.add(new ColorDivergenceQuantile(0.5));
-        measures.add(new ColorDivergenceQuantile(0.1));
-        measures.add(new ColorDivergenceQuantile(0.9));
+        measures.add(new ColorExploitation(circSampling));
+//        measures.add(new JndRegionSize(circSampling));
+        measures.add(new AttentionQuality(rectSampling));
+        measures.add(new ColorDynamicBrightest(rectSampling));
+		measures.add(new ColorDynamicDarkest(rectSampling));
+		measures.add(new ColorDynamicDistBlack(rectSampling));
+		measures.add(new ColorDynamicDistWhite(rectSampling));
+		measures.add(new ColorDynamicWhiteContrast(rectSampling));
+		measures.add(new ColorAppearanceDivergence());
+		measures.add(new ColorDivergenceVariance(distSampling));
+//        measures.add(new ColorDivergenceQuantile(0.5));
+//        measures.add(new ColorDivergenceQuantile(0.1));
+//        measures.add(new ColorDivergenceQuantile(0.9));
 		
 		for (ColormapQuality measure : measures)
 		{

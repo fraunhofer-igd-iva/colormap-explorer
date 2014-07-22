@@ -14,63 +14,72 @@
  * limitations under the License.
  */
 
-
 package algorithms.quality;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.Iterator;
+
+import main.MismatchScatterplotPanel;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
-import colorspaces.CIELABLch;
 
 /**
- * Computes the variance in attention steering
+ * Computes the variance of the color distance/map distance ratio.
  * @author Martin Steiger
  */
-public class AttentionQuality implements ColormapQuality
+public final class ColorDivergenceVariance implements ColormapQuality
 {
-	private final SamplingStrategy sampling;
+	private final SamplingStrategy strategy;
 
-	/**
-	 * @param sampling the sampling to use
-	 */
-	public AttentionQuality(SamplingStrategy sampling)
+	public ColorDivergenceVariance(SamplingStrategy strategy)
 	{
-		this.sampling = sampling;
+		this.strategy = strategy;
 	}
-	
+
 	@Override
 	public double getQuality(Colormap2D colormap)
 	{
-		// max L + max c (which is the same as a or b)
-		double normFac = Math.sqrt(100*100 + 150*150);
-
 		DescriptiveStatistics stats = new DescriptiveStatistics();
-		
-		for (Point2D pt : sampling.getPoints())
+		Iterator<Point2D> ptIt = strategy.getPoints().iterator();
+
+		while (ptIt.hasNext())
 		{
-			Color color = colormap.getColor(pt.getX(), pt.getY());
-			double[] lch = new CIELABLch().fromColor(color);
-			double attention = Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]) / normFac;
-			
-			stats.addValue(attention);
+			Point2D p1 = ptIt.next();
+
+			if (!ptIt.hasNext())
+				break;
+
+			Point2D p2 = ptIt.next();
+
+			float dist = (float) p1.distance(p2);
+
+			Color colorA = colormap.getColor(p1.getX(), p1.getY());
+			Color colorB = colormap.getColor(p2.getX(), p2.getY());
+
+			// roughly 0-100
+			double cdist = MismatchScatterplotPanel.colorDiff(colorA, colorB);
+
+			double ratio = cdist / dist;
+
+			stats.addValue(ratio);
 		}
-		
-		return 1.0 / stats.getVariance();
+
+		return 1.0 / stats.getVariance();	// "good" should be > "bad"
 	}
 
 	@Override
 	public String getName()
 	{
-		return "Attention";
+		return "ColorDistance Variance";
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Compute the attention values based on a sampling strategy and returns the variance across the colormap";
+		return "Computes the variance of the color distance/map distance ratio";
 	}
 }

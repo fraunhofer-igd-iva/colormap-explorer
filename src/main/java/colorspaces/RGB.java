@@ -92,9 +92,9 @@ public class RGB extends AbstractColorSpace {
 	
 	// derive luma follwing the same whitepoint etc as in XYZ calculation
 	public static double getLuma(Color c) {
-		double[] xyz = XYZ.rgb2xyz(new RGB().fromColor(c));
-		double luminance = xyz[1];
-		return XYZ.xyz2rgb(new double[] {luminance, luminance, luminance})[1];
+		float[] rgb = c.getColorComponents(null);
+		return (rgb[0] * 0.2126729) + (rgb[1] * 0.7151522)
+				+ (rgb[2] * 0.0721750);
 	}
 	
 	public static int getLumaByte(Color c) {

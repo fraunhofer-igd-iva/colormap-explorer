@@ -26,6 +26,8 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STRawGroupDir;
 import org.stringtemplate.v4.misc.ErrorManager;
 
+import algorithms.quality.AttentionQuality;
+import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceQuantile;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
@@ -34,6 +36,7 @@ import algorithms.quality.ColorExploitation;
 import algorithms.quality.ColormapQuality;
 import algorithms.quality.JndRegionSize;
 import algorithms.sampling.CircularSampling;
+import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
 import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
@@ -59,7 +62,7 @@ public final class LatexTableQuality
         templateDir.delimiterStartChar = '$';
         templateDir.delimiterStopChar = '$';
         
-        Map<Colormap2D, MetricColormap> mcms = Maps.newHashMap();
+        Map<Colormap2D, MetricColormap> mcms = Maps.newLinkedHashMap();
 
         for (Colormap2D cm : colormaps)
         {
@@ -70,17 +73,20 @@ public final class LatexTableQuality
 			mcms.put(cm, mcm);
         }
         
-        SamplingStrategy sampling = new CircularSampling(50);
+        SamplingStrategy circSampling = new CircularSampling(50);
+        SamplingStrategy rectSampling = new GridSampling(50);
 
         List<ColormapQuality> measures = Lists.newArrayList();
-        measures.add(new ColorExploitation(sampling));
-        measures.add(new JndRegionSize(sampling));
-		measures.add(new ColorDynamicDistBlack(sampling));
-        measures.add(new ColorDynamicDistWhite(sampling));
-        measures.add(new ColorDynamicWhiteContrast(sampling));
+        measures.add(new ColorExploitation(circSampling));
+        measures.add(new JndRegionSize(circSampling));
+        measures.add(new AttentionQuality(rectSampling));
+		measures.add(new ColorDynamicDistBlack(rectSampling));
+        measures.add(new ColorDynamicDistWhite(rectSampling));
+        measures.add(new ColorDynamicWhiteContrast(rectSampling));
         measures.add(new ColorDivergenceQuantile(0.5));
-        measures.add(new ColorDivergenceQuantile(0.1));
-        measures.add(new ColorDivergenceQuantile(0.9));
+//        measures.add(new ColorDivergenceQuantile(0.1));
+//        measures.add(new ColorDivergenceQuantile(0.9));
+        measures.add(new ColorAppearanceDivergence());
 
         for (ColormapQuality measure : measures)
         {
