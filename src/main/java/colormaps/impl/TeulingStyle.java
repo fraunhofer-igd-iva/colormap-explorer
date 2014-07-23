@@ -75,23 +75,6 @@ public abstract class TeulingStyle extends AbstractColormap2D
 	}
 	
 	/**
-	 * Clamp to 0..1 for values close to that range.
-	 * @param v
-	 * @return
-	 */
-	public float clampSafe(float v, float headroom) {
-		if (v < -headroom || v > 1 + headroom)
-			throw new IllegalArgumentException("v way out of range.Fix your algo.");
-		if (v > 1)
-			return 1;
-		else if (v < 0)
-			return 0;
-		else
-			return v;
-	}
-	
-	
-	/**
 	 * The whitening kernel in teuling has some max (w) and drops to zero in the
 	 * 4 corners.
 	 * @param x the x coordnainte
