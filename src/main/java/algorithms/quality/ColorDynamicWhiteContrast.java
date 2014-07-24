@@ -75,6 +75,6 @@ public class ColorDynamicWhiteContrast extends ColorDynamic
 	@Override
 	public String getDescription()
 	{
-		return "The maximum contrast to white";
+		return "The maximum contrast to white (as the n in n:1)";
 	}
 }
