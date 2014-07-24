@@ -4,6 +4,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class SimulaHSB2 extends AbstractColormap2D {
 
 	@Override
 	public List<String> getReferences() {
-		return Collections.singletonList("Simula99");
+		return Arrays.asList("simula1999som", "himberg2001knowledgeengineering");
 	}
 
 	@Override
