@@ -27,6 +27,7 @@ import java.util.List;
  *             Qualitätswerten. Daher meine Empfehlung: raus aus dem Paper [JB]
  * 
  */
+@Deprecated
 public class Guo30Cone extends GuoLabStyle {
 	public Guo30Cone() {
 		super(cone(60f), linearAB(0, 80, 0, -80));

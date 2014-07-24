@@ -15,6 +15,7 @@ import colormaps.ColorSpace;
  *             schneidet etwas besser ab, daher bleibt die drin.
  * 
  */
+@Deprecated
 public class RuppertGreenPurple extends AbstractColormap2D {
 
 	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(new Color(59, 197, 85), new Color(128, 128, 128), new Color(128, 128, 128), new Color(181, 75, 160));

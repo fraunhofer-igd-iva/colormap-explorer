@@ -66,6 +66,13 @@ public final class ColorMapFinder
 				if (!clazz.getName().startsWith(packageName))
 					continue;
 
+				// deprecated
+				if (clazz.isAnnotationPresent(Deprecated.class))
+				{
+					logger.info("Skipping deprecated class " + clazz);
+					continue;
+				}
+				
 				if (Modifier.isAbstract(clazz.getModifiers()))
 				{
 					logger.info("Skipping abstract class " + clazz);

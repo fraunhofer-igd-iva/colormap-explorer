@@ -31,6 +31,7 @@ import colormaps.ColorSpace;
  *             with Light-Orange, Brown, Dark-Brown, Blue colors since it
  *             performed slightly better. [JB]
  */
+@Deprecated
 public class RobertsonAndOCallaghan2 extends AbstractColormap2D {
 
 	private FourCornersAnchorColorMapParameterizable[][] colorMaps;

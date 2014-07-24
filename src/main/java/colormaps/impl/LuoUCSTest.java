@@ -25,6 +25,7 @@ import java.util.List;
  * @deprecated sollte nicht ins Paper. War für Debug issues gedacht (validierung der Metriken) 
  *
  */
+@Deprecated
 public class LuoUCSTest extends GuoLabStyle
 {
 	public LuoUCSTest()
