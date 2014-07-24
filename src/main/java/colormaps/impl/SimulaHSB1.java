@@ -25,7 +25,7 @@ public class SimulaHSB1 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Simula 99 SOM Code HSB";
+		return "Circular Hue (HSB)";
 	}
 
 	@Override

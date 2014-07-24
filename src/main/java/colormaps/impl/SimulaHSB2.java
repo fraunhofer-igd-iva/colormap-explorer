@@ -32,7 +32,7 @@ public class SimulaHSB2 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Simula 99 SOM Code HSI";
+		return "Circular Hue (HSI)";
 	}
 
 	@Override
