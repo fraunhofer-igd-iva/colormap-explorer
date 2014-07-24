@@ -62,8 +62,7 @@ public class ColorAppearanceDivergence implements ColormapQuality {
 
 	@Override
 	public String getDescription() {
-		return "The color appearance to value divergence in powers of"
-				+ " two between upper and lower bound";
+		return "The color appearance to value divergence between upper and lower bound";
 	}
 
 }
