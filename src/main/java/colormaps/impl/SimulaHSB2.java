@@ -47,7 +47,7 @@ public class SimulaHSB2 extends AbstractColormap2D {
 
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList("simula1999som", "himberg2001knowledgeengineering");
+		return Arrays.asList("simula1999som", "himberg2001knowledgeengineering", "wallet2009latent", "royColormap2010", "matos2010seismic");
 	}
 
 	@Override
