@@ -140,8 +140,8 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			g.fillOval(xCoord, yCoord, dia, dia);
 		}
 		
-		double upperQuantile = ratioStats.getQuantile(0.9);
-		double lowerQuantile = ratioStats.getQuantile(0.1);
+		double upperQuantile = ratioStats.getQuantile(0.95);
+		double lowerQuantile = ratioStats.getQuantile(0.05);
 		
 		
 		if (useLog) {

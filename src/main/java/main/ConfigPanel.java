@@ -173,7 +173,8 @@ public class ConfigPanel extends JPanel
 		measures.add(new ColorDynamicDistBlack(rectSampling));
 		measures.add(new ColorDynamicDistWhite(rectSampling));
 		measures.add(new ColorDynamicWhiteContrast(rectSampling));
-		measures.add(new ColorAppearanceDivergence());
+		measures.add(new ColorAppearanceDivergence(0.05, 0.95));
+		measures.add(new ColorAppearanceDivergence(0, 1));
 		measures.add(new ColorDivergenceVariance(distSampling));
 //        measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
