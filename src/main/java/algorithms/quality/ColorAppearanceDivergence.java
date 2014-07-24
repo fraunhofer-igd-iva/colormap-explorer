@@ -16,8 +16,6 @@
 
 package algorithms.quality;
 
-import static java.lang.Math.log;
-
 import java.util.Random;
 
 import algorithms.MedianDivergenceComputer;
@@ -27,21 +25,25 @@ import colormaps.Colormap2D;
 /**
  * Represents the color appearance to value divergence ratio as a quality measure.
  * 
- * Note: Without caching, as is now, this is pretty expensive.
- * 
  * @author Simon Thum
  */
 public class ColorAppearanceDivergence implements ColormapQuality {
 	
-	public ColorAppearanceDivergence() {
-		super();
+	private double _lower, _upper;
+	
+	/**
+	 * @param lower lower quantile
+	 * @param upper upper quantile
+	 */
+	public ColorAppearanceDivergence(double lower, double upper) {
+		_lower = lower;
+		_upper = upper;
 	}
 
 	@Override
 	public double getQuality(Colormap2D colormap2d) {
 		MedianDivergenceComputer comp = MedianDivergenceComputer.fromSamplingStrategy(colormap2d, new EvenDistributedDistancePoints(new Random(123), 10000));
-		double d = (log(comp.getQuantile(0.9))-log(comp.getQuantile(0.1))) / log(2);
-		return d;
+		return comp.getQuantile(_upper) / comp.getQuantile(_lower);
 	}
 	
 	@Override
@@ -53,7 +55,9 @@ public class ColorAppearanceDivergence implements ColormapQuality {
 
 	@Override
 	public String getName() {
-		return "ColorAppearanceDivergence";
+		if (_lower == 0 && _upper == 1)
+			return "Worst-case color appearance divergence";
+		return "Color appearance divergence";
 	}
 
 	@Override

@@ -61,7 +61,7 @@ public final class MedianDivergenceComputer {
 	}
 	
 	public double getQuantile(double p) {
-		return ratios[(int) (ratios.length * p)];
+		return ratios[(int) ((ratios.length-1) * p)];
 	}
 	
 	private void deriveMedianColormapToJNDRatio() {

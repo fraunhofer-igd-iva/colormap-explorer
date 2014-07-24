@@ -89,12 +89,12 @@ public final class LatexTableQuality
         measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
 //        measures.add(new ColorDivergenceQuantile(0.9));
-
         measures.add(new JndRegionSize(circSampling));
         measures.add(new AttentionQuality(rectSampling));
-        measures.add(new ColorAppearanceDivergence());
         measures.add(new ColorDivergenceVariance(distSampling));
         measures.add(new ColorDivergenceVariance2(distSampling));
+        measures.add(new ColorAppearanceDivergence(0.05, 0.95));
+        measures.add(new ColorAppearanceDivergence(0, 1));
 
         for (ColormapQuality measure : measures)
         {
