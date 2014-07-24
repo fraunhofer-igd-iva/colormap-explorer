@@ -23,6 +23,11 @@ import java.util.List;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
+/**
+ * @deprecated black-white diagonal.
+ * @author JB
+ */
+@Deprecated
 public class Baum2DLookupTable extends AbstractColormap2D {
 
 	@Override

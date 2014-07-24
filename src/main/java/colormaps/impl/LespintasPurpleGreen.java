@@ -7,6 +7,11 @@ import java.util.List;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
+/**
+ * @deprecated black-white diagonal.
+ * @author JB
+ */
+@Deprecated
 public class LespintasPurpleGreen extends AbstractColormap2D {
 
 	@Override
@@ -39,7 +44,7 @@ public class LespintasPurpleGreen extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Lespintas et al. G-P";
+		return "Lespinats and Aupetit";
 	}
 
 	@Override
