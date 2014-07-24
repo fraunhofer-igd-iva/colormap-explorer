@@ -66,8 +66,7 @@ public class ColorDivergenceQuantile implements ColormapQuality {
 
 	@Override
 	public String getDescription() {
-		return "The " + quantileName() + " color appearance divergence ratio; higher ratio means " +
-		"higher visual change of color appearence for a given color map distance.";
+		return "The " + quantileName() + " divergence ratio between map distance and color distance";
 	}
 
 }

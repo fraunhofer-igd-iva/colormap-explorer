@@ -71,7 +71,7 @@ public final class LatexGen
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
 
-		createDecomposedTable(colorMaps, output);
+//		createDecomposedTable(colorMaps, output);
 		createQualityTable(colorMaps, output);
 	}
 

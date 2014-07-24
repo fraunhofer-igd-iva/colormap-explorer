@@ -53,7 +53,19 @@ public class MetricColormap
 
 	public void addMetric(ColormapQuality metric, Double quality, Integer points)
 	{
-		metrics.put(metric, String.format(Locale.ENGLISH, "%.1f", quality));
+		String format;
+		
+		if (quality.isInfinite())
+		{
+			format = "$\\infty$";
+		} 
+		else
+		{
+			format = String.format(Locale.ENGLISH, "%.1f", quality);
+		}
+		
+		
+		metrics.put(metric, format);
 		
 		String colorName = (metric.moreIsBetter() ? "quality" : "malus") + points;
 		colors.put(metric, colorName);

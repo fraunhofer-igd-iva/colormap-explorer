@@ -71,7 +71,7 @@ public class ColorDynamicDistBlack extends ColorDynamic
 	@Override
 	public String getDescription()
 	{
-		return "The smallest JND distance to black";
+		return "The smallest found JND distance to black";
 	}
 
 }
