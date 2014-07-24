@@ -54,9 +54,16 @@ public class MetricColormap
 	public void addMetric(ColormapQuality metric, Double quality, Integer points)
 	{
 		metrics.put(metric, String.format(Locale.ENGLISH, "%.1f", quality));
-		colors.put(metric, "quality" + points);
+		
+		String colorName = (metric.moreIsBetter() ? "quality" : "malus") + points;
+		colors.put(metric, colorName);
 	}
 
+	public String getColorspace()
+	{
+		return colormap.getColorSpace().toString().replaceAll("\\_", "");
+	}
+	
 	public Map<ColormapQuality, String> getValues()
 	{
 		return Collections.unmodifiableMap(metrics);

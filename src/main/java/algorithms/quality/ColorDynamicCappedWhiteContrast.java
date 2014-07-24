@@ -59,7 +59,14 @@ public class ColorDynamicCappedWhiteContrast extends ColorDynamic
 	
 		return Math.max(1d / brightestY, 3);
 	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return true;
+	}
 
+	
 	@Override
 	public String getName()
 	{

@@ -52,6 +52,12 @@ public class ColorDivergenceQuantile implements ColormapQuality {
 		MedianDivergenceComputer comp = MedianDivergenceComputer.fromSamplingStrategy(colormap2d, new EvenDistributedDistancePoints(new Random(123), 10000));
 		return comp.getQuantile(quantile);
 	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return true;
+	}
 
 	@Override
 	public String getName() {

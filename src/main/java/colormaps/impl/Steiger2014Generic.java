@@ -86,7 +86,7 @@ public class Steiger2014Generic extends AbstractColormap2D {
 	@Override
 	public String getName()
 	{
-		return "Steiger et al. Cyan generic";
+		return "Steiger et al. Cyan";
 	}
 
 	@Override

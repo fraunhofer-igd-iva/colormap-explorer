@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STRawGroupDir;
@@ -29,6 +30,8 @@ import org.stringtemplate.v4.misc.ErrorManager;
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceQuantile;
+import algorithms.quality.ColorDivergenceVariance;
+import algorithms.quality.ColorDivergenceVariance2;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
 import algorithms.quality.ColorDynamicWhiteContrast;
@@ -36,6 +39,7 @@ import algorithms.quality.ColorExploitation;
 import algorithms.quality.ColormapQuality;
 import algorithms.quality.JndRegionSize;
 import algorithms.sampling.CircularSampling;
+import algorithms.sampling.EvenDistributedDistancePoints;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
@@ -75,18 +79,22 @@ public final class LatexTableQuality
         
         SamplingStrategy circSampling = new CircularSampling(50);
         SamplingStrategy rectSampling = new GridSampling(50);
-
+        EvenDistributedDistancePoints distSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
+        
         List<ColormapQuality> measures = Lists.newArrayList();
         measures.add(new ColorExploitation(circSampling));
-        measures.add(new JndRegionSize(circSampling));
-        measures.add(new AttentionQuality(rectSampling));
 		measures.add(new ColorDynamicDistBlack(rectSampling));
         measures.add(new ColorDynamicDistWhite(rectSampling));
         measures.add(new ColorDynamicWhiteContrast(rectSampling));
         measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
 //        measures.add(new ColorDivergenceQuantile(0.9));
+
+        measures.add(new JndRegionSize(circSampling));
+        measures.add(new AttentionQuality(rectSampling));
         measures.add(new ColorAppearanceDivergence());
+        measures.add(new ColorDivergenceVariance(distSampling));
+        measures.add(new ColorDivergenceVariance2(distSampling));
 
         for (ColormapQuality measure : measures)
         {
@@ -101,9 +109,13 @@ public final class LatexTableQuality
 	        }
         }
 
+        ColorRamp colorrampQuality = new ColorRamp(new Color(20, 140, 60), new Color(220, 220, 220));
+        ColorRamp colorrampMalus = new ColorRamp(new Color(191, 111, 27), new Color(220, 220, 220));
+        
         ST st = templateDir.getInstanceOf("MetricTable");
 		st.add("metrics", measures);
-		st.add("colors", createColorDefs());
+		st.add("quality", createColorDefs(colorrampQuality, "quality"));
+		st.add("malus", createColorDefs(colorrampMalus, "malus"));
 		st.add("colormaps", mcms.values());
 
         File texFile = new File(outputFolder, "metric_table.tex");
@@ -112,17 +124,16 @@ public final class LatexTableQuality
         return texFile;
     }
 
-	private static List<LatexColor> createColorDefs()
+	private static List<LatexColor> createColorDefs(ColorRamp ramp, String prefix)
 	{
 		List<LatexColor> colors = Lists.newArrayList();
-		ColorRamp colorramp = new ColorRamp();
 		
 		for (int i=0; i<=100; i++)
 		{
 			double val = 1.0 - i / 100d;
-			Color col = colorramp.getColor(val);
+			Color col = ramp.getColor(val);
 			
-			colors.add(new LatexColor(col, "quality" + i));
+			colors.add(new LatexColor(col, prefix + i));
 		}
 		
 		return colors;

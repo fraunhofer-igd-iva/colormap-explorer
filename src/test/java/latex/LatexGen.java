@@ -63,7 +63,6 @@ public final class LatexGen
 //		colorMaps.add(new BCP37());
 //		colorMaps.add(new FourCornersAnchor());
 //		colorMaps.add(new LespintasPurpleGreen());
-//		colorMaps.add(new RuppertGreenPurple());
 //		colorMaps.add(new Steiger2014Generic());
 //		colorMaps.add(new TeulingFig2());
 		

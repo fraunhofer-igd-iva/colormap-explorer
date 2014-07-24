@@ -49,6 +49,12 @@ public class ColorDynamicDarkest extends ColorDynamic
 		}
 		return darkestY * 100d;
 	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return true;
+	}
 
 	@Override
 	public String getName()

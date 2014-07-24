@@ -57,7 +57,13 @@ public class ColorDynamicWhiteContrast extends ColorDynamic
 			brightestY = Math.max(brightestY, valY);
 		}
 	
-		return 1d / brightestY;
+		return 1.0 / brightestY;
+	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return true;
 	}
 
 	@Override
@@ -69,6 +75,6 @@ public class ColorDynamicWhiteContrast extends ColorDynamic
 	@Override
 	public String getDescription()
 	{
-		return "Finds the contrast to white";
+		return "The maximum contrast to white";
 	}
 }

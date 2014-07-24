@@ -20,102 +20,53 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import com.google.common.collect.Lists;
 
 /**
  * Randomly outputs points in [0..1, 0..1] whose sequential pairwise distance is evenly distributed.
  * @author Simon Thum
  */
-public class EvenDistributedDistancePoints implements SamplingStrategy {
+public class EvenDistributedDistancePoints implements SamplingStrategy
+{
 
-	private final Random random;
-	
-	private int countdown;
-	
-	public EvenDistributedDistancePoints(Random random, int number) {
-		this.random = random;
-		this.countdown = number;
+	private final List<Point2D> pts = Lists.newArrayList();
+
+	public EvenDistributedDistancePoints(Random random, int number)
+	{
+		while (pts.size() < number)
+		{
+			double ax = random.nextDouble();
+			double ay = random.nextDouble();
+
+			double bx = 0;
+			double by = 0;
+
+			final double dist = random.nextDouble();
+
+			int tries = 20;
+			while (tries >= 1)
+			{
+				double angle = random.nextDouble() * Math.PI * 2.0;
+
+				bx = (ax + sin(angle) * dist);
+				by = (ay + cos(angle) * dist);
+				if (bx >= 0.0 && bx <= 1.0 && by >= 0.0 && by <= 1.0)
+				{
+					pts.add(new Point2D.Double(ax, ay));
+					pts.add(new Point2D.Double(bx, by));
+					break;
+				}
+				tries--;
+			}
+		}
 	}
 
 	@Override
-	public Iterable<Point2D> getPoints() {
-		return new Iterable<Point2D>() {
-			@Override
-			public Iterator<Point2D> iterator() {
-				return new Iterator<Point2D>() {
-					
-					private List<Float> buffer;
-					private boolean partial;
-
-					@Override
-					public void remove() {
-						throw new UnsupportedOperationException();
-					}
-					
-					
-					@Override
-					public Point2D next() {
-						if (!hasNext())
-							throw new IllegalStateException("iterator exhausted");
-
-						countdown--;
-						
-						if (buffer == null) {
-							partial = false;
-							buffer = makePair();
-						}
-						
-						if (!partial) {
-							partial = true;
-							return new Point2D.Float(buffer.get(0), buffer.get(1));
-						} else {
-							Point2D.Float p = new Point2D.Float(buffer.get(2), buffer.get(3));
-							buffer = null;
-							return p;
-						}
-					}
-					
-					@Override
-					public boolean hasNext() {
-						return countdown > 0;
-					}
-				};
-			}
-		};
+	public Iterable<Point2D> getPoints()
+	{
+		return pts;
 	}
-	
-	// list of lines across which to compare as pairs of pairs of floats
-	private List<Float> makePair() {
-		List<Float> list = new ArrayList<>(4);
-		
-		float ax = random.nextFloat();
-		float ay = random.nextFloat();
-		
-		float bx = 0;
-		float by = 0;
-		
-		final float dist = random.nextFloat();
-		
-		int tries = 20;
-		while (tries >= 1) {
-			float angle = (float) (random.nextFloat() * Math.PI * 2.0);
-			
-			bx = (float) (ax + sin(angle) * dist); 
-			by = (float) (ay + cos(angle) * dist);
-			if (bx >= 0.0 && bx <= 1.0 && by >= 0.0 && by <= 1.0)
-				break;
-			tries --;
-		}
-		if (tries == 0)
-			return makePair();  // exhausted, should not happen often, distorts scatterplot
-		list.add(ax);
-		list.add(ay);
-		list.add(bx);
-		list.add(by);
-		return list;
-	}
-
 }

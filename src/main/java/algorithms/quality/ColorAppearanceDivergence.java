@@ -41,8 +41,15 @@ public class ColorAppearanceDivergence implements ColormapQuality {
 	public double getQuality(Colormap2D colormap2d) {
 		MedianDivergenceComputer comp = MedianDivergenceComputer.fromSamplingStrategy(colormap2d, new EvenDistributedDistancePoints(new Random(123), 10000));
 		double d = (log(comp.getQuantile(0.9))-log(comp.getQuantile(0.1))) / log(2);
-		return 1.0 / d;		// "good" should be > "bad"
+		return d;
 	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return false;
+	}
+
 
 	@Override
 	public String getName() {
@@ -52,7 +59,7 @@ public class ColorAppearanceDivergence implements ColormapQuality {
 	@Override
 	public String getDescription() {
 		return "The color appearance to value divergence in powers of"
-				+ " two between upper and lower bound; higher values are worse.";
+				+ " two between upper and lower bound";
 	}
 
 }

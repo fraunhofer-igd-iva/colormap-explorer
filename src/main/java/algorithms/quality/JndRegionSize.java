@@ -58,7 +58,13 @@ public class JndRegionSize implements ColormapQuality
 		}
 		
 		// TODO: find a better scaling factor
-		return 1.0 / (stats.getVariance() * 10000.d);		// "good" should be > "bad"
+		return stats.getStandardDeviation() * 10000.d;
+	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return false;
 	}
 
 	private double computeArea(List<Point2D> poly, Point2D center)
@@ -85,6 +91,6 @@ public class JndRegionSize implements ColormapQuality
 	@Override
 	public String getDescription()
 	{
-		return "Compute the jnd regions values based on a sampling strategy and returns the variance of the jnd region size across the colormap";
+		return "The standard deviation of the JND region size";
 	}
 }

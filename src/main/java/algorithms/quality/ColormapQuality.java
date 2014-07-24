@@ -31,6 +31,11 @@ public interface ColormapQuality
 	double getQuality(Colormap2D colormap2d);
 
 	/**
+	 * @return true if higher quality score is "better", false if "lower" quality score is better
+	 */
+	boolean moreIsBetter();
+	
+	/**
 	 * @return the name (id)
 	 */
 	String getName();

@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[landscape]{article}
 \usepackage{graphicx}
 \usepackage{geometry}
 \usepackage{array}
@@ -10,23 +10,29 @@
 
 \begin{document}
 
-$colors:{color| 
+$quality:{color| 
+\definecolor{$color.name$\}{rgb\}{$color.r$, $color.g$, $color.b$\}
+}$
+
+$malus:{color| 
 \definecolor{$color.name$\}{rgb\}{$color.r$, $color.g$, $color.b$\}
 }$
 
 {
 \renewcommand{\tabcolsep}{0.0mm}
-\begin{tabular}{l|$colormaps:{ignored|c}; separator = "|"$}
-	Title & $colormaps:{cm|\begin{turn\}{90\} $cm.name$ \end{turn\}}; separator = " & "$  \\\\
-	\\hline
+\begin{tabular}{p{5cm}|$colormaps:{ignored|c}; separator = "|"$}
+	
+	Title & $colormaps:{cm|\begin{turn\}{90\} $cm.name$ \end{turn\}}; separator = " & "$  \\\\ \\hline
+	
+	Image & $colormaps:{cm|\includegraphics[height=8mm]{$cm.imagePath$\}}; separator = " & "$  \\\\ \\hline
 
-	 Image & $colormaps:{cm|\includegraphics[height=8mm]{$cm.imagePath$\}}; separator = " & "$  \\\\
-
-	\\hline
+	ColorSpace & $colormaps:{cm|\\scriptsize $cm.colorspace$}; separator = " & "$  \\\\ \\hline
 	
 	$metrics:{metric|
-	 $metric.name$ & $colormaps:{cm|\cellcolor{$cm.colors.(metric)$\} $cm.values.(metric)$}; separator = " & "$  \\\\
-	}$
+	 $metric.name$ \\newline
+     \\scriptsize $metric.description$ &  
+	 $colormaps:{cm|\cellcolor{$cm.colors.(metric)$\} $cm.values.(metric)$}; separator = " &\n"$  \\\\
+	}; separator = "\\hline\n" $
 \end{tabular}
 }
 

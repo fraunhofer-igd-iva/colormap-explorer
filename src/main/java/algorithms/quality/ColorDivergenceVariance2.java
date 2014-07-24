@@ -19,10 +19,13 @@ package algorithms.quality;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Iterator;
+import java.util.List;
 
 import main.MismatchScatterplotPanel;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import com.google.common.collect.Lists;
 
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
@@ -31,11 +34,11 @@ import colormaps.Colormap2D;
  * Computes the variance of the color distance/map distance ratio.
  * @author Martin Steiger
  */
-public final class ColorDivergenceVariance implements ColormapQuality
+public final class ColorDivergenceVariance2 implements ColormapQuality
 {
 	private final SamplingStrategy strategy;
 
-	public ColorDivergenceVariance(SamplingStrategy strategy)
+	public ColorDivergenceVariance2(SamplingStrategy strategy)
 	{
 		this.strategy = strategy;
 	}
@@ -43,8 +46,11 @@ public final class ColorDivergenceVariance implements ColormapQuality
 	@Override
 	public double getQuality(Colormap2D colormap)
 	{
-		DescriptiveStatistics stats = new DescriptiveStatistics();
+		DescriptiveStatistics ratioStats = new DescriptiveStatistics();
 		Iterator<Point2D> ptIt = strategy.getPoints().iterator();
+		
+		List<Double> mapDists = Lists.newArrayList();
+		List<Double> jndDists = Lists.newArrayList();
 
 		while (ptIt.hasNext())
 		{
@@ -55,7 +61,7 @@ public final class ColorDivergenceVariance implements ColormapQuality
 
 			Point2D p2 = ptIt.next();
 
-			float dist = (float) p1.distance(p2);
+			double dist = p1.distance(p2);
 
 			Color colorA = colormap.getColor(p1.getX(), p1.getY());
 			Color colorB = colormap.getColor(p2.getX(), p2.getY());
@@ -64,11 +70,24 @@ public final class ColorDivergenceVariance implements ColormapQuality
 			double cdist = MismatchScatterplotPanel.colorDiff(colorA, colorB);
 
 			double ratio = cdist / dist;
+			
+			mapDists.add(dist);
+			jndDists.add(cdist);
 
-			stats.addValue(ratio);
+			ratioStats.addValue(ratio);
 		}
 
-		return stats.getStandardDeviation();
+		double avg = ratioStats.getMean();
+		
+		DescriptiveStatistics missStats = new DescriptiveStatistics();
+
+		for (int i = 0; i < mapDists.size(); i++)
+		{
+			double miss = avg * mapDists.get(i) - jndDists.get(i);
+			missStats.addValue(Math.abs(miss));
+		}
+		
+		return missStats.getMean();
 	}
 	
 	@Override
@@ -80,12 +99,12 @@ public final class ColorDivergenceVariance implements ColormapQuality
 	@Override
 	public String getName()
 	{
-		return "ColorDivergence Variance";
+		return "ColorDivergence Variance JB";
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "The standard deviation of the color distance/map distance ratio";
+		return "The mean of the squared distance between color divergence from the average";
 	}
 }

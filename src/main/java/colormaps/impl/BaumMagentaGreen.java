@@ -23,6 +23,13 @@ import java.util.List;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
+
+/**
+ * @deprecated Another magenta/green colormap. This one with black/white corners this is suboptimal compared
+ * to the other colormaps in the paper
+ * @author ??
+ */
+@Deprecated
 public class BaumMagentaGreen extends AbstractColormap2D {
 
 	@Override

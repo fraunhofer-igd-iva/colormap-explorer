@@ -17,6 +17,10 @@
 package latex;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 /**
  * Hue-Lightness colormap that between (dark) blue and (light) yellow. 
@@ -26,15 +30,17 @@ import java.awt.Color;
  */
 public class ColorRamp
 {
-	private final Color[] colors = new Color[] 
-	{ 
-//		new Color(46, 64, 82), new Color(42, 86, 101), new Color(35, 110, 114),
-//		new Color(39, 133, 120), new Color(63, 155, 120), new Color(99, 177, 114), 
-//		new Color(143, 196, 105), new Color(193, 213, 98), new Color(249, 226, 97) 
-
-		new Color(20, 140, 60), new Color(220, 220, 220)
-	};
+	private final List<Color> colors = Lists.newArrayList();
 	
+	/**
+	 * @param colors
+	 */
+	public ColorRamp(Color c0, Color... more)
+	{
+		colors.add(c0);
+		colors.addAll(Arrays.asList(more));
+	}
+
 	/** 
 	 * linear min/max scaling; assumes value in [0.0 .. 1.0]
 	 * @param value
@@ -42,30 +48,30 @@ public class ColorRamp
 	 */
 	public Color getColor(double value)
 	{
-		double indexExact = value * (colors.length - 1);
+		double indexExact = value * (colors.size() - 1);
 		int indexLow = (int) Math.floor(indexExact);
-		if (indexLow >= colors.length)
+		if (indexLow >= colors.size())
 		{
-			indexLow = colors.length - 1;
+			indexLow = colors.size() - 1;
 		}
 		if (indexLow < 0)
 		{
 			indexLow = 0;
 		}
 		int indexHigh = indexLow + 1;
-		if (indexHigh >= colors.length)
+		if (indexHigh >= colors.size())
 		{
-			indexHigh = colors.length - 1;
+			indexHigh = colors.size() - 1;
 		}
 		if (indexHigh < 0)
 		{
 			indexHigh = 0;
 		}
 		if (indexLow == indexHigh)
-			return colors[indexLow];
+			return colors.get(indexLow);
 		
-		Color cL = colors[indexLow];
-		Color cH = colors[indexHigh];
+		Color cL = colors.get(indexLow);
+		Color cH = colors.get(indexHigh);
 		int r = (int) ((1 - (indexExact - indexLow)) * cL.getRed() + (1 - (indexHigh - indexExact)) * cH.getRed());
 		int g = (int) ((1 - (indexExact - indexLow)) * cL.getGreen() + (1 - (indexHigh - indexExact)) * cH.getGreen());
 		int b = (int) ((1 - (indexExact - indexLow)) * cL.getBlue() + (1 - (indexHigh - indexExact)) * cH.getBlue());

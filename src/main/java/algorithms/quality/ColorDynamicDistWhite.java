@@ -56,6 +56,12 @@ public class ColorDynamicDistWhite extends ColorDynamic
 		
 		return distWhite;
 	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return true;
+	}
 
 	@Override
 	public String getName()
@@ -66,7 +72,7 @@ public class ColorDynamicDistWhite extends ColorDynamic
 	@Override
 	public String getDescription()
 	{
-		return "Finds the smallest distance to white";
+		return "The smallest JND distance to white";
 	}
 	
 }

@@ -59,18 +59,24 @@ public class AttentionQuality implements ColormapQuality
 			stats.addValue(attention);
 		}
 		
-		return 1.0 / stats.getVariance();
+		return stats.getStandardDeviation() * 100d;
+	}
+	
+	@Override
+	public boolean moreIsBetter()
+	{
+		return false;
 	}
 
 	@Override
 	public String getName()
 	{
-		return "Attention";
+		return "Attention Steering";
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Compute the attention values based on a sampling strategy and returns the variance across the colormap";
+		return "The standard deviation of the attention steering (Lightness and Chroma) variable";
 	}
 }

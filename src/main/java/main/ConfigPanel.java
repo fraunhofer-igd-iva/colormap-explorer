@@ -165,7 +165,7 @@ public class ConfigPanel extends JPanel
 		List<ColormapQuality> measures = Lists.newArrayList();
 		List<String> results = Lists.newArrayList();
 		
-        measures.add(new ColorExploitation(circSampling));
+//        measures.add(new ColorExploitation(circSampling));
 //        measures.add(new JndRegionSize(circSampling));
         measures.add(new AttentionQuality(rectSampling));
         measures.add(new ColorDynamicBrightest(rectSampling));

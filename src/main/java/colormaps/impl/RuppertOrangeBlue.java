@@ -7,6 +7,7 @@ import java.util.List;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
+@Deprecated
 public class RuppertOrangeBlue extends AbstractColormap2D {
 
 	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(new Color(255, 127, 2), new Color(128, 128, 128), new Color(128, 128, 128), new Color(19, 70, 237));

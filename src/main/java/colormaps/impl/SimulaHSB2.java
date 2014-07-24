@@ -11,6 +11,11 @@ import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 import colorspaces.HSI;
 
+/**
+ * @deprecated There is no smooth transition at the left side (implementation bug?)
+ * @author Simon Thum
+ */
+@Deprecated
 public class SimulaHSB2 extends AbstractColormap2D {
 	
 	@Override
