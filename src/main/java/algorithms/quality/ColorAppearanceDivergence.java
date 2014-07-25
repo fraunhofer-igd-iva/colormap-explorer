@@ -55,14 +55,12 @@ public class ColorAppearanceDivergence implements ColormapQuality {
 
 	@Override
 	public String getName() {
-		if (_lower == 0 && _upper == 1)
-			return "Worst-case color appearance divergence";
 		return "Color appearance divergence";
 	}
 
 	@Override
 	public String getDescription() {
-		return "The color appearance to value divergence between upper and lower bound";
+		return "The color appearance to value divergence between " + _upper + " and " + _lower;
 	}
 
 }

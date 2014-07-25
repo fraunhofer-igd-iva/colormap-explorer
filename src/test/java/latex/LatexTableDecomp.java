@@ -54,7 +54,7 @@ public final class LatexTableDecomp
         templateDir.delimiterStartChar = '$';
         templateDir.delimiterStopChar = '$';
 
-        String imgFolderName = "images";
+        String imgFolderName = "images/gen";
 
         List<LatexColormap> lcms = Lists.newArrayList();
 

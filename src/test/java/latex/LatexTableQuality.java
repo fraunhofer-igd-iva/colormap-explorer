@@ -31,7 +31,7 @@ import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceQuantile;
 import algorithms.quality.ColorDivergenceVariance;
-import algorithms.quality.ColorDivergenceVariance2;
+import algorithms.quality.ColorDivergenceVarianceJB;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
 import algorithms.quality.ColorDynamicWhiteContrast;
@@ -71,7 +71,7 @@ public final class LatexTableQuality
         for (Colormap2D cm : colormaps)
         {
         	String fname = cm.getName() + "_" + ViewType.REAL.toString();
-            String relativePath = "images/" + toFilename(fname);
+            String relativePath = "images/gen/" + toFilename(fname);
 
         	MetricColormap mcm = new MetricColormap(cm, relativePath);
 			mcms.put(cm, mcm);
@@ -82,7 +82,7 @@ public final class LatexTableQuality
         EvenDistributedDistancePoints distSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
         
         List<ColormapQuality> measures = Lists.newArrayList();
-        measures.add(new ColorExploitation(circSampling));
+        measures.add(new ColorExploitation(circSampling, 2));
 		measures.add(new ColorDynamicDistBlack(rectSampling));
         measures.add(new ColorDynamicDistWhite(rectSampling));
         measures.add(new ColorDynamicWhiteContrast(rectSampling));
@@ -92,7 +92,7 @@ public final class LatexTableQuality
         measures.add(new JndRegionSize(circSampling));
         measures.add(new AttentionQuality(rectSampling));
         measures.add(new ColorDivergenceVariance(distSampling));
-        measures.add(new ColorDivergenceVariance2(distSampling));
+//        measures.add(new ColorDivergenceVarianceJB(distSampling));
         measures.add(new ColorAppearanceDivergence(0.05, 0.95));
         measures.add(new ColorAppearanceDivergence(0, 1));
 
@@ -158,11 +158,14 @@ public final class LatexTableQuality
 
 		for (Double quality : quals)
 		{	
-	    	if (quality > max)
-	    		max = quality;
-	    	
-	    	if (quality < min)
-	    		min = quality;
+			if (!quality.isInfinite() && !quality.isNaN())
+			{
+		    	if (quality > max)
+		    		max = quality;
+		    	
+		    	if (quality < min)
+		    		min = quality;
+			}
 		}
 		
 		return Range.closed(min, max);
@@ -178,9 +181,16 @@ public final class LatexTableQuality
         for (Colormap2D cm : qualityMap.keySet())
         {
         	double val = qualityMap.get(cm);
-        	double frac = (val - range.lowerEndpoint()) / span;
-        	int percent = (int)(frac * 100d);
-			result.put(cm, Integer.valueOf(percent));
+        	if (Double.isInfinite(val) || Double.isNaN(val))
+        	{
+        		result.put(cm, 100);
+        	}
+        	else
+        	{
+	        	double frac = (val - range.lowerEndpoint()) / span;
+	        	int percent = (int)(frac * 100d);
+				result.put(cm, Integer.valueOf(percent));
+        	}
         }
         
         return result;

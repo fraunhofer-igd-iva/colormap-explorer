@@ -50,7 +50,7 @@ public class LatexColormap
 
 	public String getColorspace()
 	{
-		return colormap.getColorSpace().toString().replaceAll("\\_", "\\\\_");
+		return colormap.getColorSpace().toString().replaceAll("\\_", "");
 	}
 
 	public void addImage(String imgFile)

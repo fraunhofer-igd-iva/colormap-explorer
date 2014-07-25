@@ -34,11 +34,11 @@ import colormaps.Colormap2D;
  * Computes the variance of the color distance/map distance ratio.
  * @author Martin Steiger
  */
-public final class ColorDivergenceVariance2 implements ColormapQuality
+public final class ColorDivergenceVarianceJB implements ColormapQuality
 {
 	private final SamplingStrategy strategy;
 
-	public ColorDivergenceVariance2(SamplingStrategy strategy)
+	public ColorDivergenceVarianceJB(SamplingStrategy strategy)
 	{
 		this.strategy = strategy;
 	}

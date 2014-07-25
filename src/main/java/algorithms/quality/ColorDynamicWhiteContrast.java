@@ -69,12 +69,12 @@ public class ColorDynamicWhiteContrast extends ColorDynamic
 	@Override
 	public String getName()
 	{
-		return "White Contrast";
+		return "White Contrast (1 : n)";
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "The maximum contrast to white";
+		return "The minimum contrast to white, based on the brightest found point in the map";
 	}
 }

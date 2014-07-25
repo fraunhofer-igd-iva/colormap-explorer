@@ -18,5 +18,24 @@ package colormaps;
 
 public enum ColorSpace 
 {
-	NONE, sRGB, HSV, CIE_XYZ, CIE_Lab
+	NONE, sRGB, HSV, CIE_XYZ("XYZ"), CIE_Lab("L*a*b");
+	
+	private String name;
+
+	ColorSpace()
+	{
+		name = super.name();
+	}
+	
+	ColorSpace(String name)
+	{
+		this.name = name;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }
+

@@ -20,9 +20,10 @@ public class TeulingFig3 extends TeulingStyle {
 
 	@Override
 	public String getDescription() {
-		return "See Teuling paper fig. 3 / 4 (c). Note: In the paper, (at least) the green channel is "
-				+ "not maxed out in the SW corner, suggesting there are more tweaks than described. This colormap "
-				+ "is as described, not as shown in the paper. Orientation as in Fig. 4";
+		return "See Teuling paper fig. 3 / 4 (c). This colormap is as described, not as shown in the paper. Orientation as in Fig. 4";
+//		return "See Teuling paper fig. 3 / 4 (c). Note: In the paper, (at least) the green channel is "
+//				+ "not maxed out in the SW corner, suggesting there are more tweaks than described. This colormap "
+//				+ "is as described, not as shown in the paper. Orientation as in Fig. 4";
 	}
 
 

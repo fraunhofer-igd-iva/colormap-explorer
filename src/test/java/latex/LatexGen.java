@@ -59,10 +59,8 @@ public final class LatexGen
 	public static void main(String[] args) throws Exception
 	{
 //		List<Colormap2D> colorMaps = Lists.newArrayList();
-//		colorMaps.add(new BaumOrangeCyan());
 //		colorMaps.add(new BCP37());
 //		colorMaps.add(new FourCornersAnchor());
-//		colorMaps.add(new LespintasPurpleGreen());
 //		colorMaps.add(new Steiger2014Generic());
 //		colorMaps.add(new TeulingFig2());
 		

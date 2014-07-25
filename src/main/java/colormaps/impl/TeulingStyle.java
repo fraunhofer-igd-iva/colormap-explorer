@@ -94,7 +94,7 @@ public abstract class TeulingStyle extends AbstractColormap2D
 	@Override
 	public List<String> getReferences()
 	{
-		return Collections.singletonList("teuling_aj_2011");
+		return Collections.singletonList("teulingBivariate2011");
 	}
 
 }
