@@ -4,48 +4,54 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 import java.awt.Color;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
+import colorspaces.HSL;
 
-@Deprecated
-public class SimulaHSB1 extends AbstractColormap2D {
+public class SimulaHSB3 extends AbstractColormap2D {
 
+	Logger _log = LoggerFactory.getLogger(getClass());
+		
 	@Override
 	public Color getColor(double x, double y) {
 		// normalize to -1..1
 		double nx = (float) (x * 2 - 1);
 		double ny = (float) (y * 2 - 1);
 		double dist = max(abs(ny), abs(nx));
-		double ang = Math.atan2(ny, nx)/(Math.PI*2);
-		return Color.getHSBColor((float)ang, 1f, (float)dist);
+		double ang = (Math.atan2(ny, nx)+Math.PI)/(Math.PI*2);
+		return HSL.HSLtoRGB((float)ang, (float)1, (float)dist/2f);
 	}
 
 	@Override
 	public String getName() {
-		return "Circular Hue (HSB)";
+		return "Simula 99 SOM Code HSL";
 	}
 
 	@Override
 	public String getDescription() {
-		return "HSB-based map with black center and constant saturation.";
-	}
-
-	@Override
-	public ColorSpace getColorSpace() {
-		return ColorSpace.HSV;
+		return "HSL-based map with black center and constant saturation.";
 	}
 
 	@Override
 	public List<String> getReferences() {
-		return Arrays.asList("simula1999som", "himberg2001knowledgeengineering", "wallet2009latent", "royColormap2010", "matos2010seismic");
+		return Collections.singletonList("Simula99");
 	}
 
 	@Override
 	protected Color getColor(float x, float y) {
 		throw new IllegalStateException("this method shuld not be called");
+	}
+	
+
+	@Override
+	public ColorSpace getColorSpace() {
+		return ColorSpace.HSV;
 	}
 
 }

@@ -69,7 +69,8 @@ public final class MedianDivergenceComputer {
 		ratios = new double[len];
 		Iterator<Point2D> ptIt = points.iterator();
 		
-		for (int i = 0; i < len; i++)
+		int i = 0;
+		while (i < len && ptIt.hasNext())
 		{
 			Point2D p1 = ptIt.next();
 			Point2D p2 = ptIt.next();
@@ -79,11 +80,16 @@ public final class MedianDivergenceComputer {
 			Color colorA = colormap.getColor(p1.getX(), p1.getY());
 			Color colorB = colormap.getColor(p2.getX(), p2.getY());
 			
-			// roughly 0-100
+			// color distance
 			double cdist = MismatchScatterplotPanel.colorDiff(colorA, colorB);
 			
+			// filter zero divisions, as long as the value distance is small
+			// DON'T protect colormaps that contain double colors
+			if (cdist == 0 && dist < 0.05)
+				continue;
 			double ratio = cdist / dist;
 			ratios[i] = ratio;
+			i++;
 		}
 		Arrays.sort(ratios);
 	}
