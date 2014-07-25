@@ -82,14 +82,14 @@ public final class LatexTableQuality
         EvenDistributedDistancePoints distSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
         
         List<ColormapQuality> measures = Lists.newArrayList();
-        measures.add(new ColorExploitation(circSampling, 2));
+//        measures.add(new ColorExploitation(circSampling, 2));
 		measures.add(new ColorDynamicDistBlack(rectSampling));
         measures.add(new ColorDynamicDistWhite(rectSampling));
         measures.add(new ColorDynamicWhiteContrast(rectSampling));
         measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
 //        measures.add(new ColorDivergenceQuantile(0.9));
-        measures.add(new JndRegionSize(circSampling));
+//        measures.add(new JndRegionSize(circSampling));
         measures.add(new AttentionQuality(rectSampling));
         measures.add(new ColorDivergenceVariance(distSampling));
 //        measures.add(new ColorDivergenceVarianceJB(distSampling));
