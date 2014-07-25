@@ -55,12 +55,12 @@ public class ColorAppearanceDivergence implements ColormapQuality {
 
 	@Override
 	public String getName() {
-		return "Color appearance divergence";
+		return "Dist. Quantiles";
 	}
 
 	@Override
 	public String getDescription() {
-		return "The color appearance to value divergence between " + _upper + " and " + _lower;
+		return "The color appearance to value divergence between the " + _upper + " and " + _lower + " quantiles";
 	}
 
 }

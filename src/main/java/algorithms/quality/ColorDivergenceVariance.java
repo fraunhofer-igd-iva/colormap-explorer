@@ -80,7 +80,7 @@ public final class ColorDivergenceVariance implements ColormapQuality
 	@Override
 	public String getName()
 	{
-		return "ColorDivergence Variance";
+		return "Dist. Ratio Divergence";
 	}
 
 	@Override

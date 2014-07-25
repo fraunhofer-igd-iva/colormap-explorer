@@ -19,6 +19,10 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -29,12 +33,9 @@ import org.stringtemplate.v4.misc.ErrorManager;
 
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
-import algorithms.quality.ColorDivergenceQuantile;
 import algorithms.quality.ColorDivergenceVariance;
-import algorithms.quality.ColorDivergenceVarianceJB;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
-import algorithms.quality.ColorDynamicWhiteContrast;
 import algorithms.quality.ColorExploitation;
 import algorithms.quality.ColormapQuality;
 import algorithms.quality.JndRegionSize;
@@ -82,11 +83,11 @@ public final class LatexTableQuality
         EvenDistributedDistancePoints distSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
         
         List<ColormapQuality> measures = Lists.newArrayList();
-//        measures.add(new ColorExploitation(circSampling, 2));
+//        measures.add(new ColorExploitation(circSampling, 5));
 		measures.add(new ColorDynamicDistBlack(rectSampling));
         measures.add(new ColorDynamicDistWhite(rectSampling));
-        measures.add(new ColorDynamicWhiteContrast(rectSampling));
-        measures.add(new ColorDivergenceQuantile(0.5));
+//        measures.add(new ColorDynamicWhiteContrast(rectSampling));
+//        measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
 //        measures.add(new ColorDivergenceQuantile(0.9));
 //        measures.add(new JndRegionSize(circSampling));
@@ -94,17 +95,20 @@ public final class LatexTableQuality
         measures.add(new ColorDivergenceVariance(distSampling));
 //        measures.add(new ColorDivergenceVarianceJB(distSampling));
         measures.add(new ColorAppearanceDivergence(0.05, 0.95));
-        measures.add(new ColorAppearanceDivergence(0, 1));
+//        measures.add(new ColorAppearanceDivergence(0, 1));
 
         for (ColormapQuality measure : measures)
         {
         	Map<Colormap2D, Double> mapQualities = computeQuality(colormaps, measure);
         	Map<Colormap2D, Integer> mapPoints = computePoints(mapQualities);
+        	Map<Colormap2D, Integer> mapRanks = computeRanks(mapQualities);
+        	
         
             for (Colormap2D cm : colormaps)
             {
             	double quality = mapQualities.get(cm);
             	Integer points = mapPoints.get(cm);
+            	Integer rank = mapRanks.get(cm);
 				mcms.get(cm).addMetric(measure, quality, points);
 	        }
         }
@@ -123,6 +127,45 @@ public final class LatexTableQuality
         
         return texFile;
     }
+
+	private static Map<Colormap2D, Integer> computeRanks(Map<Colormap2D, Double> mapQualities)
+	{
+		Map<Colormap2D, Double> sorted = sortByValue(mapQualities);
+		Map<Colormap2D, Integer> result = Maps.newLinkedHashMap();
+		
+		int rank = 1;
+		
+		for (Map.Entry<Colormap2D, Double> entry : sorted.entrySet())
+		{
+			result.put(entry.getKey(), rank++);
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Copied from 
+	 * http://stackoverflow.com/questions/109383/how-to-sort-a-mapkey-value-on-the-values-in-java/2581754#2581754
+	 */
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map)
+	{
+		List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
+		Collections.sort(list, new Comparator<Map.Entry<K, V>>()
+		{
+			@Override
+			public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2)
+			{
+				return (o1.getValue()).compareTo(o2.getValue());
+			}
+		});
+
+		Map<K, V> result = new LinkedHashMap<>();
+		for (Map.Entry<K, V> entry : list)
+		{
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
+	}
 
 	private static List<LatexColor> createColorDefs(ColorRamp ramp, String prefix)
 	{

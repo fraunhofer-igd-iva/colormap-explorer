@@ -7,6 +7,11 @@ import java.util.List;
 import colormaps.AbstractColormap2D;
 import colormaps.ColorSpace;
 
+/**
+ * @deprecated Black/White corners and magenta/green - too similar to many other approaches 
+ * @author ??
+ */
+@Deprecated
 public class Brecheisen2009 extends AbstractColormap2D {
 
 	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(

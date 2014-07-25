@@ -84,7 +84,7 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 		case HUE:
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			Color rgb = new Color(Color.HSBtoRGB(hsv[0], 1, 1));
-			return new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), (int)(hsv[1] * 255 + 0.5));
+			return new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), 255);
 		case SAT:
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			return new Color(hsv[1], hsv[1], hsv[1]);

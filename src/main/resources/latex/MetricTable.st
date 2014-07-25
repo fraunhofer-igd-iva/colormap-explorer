@@ -29,15 +29,15 @@ $malus:{color|
 % Centering the content of a table cell is a real pain
 % We therefore use \raisebox to do the centering manually for every single cell
 
-\renewcommand{\tabcolsep}{0.0mm}
-\begin{tabular}{p{5cm}|c|c|$metrics:{ignored|p{1.1cm\}}; separator = "|"$}
+%\renewcommand{\tabcolsep}{0.0mm}
+\begin{tabular}{p{5cm}|c|c|$metrics:{ignored|p{0.9cm\}}; separator = "|"$}
 	
-	Title & Space & Image & $metrics:{metric|\begin{sideways\} \parbox{5cm\}{$metric.name$ \\newline \\scriptsize $metric.description$\}\end{sideways\}}; separator = " &\n"$ \\\\
+	Title & Space & Img. & $metrics:{metric|\begin{sideways\} \parbox{4cm\}{$metric.name$ \\newline \\scriptsize $metric.description$\}\end{sideways\}}; separator = " &\n"$ \\\\
 	\hline
 	
-	$colormaps:{cm|$cm.name$ & $cm.colorspace$ & \topincludegraphics[height=9mm]{$cm.imagePath$\} & 
-    	$metrics:{metric|\cellcolor{$cm.colors.(metric)$\}\raisebox{-3mm\}{$cm.values.(metric)$\}}; separator = "& \n"$
-    }; separator = "\\\\ \n\\hline \n"$
+	$colormaps:{cm|$cm.name$ & $cm.colorspace$ & \topincludegraphics[height=7mm]{$cm.imagePath$\} & 
+    	$metrics:{metric|\cellcolor{$cm.colors.(metric)$\}\raisebox{-2mm\}{$cm.values.(metric)$\}}; separator = " &\n"$ \\\\
+    }; separator = "\\hline \n"$
 	
 	 
 \end{tabular}
