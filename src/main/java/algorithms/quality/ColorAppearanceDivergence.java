@@ -20,6 +20,7 @@ import java.util.Random;
 
 import algorithms.MedianDivergenceComputer;
 import algorithms.sampling.EvenDistributedDistancePoints;
+import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
 
 /**
@@ -31,18 +32,26 @@ public class ColorAppearanceDivergence implements ColormapQuality {
 	
 	private double _lower, _upper;
 	
+	private final SamplingStrategy _samplingStrategy;
+	
 	/**
 	 * @param lower lower quantile
 	 * @param upper upper quantile
 	 */
 	public ColorAppearanceDivergence(double lower, double upper) {
-		_lower = lower;
-		_upper = upper;
+		this(lower, upper, new EvenDistributedDistancePoints(new Random(123), 10000));
+	}
+
+	public ColorAppearanceDivergence(double _lower, double _upper,
+			SamplingStrategy _samplingStrategy) {
+		this._lower = _lower;
+		this._upper = _upper;
+		this._samplingStrategy = _samplingStrategy;
 	}
 
 	@Override
 	public double getQuality(Colormap2D colormap2d) {
-		MedianDivergenceComputer comp = MedianDivergenceComputer.fromSamplingStrategy(colormap2d, new EvenDistributedDistancePoints(new Random(123), 10000));
+		MedianDivergenceComputer comp = MedianDivergenceComputer.fromSamplingStrategy(colormap2d, _samplingStrategy);
 		return comp.getQuantile(_upper) / comp.getQuantile(_lower);
 	}
 	

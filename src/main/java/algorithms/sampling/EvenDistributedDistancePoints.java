@@ -26,16 +26,30 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 
 /**
- * Randomly outputs points in [0..1, 0..1] whose sequential pairwise distance is evenly distributed.
+ * Randomly outputs points in [0..1, 0..1] whose sequential pairwise distance is evenly distributed
+ * in the range given.
  * @author Simon Thum
  */
 public class EvenDistributedDistancePoints implements SamplingStrategy
 {
 
 	private final List<Point2D> pts = Lists.newArrayList();
+	
+	private double lower = 0;
+	private double upper = 1;
+	
+	public EvenDistributedDistancePoints(Random random, int number, double lower, double upper) {
+		this.lower = lower;
+		this.upper = upper;
+		populateList(random, number);
+	}
 
 	public EvenDistributedDistancePoints(Random random, int number)
 	{
+		populateList(random, number);
+	}
+
+	private void populateList(Random random, int number) {
 		while (pts.size() < number)
 		{
 			double ax = random.nextDouble();
@@ -44,7 +58,7 @@ public class EvenDistributedDistancePoints implements SamplingStrategy
 			double bx = 0;
 			double by = 0;
 
-			final double dist = random.nextDouble();
+			final double dist = lower + random.nextDouble() * (upper - lower);
 
 			int tries = 20;
 			while (tries >= 1)

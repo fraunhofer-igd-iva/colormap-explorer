@@ -159,7 +159,10 @@ public class ConfigPanel extends JPanel
 	{
         SamplingStrategy circSampling = new CircularSampling(30);
         SamplingStrategy rectSampling = new GridSampling(50);	// 50x50 = 2500 sample points
-		EvenDistributedDistancePoints distSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
+		EvenDistributedDistancePoints overallDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
+		EvenDistributedDistancePoints smallDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0, 0.1);
+		EvenDistributedDistancePoints midDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0.1, 0.3);
+		EvenDistributedDistancePoints largeDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0.3, 1);
 		
 		// TODO: iterate over all available quality measures
 		List<ColormapQuality> measures = Lists.newArrayList();
@@ -173,10 +176,16 @@ public class ConfigPanel extends JPanel
 		measures.add(new ColorDynamicDistBlack(rectSampling));
 		measures.add(new ColorDynamicDistWhite(rectSampling));
 		measures.add(new ColorDynamicWhiteContrast(rectSampling));
-		measures.add(new ColorAppearanceDivergence(0.05, 0.95));
-		measures.add(new ColorAppearanceDivergence(0, 1));
-		measures.add(new ColorDivergenceVariance(distSampling));
-//        measures.add(new ColorDivergenceQuantile(0.5));
+		measures.add(new ColorDivergenceVariance(smallDistSampling));
+		measures.add(new ColorDivergenceVariance(midDistSampling));
+		measures.add(new ColorDivergenceVariance(largeDistSampling));
+		measures.add(new ColorDivergenceVariance(overallDistSampling));
+		measures.add(new ColorAppearanceDivergence(0.05, 0.95, smallDistSampling));
+		measures.add(new ColorAppearanceDivergence(0.05, 0.95, midDistSampling));
+		measures.add(new ColorAppearanceDivergence(0.05, 0.95, largeDistSampling));
+		measures.add(new ColorAppearanceDivergence(0.05, 0.95, overallDistSampling));
+		
+		//        measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
 //        measures.add(new ColorDivergenceQuantile(0.9));
 		
