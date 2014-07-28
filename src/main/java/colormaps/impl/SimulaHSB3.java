@@ -40,7 +40,7 @@ public class SimulaHSB3 extends AbstractColormap2D {
 
 	@Override
 	public List<String> getReferences() {
-		return Collections.singletonList("Simula99");
+		return Collections.singletonList("simula1999som");
 	}
 
 	@Override
