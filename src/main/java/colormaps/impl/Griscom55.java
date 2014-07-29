@@ -1,5 +1,8 @@
 package colormaps.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 
 /**
  * This is modeled after the poster "Cross-Modal Sound to Sight Associations
@@ -12,6 +15,7 @@ package colormaps.impl;
  * or RGB magic.
  * @author Simon Thum
  */
+@Deprecated
 public class Griscom55 extends GuoLabStyle {
 	
 	public Griscom55() {
@@ -26,6 +30,11 @@ public class Griscom55 extends GuoLabStyle {
 	@Override
 	public String getDescription() {
 		return "Griscom and Palmer 2013 - not really a 2D color map, maybe not Lab.";
+	}
+	
+	@Override
+	public List<String> getReferences() {
+		return Collections.singletonList("griscom2013violins");
 	}
 	
 }
