@@ -30,7 +30,7 @@ public class SimulaHSB3 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Simula 99 SOM Code HSL";
+		return "Simula and Alhoniemi";
 	}
 
 	@Override

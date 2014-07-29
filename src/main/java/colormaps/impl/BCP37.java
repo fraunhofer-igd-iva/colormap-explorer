@@ -69,7 +69,7 @@ public class BCP37 extends AbstractColormap2D {
 
 	@Override
 	public String getDescription() {
-		return "Colormap with (CIELAB) colors from the BCP 37 (Berkeley Color Project)";
+		return "CIELab colormap with colors from the BCP 37 (Berkeley Color Project). Implementation based on a sRGB regression model.";
 	}
 
 	@Override
