@@ -83,14 +83,14 @@ public final class LatexTableQuality
         EvenDistributedDistancePoints distSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
         
         List<ColormapQuality> measures = Lists.newArrayList();
-//        measures.add(new ColorExploitation(circSampling, 5));
+        measures.add(new ColorExploitation(circSampling, 3.0));
 		measures.add(new ColorDynamicDistBlack(rectSampling));
         measures.add(new ColorDynamicDistWhite(rectSampling));
 //        measures.add(new ColorDynamicWhiteContrast(rectSampling));
 //        measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
 //        measures.add(new ColorDivergenceQuantile(0.9));
-//        measures.add(new JndRegionSize(circSampling));
+        measures.add(new JndRegionSize(circSampling));
         measures.add(new AttentionQuality(rectSampling));
         measures.add(new ColorDivergenceVariance(distSampling));
 //        measures.add(new ColorDivergenceVarianceJB(distSampling));
@@ -118,8 +118,8 @@ public final class LatexTableQuality
         
         ST st = templateDir.getInstanceOf("MetricTable");
 		st.add("metrics", measures);
-		st.add("quality", createColorDefs(colorrampQuality, "quality"));
-		st.add("malus", createColorDefs(colorrampMalus, "malus"));
+		st.add("quality", createColorDefs(colorrampQuality, "quality", 100));
+		st.add("malus", createColorDefs(colorrampMalus, "malus", 100));
 		st.add("colormaps", mcms.values());
 
         File texFile = new File(outputFolder, "metric_table.tex");
@@ -167,13 +167,13 @@ public final class LatexTableQuality
 		return result;
 	}
 
-	private static List<LatexColor> createColorDefs(ColorRamp ramp, String prefix)
+	private static List<LatexColor> createColorDefs(ColorRamp ramp, String prefix, int steps)
 	{
 		List<LatexColor> colors = Lists.newArrayList();
 		
-		for (int i=0; i<=100; i++)
+		for (int i=0; i<=steps; i++)
 		{
-			double val = 1.0 - i / 100d;
+			double val = 1.0 - i / (double)steps;
 			Color col = ramp.getColor(val);
 			
 			colors.add(new LatexColor(col, prefix + i));

@@ -144,7 +144,7 @@ public class JndRegionComputer
 		Color color = colormap.getColor((float)mx, (float)my);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 		
-		int angleSteps = 96;
+		int angleSteps = 128;
 		double sampleRateDist = 0.0005;
 		
 		List<Point2D> pts = Lists.newArrayList();

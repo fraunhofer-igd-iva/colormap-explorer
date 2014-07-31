@@ -149,7 +149,7 @@ public class JndViewPanel extends JPanel
 		int sampleRate = 100;
 //		GridSampling sampling = new GridSampling(sampleRate);
 		CircularSampling sampling = new CircularSampling(sampleRate);
-		regionComputer = new JndRegionComputer(colormap, sampling, 3.0);
+		regionComputer = new JndRegionComputer(colormap, sampling, 6.0);
 
 		repaint();
 	}
