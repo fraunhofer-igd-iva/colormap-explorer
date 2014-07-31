@@ -25,4 +25,7 @@ public class TeulingFig3 extends TeulingStyle {
 	}
 
 
+	public String getName() {
+		return "Teuling et al. Fig. 3";
+	}
 }

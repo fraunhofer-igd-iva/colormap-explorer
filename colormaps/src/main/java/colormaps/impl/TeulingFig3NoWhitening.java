@@ -21,4 +21,7 @@ public class TeulingFig3NoWhitening extends TeulingStyle {
 	}
 
 
+	public String getName() {
+		return "Teuling et al. Fig. 4c";
+	}
 }

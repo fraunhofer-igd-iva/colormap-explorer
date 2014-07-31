@@ -21,5 +21,8 @@ public class TeulingFig4a extends TeulingStyle {
 //				+ "It seems that it only served explanatory purposes in the paper.";
 	}
 
+	public String getName() {
+		return "Teuling et al. Fig. 4a";
+	}
 
 }

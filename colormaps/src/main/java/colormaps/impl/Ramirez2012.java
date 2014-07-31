@@ -35,7 +35,7 @@ public class Ramirez2012 extends AbstractColormap2D {
 
 	@Override
 	public String getName() {
-		return "Ramirez2012";
+		return "Ramirez et al.";
 	}
 
 	@Override

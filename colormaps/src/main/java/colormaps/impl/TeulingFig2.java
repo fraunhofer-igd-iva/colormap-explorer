@@ -17,5 +17,8 @@ public class TeulingFig2 extends TeulingStyle {
 		return "See Teuling paper fig. 2 or 4(b). Orientation as in Fig. 4.";
 	}
 
+	public String getName() {
+		return "Teuling et al. Fig. 2";
+	}
 
 }
