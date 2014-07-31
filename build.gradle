@@ -1,42 +1,37 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
-group = 'de.fhg.igd.iva'
-version = '1.0-SNAPSHOT'
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}
 
-compileJava.options.encoding = 'ISO-8859-15'
-javadoc.options.encoding = 'ISO-8859-15'
+allprojects {
+	group = 'de.fhg.igd.iva'
+	version = '1.0.0'
 
-sourceCompatibility=1.7
+	compileJava.options.encoding = 'ISO-8859-15'
+	javadoc.options.encoding = 'ISO-8859-15'
 
-// We use both Maven Central and the Humboldt Artifactory instance, which contains igd-iva/pcolor
-subprojects {
+	sourceCompatibility=1.7
+
+	// We use both Maven Central and the Humboldt Artifactory instance, which contains igd-iva/pcolor
 	repositories {
 		mavenCentral()
 		maven {
 			url "http://artifactory.esdi-humboldt.eu/artifactory/libs-release/"
 		}
 	}
-}
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
-}
+	task sourceJar(type: Jar) {
+		description = "Create a JAR with all sources"
+		from sourceSets.main.allSource
+		classifier = 'sources'
+	}
 
-task sourceJar(type: Jar) {
-    description = "Create a JAR with all sources"
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+		description = "Create a JAR with the JavaDoc for the java sources"
+		from javadoc.destinationDir
+		classifier = 'javadoc'
+	}
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    description = "Create a JAR with the JavaDoc for the java sources"
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
-// Define the artifacts we want to publish (the .pom will also be included since the Maven plugin is active)
-artifacts {
-    archives sourceJar
-    archives javadocJar
 }
