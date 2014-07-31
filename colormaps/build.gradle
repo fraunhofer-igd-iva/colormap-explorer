@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+dependencies {
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+	compile group: 'com.google.guava', name: 'guava', version: '17.0'
+	
+	// In Humboldt Artifactory
+	compile(group: 'de.fhg.igd', name: 'pcolor', version: '1.3.0') 
+
+	runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.2'
+}
+

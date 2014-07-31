@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+mainClassName = "main.ColorMapExplorer"
+
+dependencies {
+	compile group: 'org.antlr', name: 'ST4', version: '4.0.8'
+	compile group: 'org.jbibtex', name: 'jbibtex', version: '1.0.13'
+
+	compile project(':metrics')
+	compile project(':colormaps')
+}
+

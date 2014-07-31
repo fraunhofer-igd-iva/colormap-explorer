@@ -9,8 +9,7 @@
 .project
 .settings/
 /bin
-/build
+build
 
 # Other
-/*.log
-/output.txt
+*.log
