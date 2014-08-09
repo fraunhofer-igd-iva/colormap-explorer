@@ -16,15 +16,15 @@
 
 package main;
 
-import static colormaps.transformed.SimpleColormapView.ViewType.ATT;
-import static colormaps.transformed.SimpleColormapView.ViewType.BLUE;
-import static colormaps.transformed.SimpleColormapView.ViewType.GREEN;
-import static colormaps.transformed.SimpleColormapView.ViewType.HUE;
-import static colormaps.transformed.SimpleColormapView.ViewType.LUM;
-import static colormaps.transformed.SimpleColormapView.ViewType.REAL;
-import static colormaps.transformed.SimpleColormapView.ViewType.RED;
-import static colormaps.transformed.SimpleColormapView.ViewType.SAT;
-import static colormaps.transformed.SimpleColormapView.ViewType.VAL;
+import static views.decomposed.SimpleColormapView.ViewType.ATT;
+import static views.decomposed.SimpleColormapView.ViewType.BLUE;
+import static views.decomposed.SimpleColormapView.ViewType.GREEN;
+import static views.decomposed.SimpleColormapView.ViewType.HUE;
+import static views.decomposed.SimpleColormapView.ViewType.LUM;
+import static views.decomposed.SimpleColormapView.ViewType.REAL;
+import static views.decomposed.SimpleColormapView.ViewType.RED;
+import static views.decomposed.SimpleColormapView.ViewType.SAT;
+import static views.decomposed.SimpleColormapView.ViewType.VAL;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -32,11 +32,10 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import views.decomposed.SimpleColormapView;
+import views.decomposed.SimpleColormapView.ViewType;
 import colormaps.Colormap2D;
 import colormaps.ConstantColormap2D;
-import colormaps.transformed.SimpleColormapView;
-import colormaps.transformed.SimpleColormapView.ViewType;
-import colormaps.transformed.TransformedColormap2D;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;

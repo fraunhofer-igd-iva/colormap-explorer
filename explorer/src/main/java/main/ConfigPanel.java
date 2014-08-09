@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
+import views.decomposed.ColormapView;
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceVariance;
@@ -56,7 +57,6 @@ import algorithms.sampling.EvenDistributedDistancePoints;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
-import colormaps.transformed.ColormapView;
 import colorspaces.CIELABLch;
 import colorspaces.RGB;
 import colorspaces.XYZ;

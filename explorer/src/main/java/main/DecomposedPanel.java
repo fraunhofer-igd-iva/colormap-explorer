@@ -40,8 +40,8 @@ import org.slf4j.LoggerFactory;
 import tiling.Direction;
 import tiling.HexTileModel;
 import tiling.Tile;
+import views.decomposed.ColormapView;
 import colormaps.Colormap2D;
-import colormaps.transformed.ColormapView;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;

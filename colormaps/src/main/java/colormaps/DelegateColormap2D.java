@@ -65,4 +65,12 @@ public class DelegateColormap2D implements Colormap2D
 	{
 		return delegate.getReferences();
 	}
+	
+	/**
+	 * @return the underlying delegate colormap
+	 */
+	protected Colormap2D getDelegate()
+	{
+		return delegate;
+	}
 }

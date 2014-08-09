@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colormaps.transformed;
+package views.decomposed;
 
 import java.awt.Color;
 

@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package colormaps.transformed;
+package views.decomposed;
 
-import colormaps.AbstractColormap2D;
-import colormaps.ColorSpace;
-import colormaps.Colormap2D;
+import java.awt.Color;
 
 /**
- * Transforms a given colormap
+ * A view on a colormap
  * @author Martin Steiger
  */
-public abstract class TransformedColormap2D extends AbstractColormap2D {
+public interface ColormapView
+{
+	/**
+	 * @param mx the x coordinate in the range [0..1]
+	 * @param my the x coordinate in the range [0..1]
+	 * @return the color value at [mx, my] 
+	 */
+	Color getColor(double mx, double my);
 
-	private Colormap2D colormap;
+	/**
+	 * @param mx the x coordinate in the range [0..1]
+	 * @param my the x coordinate in the range [0..1]
+	 * @return the reliability of the view [0..1]
+	 */
+	double getReliability(double mx, double my);
 
-	protected TransformedColormap2D(Colormap2D colormap)
-	{
-		this.colormap = colormap;
-	}
-	
-	protected Colormap2D getColormap() {
-		return colormap;
-	}
-
-	@Override
-	public ColorSpace getColorSpace() {
-		return colormap.getColorSpace();
-	}
-
+	/**
+	 * @return a human-readable description of the view
+	 */
+	String getDescription();
 }
