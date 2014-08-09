@@ -21,6 +21,7 @@ import java.util.Set;
 import tiling.Tile;
 import tiling.TileModel;
 import colormaps.Colormap2D;
+import colormaps.transformed.ColormapView;
 
 import com.google.common.base.Preconditions;
 
@@ -31,7 +32,7 @@ import com.google.common.base.Preconditions;
 public class TileSelectionEvent
 {
 	private final Set<Tile> selection;
-	private final Colormap2D colormap;
+	private final ColormapView colormap;
 	private final TileModel model;
 
 	/**
@@ -39,7 +40,7 @@ public class TileSelectionEvent
 	 * @param colormap the corresponding colormap, never <code>null</code>
 	 * @param model the corresponding tile model, never <code>null</code>
 	 */
-	public TileSelectionEvent(Set<Tile> tiles, Colormap2D colormap, TileModel model)
+	public TileSelectionEvent(Set<Tile> tiles, ColormapView colormap, TileModel model)
 	{
 		// prefer NPE over IAE - Effective Java 2nd Edition, Item 60
 		Preconditions.checkNotNull(colormap, "colormap must not be null");
@@ -54,7 +55,7 @@ public class TileSelectionEvent
 	/**
 	 * @return the corresponding colormap, never <code>null</code>
 	 */
-	public Colormap2D getColormap()
+	public ColormapView getColormap()
 	{
 		return colormap;
 	}

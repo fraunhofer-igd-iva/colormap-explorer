@@ -56,6 +56,7 @@ import algorithms.sampling.EvenDistributedDistancePoints;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 import colormaps.Colormap2D;
+import colormaps.transformed.ColormapView;
 import colorspaces.CIELABLch;
 import colorspaces.RGB;
 import colorspaces.XYZ;
@@ -253,7 +254,7 @@ public class ConfigPanel extends JPanel
 	{
 		tileInfoPanel.removeAll();
 
-		Colormap2D colormap = event.getColormap();
+		ColormapView colormap = event.getColormap();
 		TileModel tileModel = event.getTileModel();
 		
 		Set<Tile> tiles = event.getSelection();

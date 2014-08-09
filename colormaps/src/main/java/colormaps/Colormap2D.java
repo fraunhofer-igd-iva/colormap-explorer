@@ -28,7 +28,7 @@ public interface Colormap2D
 	/**
 	 * @param x the x coordinate in the range [0..1]
 	 * @param y the x coordinate in the range [0..1]
-	 * @return the 
+	 * @return the color value at [mx, my] 
 	 */
 	Color getColor(double x, double y);
 

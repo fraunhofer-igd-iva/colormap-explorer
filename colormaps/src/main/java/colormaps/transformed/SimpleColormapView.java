@@ -19,6 +19,7 @@ package colormaps.transformed;
 import java.awt.Color;
 
 import colormaps.Colormap2D;
+import colormaps.DelegateColormap2D;
 import colorspaces.CIELABLch;
 import colorspaces.RGB;
 
@@ -26,19 +27,36 @@ import colorspaces.RGB;
  * Transforms a given colormap by filtering a channel
  * @author Martin Steiger
  */
-public class SimpleFilteredColormap2D extends TransformedColormap2D {
+public class SimpleColormapView implements ColormapView
+{
+	private Colormap2D colormap;
 
 	public enum ViewType
 	{
-		REAL,
-		LUM,
-		RED,
-		GREEN,
-		BLUE,
-		HUE,
-		SAT,
-		VAL,
-		ATT;
+		REAL("The original colormap"),
+		LUM("Luminance"),
+		RED("Red channel"),
+		GREEN("Green channel"),
+		BLUE("Blue channel"),
+		HUE("Hue"),
+		SAT("Saturation"),
+		VAL("Value (in HSV)"),
+		ATT("Attention");
+		
+		private String desc;
+		
+		ViewType(String desc)
+		{
+			this.desc = desc;
+		}
+		
+		/**
+		 * @return a description of the view
+		 */
+		public String getDescription()
+		{
+			return desc;
+		}
 	}
 	
 	private ViewType viewType;
@@ -47,18 +65,16 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	 * @param colormap the original color map
 	 * @param viewType the filter type
 	 */
-	public SimpleFilteredColormap2D(Colormap2D colormap, ViewType viewType)
+	public SimpleColormapView(Colormap2D colormap, ViewType viewType)
 	{
-		super(colormap);
+		this.colormap = colormap;
 		this.viewType = viewType;
 	}
 	
 	@Override
-	public Color getColor(float mx, float my)
+	public Color getColor(double mx, double my)
 	{
-		Color color = getColormap().getColor(mx, my);
-		
-//		double[] lab = new CIELAB().fromColor(color);
+		Color color = colormap.getColor(mx, my);
 		
 		int red = color.getRed();
 		int green = color.getGreen();
@@ -81,7 +97,7 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 		case HUE:
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			Color rgb = new Color(Color.HSBtoRGB(hsv[0], 1, 1));
-			return new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), 255);
+			return new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue());
 		case SAT:
 			hsv = Color.RGBtoHSB(red, green, blue, null);
 			return new Color(hsv[1], hsv[1], hsv[1]);
@@ -102,12 +118,27 @@ public class SimpleFilteredColormap2D extends TransformedColormap2D {
 	}
 
 	@Override
-	public String getName() {
-		return viewType.name();
+	public String getDescription()
+	{
+		return viewType.getDescription();
 	}
-
+	
 	@Override
-	public String getDescription() {
-		return "Filtered views on a colormap";
+	public double getReliability(double mx, double my)
+	{
+		switch (viewType)
+		{
+		case HUE:
+		{
+			Color color = colormap.getColor(mx, my);
+			int red = color.getRed();
+			int green = color.getGreen();
+			int blue = color.getBlue();
+			float[] hsv = Color.RGBtoHSB(red, green, blue, null);
+			return hsv[1];
+		}
+		default:
+			return 1.0;
+		}
 	}
 }

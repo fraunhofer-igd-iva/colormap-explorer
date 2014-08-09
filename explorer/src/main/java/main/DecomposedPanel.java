@@ -41,6 +41,7 @@ import tiling.Direction;
 import tiling.HexTileModel;
 import tiling.Tile;
 import colormaps.Colormap2D;
+import colormaps.transformed.ColormapView;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
@@ -67,7 +68,7 @@ public class DecomposedPanel extends JPanel
 	private static final ColorSpace COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_sRGB);
 
 	
-	private Colormap2D colormap;
+	private ColormapView colormap;
 	private HexTileModel tileModel;
 	private Optional<Tile> selection = Optional.absent();
 	private final Polygon hexagon;
@@ -75,7 +76,7 @@ public class DecomposedPanel extends JPanel
 	/**
 	 * @param colormap the colormap to show
 	 */
-	public DecomposedPanel(Colormap2D colormap)
+	public DecomposedPanel(ColormapView colormap)
 	{
 		this.colormap = colormap;
 		int cells = 10;
@@ -161,11 +162,11 @@ public class DecomposedPanel extends JPanel
 	}
 
 	/**
-	 * @param colorMap the new colormap
+	 * @param colorMapView the new colormap view
 	 */
-	public void setColorMap(Colormap2D colorMap)
+	public void setColorMapView(ColormapView colorMapView)
 	{
-		this.colormap = colorMap;
+		this.colormap = colorMapView;
 		repaint();
 	}
 	
@@ -310,6 +311,14 @@ public class DecomposedPanel extends JPanel
 		return color;
 	}
 
+	private double getTileReliability(int worldX, int worldY)
+	{
+		float mapX = (float)worldX / tileModel.getWorldWidth();
+		float mapY = (float)worldY / tileModel.getWorldHeight();
+		
+		return colormap.getReliability(mapX, mapY);
+	}
+
 	private void drawTiles(Graphics2D g)
 	{
 		int mapWidth = tileModel.getMapWidth();
@@ -322,7 +331,7 @@ public class DecomposedPanel extends JPanel
 				int worldX = tileModel.getWorldX(x, y);
 				int worldY = tileModel.getWorldY(x, y);
 				Color color = getTileColor(worldX, worldY);
-				float scale = color.getAlpha() / 255f;
+				float scale = (float) getTileReliability(worldX, worldY);
 
 				g.setColor(color);
 				g.translate(worldX, worldY);

@@ -16,15 +16,15 @@
 
 package main;
 
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.ATT;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.BLUE;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.GREEN;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.HUE;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.LUM;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.REAL;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.RED;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.SAT;
-import static colormaps.transformed.SimpleFilteredColormap2D.ViewType.VAL;
+import static colormaps.transformed.SimpleColormapView.ViewType.ATT;
+import static colormaps.transformed.SimpleColormapView.ViewType.BLUE;
+import static colormaps.transformed.SimpleColormapView.ViewType.GREEN;
+import static colormaps.transformed.SimpleColormapView.ViewType.HUE;
+import static colormaps.transformed.SimpleColormapView.ViewType.LUM;
+import static colormaps.transformed.SimpleColormapView.ViewType.REAL;
+import static colormaps.transformed.SimpleColormapView.ViewType.RED;
+import static colormaps.transformed.SimpleColormapView.ViewType.SAT;
+import static colormaps.transformed.SimpleColormapView.ViewType.VAL;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -34,8 +34,8 @@ import javax.swing.JPanel;
 
 import colormaps.Colormap2D;
 import colormaps.ConstantColormap2D;
-import colormaps.transformed.SimpleFilteredColormap2D;
-import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
+import colormaps.transformed.SimpleColormapView;
+import colormaps.transformed.SimpleColormapView.ViewType;
 import colormaps.transformed.TransformedColormap2D;
 
 import com.google.common.collect.ImmutableList;
@@ -69,7 +69,9 @@ public class DecomposedViewPanel extends JPanel
 		{
 			for (int col = 0; col < cols; col++)
 			{
-				DecomposedPanel mini = new DecomposedPanel(new ConstantColormap2D(Color.WHITE));
+				ConstantColormap2D colormap = new ConstantColormap2D(Color.WHITE);
+				SimpleColormapView view = new SimpleColormapView(colormap, REAL);
+				DecomposedPanel mini = new DecomposedPanel(view);
 				panels[row][col] = mini;
 				add(mini);
 			}
@@ -94,8 +96,8 @@ public class DecomposedViewPanel extends JPanel
 			for (int col = 0; col < cols; col++)
 			{
 				Colormap2D colormap = event.getSelection();
-				TransformedColormap2D tColormap = new SimpleFilteredColormap2D(colormap, types.get(typeIdx++));
-				panels[row][col].setColorMap(tColormap);
+				SimpleColormapView tColormap = new SimpleColormapView(colormap, types.get(typeIdx++));
+				panels[row][col].setColorMapView(tColormap);
 			}
 		}
 	}
