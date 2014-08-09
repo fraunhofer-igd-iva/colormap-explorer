@@ -14,12 +14,19 @@ dependencies {
 
 task createVersionFile(type:Copy) {
 	description = 'Creates a java version file based on the template in the resources folder'
+	def version = getGitDesc()
+	
+	inputs.property('version', version)	// trigger executing by setting a property
 
 	from('src/main/resources/GitVersion.template')
 	into('src/main/java/version')
 	rename '(.*).template', '$1.java'
 
-	expand(GIT_VERSION: getGitDesc())
+	expand(GIT_VERSION: version)
+	
+	doLast {
+		logger.lifecycle("Updated $outputs.files with $version");
+	}
 }
 
 compileJava.dependsOn createVersionFile
