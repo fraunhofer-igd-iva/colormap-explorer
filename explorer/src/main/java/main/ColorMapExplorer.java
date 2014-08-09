@@ -34,6 +34,7 @@ import org.jbibtex.TokenMgrException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import version.GitVersion;
 import colormaps.Colormap2D;
 
 import com.google.common.base.Charsets;
@@ -55,7 +56,7 @@ public class ColorMapExplorer extends JFrame
 	 */
 	public ColorMapExplorer(List<Colormap2D> colorMaps, BibTeXDatabase database) 
 	{
-		super("ColorMap Explorer");
+		super("ColorMap Explorer - " + GitVersion.getVersion());
 		
 		Preconditions.checkArgument(!colorMaps.isEmpty());
 		

@@ -1,13 +1,27 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.0'
 }
 
-allprojects {
+
+def getGitDesc() {
+	def cmd = "git describe --dirty"
+	
+	try {
+		def proc = cmd.execute()
+		proc.waitFor()					// wait for the command to finish
+		return proc.in.text.trim()		// "out" from the process is "in" for gradle
+	} catch (IOException e) {
+		logger.warn("Could not run '$cmd' - using date - {}", e.getLocalizedMessage());
+		return new Date().format('yyyy-MM-dd-HH-mm-ss');
+	}
+}
+
+
+subprojects {
+	apply plugin: 'java'
+
 	group = 'de.fhg.igd.iva'
-	version = '1.0.0'
+	version = getGitDesc()
 
 	compileJava.options.encoding = 'ISO-8859-15'
 	javadoc.options.encoding = 'ISO-8859-15'

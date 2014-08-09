@@ -1,0 +1,14 @@
+#!/bin/sh
+# this hook is in SCM so that it can be shared
+# to install it, create a symbolic link in the projects .git/hooks folder
+#
+#  $ ln -s config/git-hooks/post-commit .git/hooks/post-commit
+#
+
+# run the gradle wrapper
+#./gradlew ..
+
+gradle explorer:createVersionFile
+
+# return the exit code
+exit $?

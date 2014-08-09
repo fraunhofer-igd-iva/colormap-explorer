@@ -12,3 +12,15 @@ dependencies {
 	compile project(':colormaps')
 }
 
+task createVersionFile(type:Copy) {
+	description = 'Creates a java version file based on the template in the resources folder'
+
+	from('src/main/resources/GitVersion.template')
+	into('src/main/java/version')
+	rename '(.*).template', '$1.java'
+
+	expand(GIT_VERSION: getGitDesc())
+}
+
+compileJava.dependsOn createVersionFile
+eclipseProject.dependsOn createVersionFile
