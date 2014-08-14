@@ -17,7 +17,12 @@ package regression;
 
 import java.io.IOException;
 
-public class StatisticsTester {
+public final class StatisticsTester {
+	
+	private StatisticsTester()
+	{
+		// private
+	}
 
 	public static void main(String[] args) throws IOException {
 		// BufferedImageAnalyzer.analyzeBufferedImage(

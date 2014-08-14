@@ -21,7 +21,6 @@ import java.util.Set;
 import tiling.Tile;
 import tiling.TileModel;
 import views.decomposed.ColormapView;
-import colormaps.Colormap2D;
 
 import com.google.common.base.Preconditions;
 

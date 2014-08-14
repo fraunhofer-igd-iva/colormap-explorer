@@ -19,7 +19,6 @@ package views.decomposed;
 import java.awt.Color;
 
 import colormaps.Colormap2D;
-import colormaps.DelegateColormap2D;
 import colorspaces.CIELABLch;
 import colorspaces.RGB;
 

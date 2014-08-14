@@ -41,7 +41,6 @@ import tiling.Direction;
 import tiling.HexTileModel;
 import tiling.Tile;
 import views.decomposed.ColormapView;
-import colormaps.Colormap2D;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
@@ -304,8 +303,8 @@ public class DecomposedPanel extends JPanel
 
 	private Color getTileColor(int worldX, int worldY)
 	{
-		float mapX = (float)worldX / tileModel.getWorldWidth();
-		float mapY = (float)worldY / tileModel.getWorldHeight();
+		double mapX = (double)worldX / tileModel.getWorldWidth();
+		double mapY = (double)worldY / tileModel.getWorldHeight();
 		
 		Color color = colormap.getColor(mapX, mapY);
 		return color;
@@ -313,8 +312,8 @@ public class DecomposedPanel extends JPanel
 
 	private double getTileReliability(int worldX, int worldY)
 	{
-		float mapX = (float)worldX / tileModel.getWorldWidth();
-		float mapY = (float)worldY / tileModel.getWorldHeight();
+		double mapX = (double)worldX / tileModel.getWorldWidth();
+		double mapY = (double)worldY / tileModel.getWorldHeight();
 		
 		return colormap.getReliability(mapX, mapY);
 	}

@@ -141,7 +141,7 @@ public class JndRegionComputer
 	
 	private List<Point2D> computeJndRegion(double mx, double my)
 	{
-		Color color = colormap.getColor((float)mx, (float)my);
+		Color color = colormap.getColor(mx, my);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 		
 		int angleSteps = 128;
@@ -168,7 +168,7 @@ public class JndRegionComputer
 				if (px < 0 || px > 1 || py < 0 || py > 1)
 					break;
 				
-				Color tcolor = colormap.getColor((float)px, (float)py);
+				Color tcolor = colormap.getColor(px, py);
 				PColor ptcolor = PColor.create(COLOR_SPACE, tcolor.getColorComponents(new float[3]));
 
 				jndDist = ColorTools.distance(pcolor, ptcolor, VIEW_ENV);

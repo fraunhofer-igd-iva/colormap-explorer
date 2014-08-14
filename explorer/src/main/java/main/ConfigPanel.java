@@ -266,8 +266,8 @@ public class ConfigPanel extends JPanel
 			int worldX = tileModel.getWorldX(x, y);
 			int worldY = tileModel.getWorldY(x, y);
 			
-			float mapX = (float)worldX / tileModel.getWorldWidth();
-			float mapY = (float)worldY / tileModel.getWorldHeight();
+			double mapX = (double)worldX / tileModel.getWorldWidth();
+			double mapY = (double)worldY / tileModel.getWorldHeight();
 			
 			Color color = colormap.getColor(mapX, mapY);
 

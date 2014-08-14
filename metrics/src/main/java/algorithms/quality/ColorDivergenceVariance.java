@@ -54,7 +54,7 @@ public final class ColorDivergenceVariance implements ColormapQuality
 
 			Point2D p2 = ptIt.next();
 
-			float dist = (float) p1.distance(p2);
+			double dist = p1.distance(p2);
 
 			Color colorA = colormap.getColor(p1.getX(), p1.getY());
 			Color colorB = colormap.getColor(p2.getX(), p2.getY());

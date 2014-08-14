@@ -98,8 +98,8 @@ public class OverlayExamplePanel extends JPanel
 		{
 			for (int x = 0; x < width; x++)
 			{
-				float cx = r.nextFloat();
-				float cy = r.nextFloat();
+				double cx = r.nextDouble();
+				double cy = r.nextDouble();
 			
 				Color color = colormap.getColor(cx, cy);
 			

@@ -57,9 +57,9 @@ public final class BufferedImageAnalyzer {
 			for (double x = 0; x <= maxX; x++)
 				for (double y = 0; y <= maxY; y++) {
 					int i = (int) round(
-							(x / maxX) * (double) image.getWidth(), 0);
+							(x / maxX) * image.getWidth(), 0);
 					int j = (int) round(
-							(y / maxY) * (double) image.getHeight(), 0);
+							(y / maxY) * image.getHeight(), 0);
 					
 					if (i >= image.getWidth())
 						i = image.getWidth()-1;

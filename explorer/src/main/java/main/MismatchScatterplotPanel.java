@@ -110,7 +110,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			Point2D p1 = pstr.next();
 			Point2D p2 = pstr.next();
 	
-			float dist = (float) p1.distance(p2);
+			double dist = p1.distance(p2);
 			
 			Color colorA = colormap.getColor(p1.getX(), p1.getY());
 			Color colorB = colormap.getColor(p2.getX(), p2.getY());
@@ -166,7 +166,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAhint);
 	}
 
-	private int getYPos(double maxY, float dist, double cdist) {
+	private int getYPos(double maxY, double dist, double cdist) {
 		int yCoord;
 		if (useLog)
 			yCoord = (int)((maxY/2) - (Math.log(cdist / dist)/Math.log(6))*maxY);
