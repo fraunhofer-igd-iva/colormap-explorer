@@ -29,11 +29,12 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STRawGroupDir;
 import org.stringtemplate.v4.misc.ErrorManager;
 
-import colormaps.Colormap2D;
-import colormaps.transformed.SimpleFilteredColormap2D;
-import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
+import views.SimpleColormapView;
+import views.SimpleColormapView.ViewType;
 
 import com.google.common.collect.Lists;
+
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Generates LaTeX table output for a list of decomposed colormaps 
@@ -48,7 +49,7 @@ public final class LatexTableDecomp
 		// private
 	}
 	
-	public static File generateTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
+	public static File generateTable(List<Colormap> colormaps, File outputFolder) throws IOException 
     {
     	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources/latex");
         templateDir.delimiterStartChar = '$';
@@ -61,7 +62,7 @@ public final class LatexTableDecomp
 		File imageFolder = new File(outputFolder, imgFolderName);
         imageFolder.mkdir();
         
-        for (Colormap2D cm : colormaps)
+        for (Colormap cm : colormaps)
         {
         	LatexColormap lcm = new LatexColormap(cm);
 			lcms.add(lcm);
@@ -73,7 +74,7 @@ public final class LatexTableDecomp
 	        	
 				if (!imgFile.exists())
 				{
-					SimpleFilteredColormap2D filtered = new SimpleFilteredColormap2D(cm, viewType);
+					SimpleColormapView filtered = new SimpleColormapView(cm, viewType);
 					saveToFile(filtered, imgFile);
 				}
 
@@ -103,7 +104,7 @@ public final class LatexTableDecomp
 			+ ".png";
 	}
 
-	private static void saveToFile(Colormap2D map, File file) throws IOException
+	private static void saveToFile(SimpleColormapView filtered, File file) throws IOException
     {
     	int width = 128;
     	int height = 128;
@@ -115,7 +116,7 @@ public final class LatexTableDecomp
 		{
 			for (int x = 0; x < width; x++)
 			{
-				Color color = map.getColor(x / fw, y / fh);
+				Color color = filtered.getColor(x / fw, y / fh);
 				int rgb = color.getRGB();
 				img.setRGB(x, y, rgb);
 			}

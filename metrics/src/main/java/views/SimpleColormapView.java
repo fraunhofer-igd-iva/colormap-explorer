@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.decomposed;
+package views;
 
 import java.awt.Color;
 

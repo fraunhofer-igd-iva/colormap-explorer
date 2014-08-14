@@ -31,6 +31,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STRawGroupDir;
 import org.stringtemplate.v4.misc.ErrorManager;
 
+import views.SimpleColormapView;
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceVariance;
@@ -43,12 +44,12 @@ import algorithms.sampling.CircularSampling;
 import algorithms.sampling.EvenDistributedDistancePoints;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
-import colormaps.Colormap2D;
-import colormaps.transformed.SimpleFilteredColormap2D.ViewType;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
+
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Generates LaTeX table output for a list of colormaps 
@@ -61,17 +62,17 @@ public final class LatexTableQuality
 		// private
 	}
 	
-	public static File generateTable(List<Colormap2D> colormaps, File outputFolder) throws IOException 
+	public static File generateTable(List<Colormap> colormaps, File outputFolder) throws IOException 
     {
     	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources/latex");
         templateDir.delimiterStartChar = '$';
         templateDir.delimiterStopChar = '$';
         
-        Map<Colormap2D, MetricColormap> mcms = Maps.newLinkedHashMap();
+        Map<Colormap, MetricColormap> mcms = Maps.newLinkedHashMap();
 
-        for (Colormap2D cm : colormaps)
+        for (Colormap cm : colormaps)
         {
-        	String fname = cm.getName() + "_" + ViewType.REAL.toString();
+        	String fname = cm.getName() + "_" + SimpleColormapView.ViewType.REAL.toString();
             String relativePath = "images/gen/" + toFilename(fname);
 
         	MetricColormap mcm = new MetricColormap(cm, relativePath);
@@ -99,12 +100,12 @@ public final class LatexTableQuality
 
         for (ColormapQuality measure : measures)
         {
-        	Map<Colormap2D, Double> mapQualities = computeQuality(colormaps, measure);
-        	Map<Colormap2D, Integer> mapPoints = computePoints(mapQualities);
-        	Map<Colormap2D, Integer> mapRanks = computeRanks(mapQualities);
+        	Map<Colormap, Double> mapQualities = computeQuality(colormaps, measure);
+        	Map<Colormap, Integer> mapPoints = computePoints(mapQualities);
+        	Map<Colormap, Integer> mapRanks = computeRanks(mapQualities);
         	
         
-            for (Colormap2D cm : colormaps)
+            for (Colormap cm : colormaps)
             {
             	double quality = mapQualities.get(cm);
             	Integer points = mapPoints.get(cm);
@@ -128,14 +129,14 @@ public final class LatexTableQuality
         return texFile;
     }
 
-	private static Map<Colormap2D, Integer> computeRanks(Map<Colormap2D, Double> mapQualities)
+	private static Map<Colormap, Integer> computeRanks(Map<Colormap, Double> mapQualities)
 	{
-		Map<Colormap2D, Double> sorted = sortByValue(mapQualities);
-		Map<Colormap2D, Integer> result = Maps.newLinkedHashMap();
+		Map<Colormap, Double> sorted = sortByValue(mapQualities);
+		Map<Colormap, Integer> result = Maps.newLinkedHashMap();
 		
 		int rank = 1;
 		
-		for (Map.Entry<Colormap2D, Double> entry : sorted.entrySet())
+		for (Map.Entry<Colormap, Double> entry : sorted.entrySet())
 		{
 			result.put(entry.getKey(), rank++);
 		}
@@ -182,10 +183,10 @@ public final class LatexTableQuality
 		return colors;
 	}
 	
-	private static Map<Colormap2D, Double> computeQuality(List<Colormap2D> colormaps, ColormapQuality measure)
+	private static Map<Colormap, Double> computeQuality(List<Colormap> colormaps, ColormapQuality measure)
 	{
-		Map<Colormap2D, Double> qualityMap = Maps.newHashMap();
-        for (Colormap2D cm : colormaps)
+		Map<Colormap, Double> qualityMap = Maps.newHashMap();
+        for (Colormap cm : colormaps)
         {
         	double quality = measure.getQuality(cm);
         	qualityMap.put(cm, Double.valueOf(quality));
@@ -214,14 +215,14 @@ public final class LatexTableQuality
 		return Range.closed(min, max);
 	}
 
-    private static Map<Colormap2D, Integer> computePoints(Map<Colormap2D, Double> qualityMap)
+    private static Map<Colormap, Integer> computePoints(Map<Colormap, Double> qualityMap)
     {
-		Map<Colormap2D, Integer> result = Maps.newHashMap();
+		Map<Colormap, Integer> result = Maps.newHashMap();
 
 		Range<Double> range = getMinMax(qualityMap.values());
 		
 		double span = range.upperEndpoint() - range.lowerEndpoint();
-        for (Colormap2D cm : qualityMap.keySet())
+        for (Colormap cm : qualityMap.keySet())
         {
         	double val = qualityMap.get(cm);
         	if (Double.isInfinite(val) || Double.isNaN(val))

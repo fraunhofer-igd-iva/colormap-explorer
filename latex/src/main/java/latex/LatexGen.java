@@ -31,7 +31,7 @@ import main.ColorMapFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Generates LaTeX table output for a list of colormaps 
@@ -55,7 +55,7 @@ public final class LatexGen
 //		colorMaps.add(new Steiger2014Generic());
 //		colorMaps.add(new TeulingFig2());
 		
-		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+		List<Colormap> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
@@ -64,7 +64,7 @@ public final class LatexGen
 		createQualityTable(colorMaps, output);
 	}
 
-	private static void createQualityTable(List<Colormap2D> colorMaps, File output) throws Exception
+	private static void createQualityTable(List<Colormap> colorMaps, File output) throws Exception
 	{
 		File texFile = LatexTableQuality.generateTable(colorMaps, output);
 		File pdf = compileLaTeX(texFile);
@@ -72,7 +72,7 @@ public final class LatexGen
 		logger.info("PDF file created at " + pdf.getCanonicalPath());
 	}
 
-	private static void createDecomposedTable(List<Colormap2D> colorMaps, File output) throws IOException, Exception
+	private static void createDecomposedTable(List<Colormap> colorMaps, File output) throws IOException, Exception
 	{
 		File texFile = LatexTableDecomp.generateTable(colorMaps, output);
 

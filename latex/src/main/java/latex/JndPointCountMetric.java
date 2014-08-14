@@ -17,7 +17,7 @@
 
 package latex;
 
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * TODO Type description
@@ -25,7 +25,7 @@ import colormaps.Colormap2D;
  */
 public class JndPointCountMetric 
 {
-	double compute(Colormap2D cm)
+	double compute(Colormap cm)
 	{
 		return 0;
 	}

@@ -16,15 +16,15 @@
 
 package main;
 
-import static views.decomposed.SimpleColormapView.ViewType.ATT;
-import static views.decomposed.SimpleColormapView.ViewType.BLUE;
-import static views.decomposed.SimpleColormapView.ViewType.GREEN;
-import static views.decomposed.SimpleColormapView.ViewType.HUE;
-import static views.decomposed.SimpleColormapView.ViewType.LUM;
-import static views.decomposed.SimpleColormapView.ViewType.REAL;
-import static views.decomposed.SimpleColormapView.ViewType.RED;
-import static views.decomposed.SimpleColormapView.ViewType.SAT;
-import static views.decomposed.SimpleColormapView.ViewType.VAL;
+import static views.SimpleColormapView.ViewType.ATT;
+import static views.SimpleColormapView.ViewType.BLUE;
+import static views.SimpleColormapView.ViewType.GREEN;
+import static views.SimpleColormapView.ViewType.HUE;
+import static views.SimpleColormapView.ViewType.LUM;
+import static views.SimpleColormapView.ViewType.REAL;
+import static views.SimpleColormapView.ViewType.RED;
+import static views.SimpleColormapView.ViewType.SAT;
+import static views.SimpleColormapView.ViewType.VAL;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -32,8 +32,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import views.decomposed.SimpleColormapView;
-import views.decomposed.SimpleColormapView.ViewType;
+import views.SimpleColormapView;
+import views.SimpleColormapView.ViewType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;

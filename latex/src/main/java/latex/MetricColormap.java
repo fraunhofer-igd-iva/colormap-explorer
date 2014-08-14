@@ -20,9 +20,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import algorithms.quality.ColormapQuality;
-import colormaps.Colormap2D;
 
 import com.google.common.collect.Maps;
+
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Defines a colormap in the LaTeX output
@@ -30,12 +31,12 @@ import com.google.common.collect.Maps;
  */
 public class MetricColormap
 {
-	private final Colormap2D colormap;
+	private final Colormap colormap;
 	private final Map<ColormapQuality, String> metrics = Maps.newHashMap();
 	private final Map<ColormapQuality, String> colors = Maps.newHashMap();
 	private final String imagePath;
 
-	public MetricColormap(Colormap2D cm, String imagePath)
+	public MetricColormap(Colormap cm, String imagePath)
 	{
 		this.colormap = cm;
 		this.imagePath = imagePath;

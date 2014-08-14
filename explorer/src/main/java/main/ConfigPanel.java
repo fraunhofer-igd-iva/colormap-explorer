@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import tiling.Tile;
 import tiling.TileModel;
-import views.decomposed.ColormapView;
+import views.ColormapView;
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceVariance;

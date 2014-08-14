@@ -20,7 +20,7 @@ import java.util.Set;
 
 import tiling.Tile;
 import tiling.TileModel;
-import views.decomposed.ColormapView;
+import views.ColormapView;
 
 import com.google.common.base.Preconditions;
 
