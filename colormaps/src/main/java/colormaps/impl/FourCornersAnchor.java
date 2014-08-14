@@ -26,7 +26,7 @@ import colormaps.ColorSpace;
 public class FourCornersAnchor extends AbstractColormap2D {
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 		
 		// rot

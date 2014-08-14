@@ -48,7 +48,7 @@ class FourCornersAnchorColorMapParameterizable extends AbstractColormap2D {
 	}
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
 		double r = interpolate(upperLeft.getRed(), upperRight.getRed(),

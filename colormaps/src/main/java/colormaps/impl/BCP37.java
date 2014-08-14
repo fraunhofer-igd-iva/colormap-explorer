@@ -46,17 +46,17 @@ import colormaps.ColorSpace;
 public class BCP37 extends AbstractColormap2D {
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
 		// red
-		float r = 124.6f + 91.8f * x - 47.53f * y;
+		float r = (float) (124.6f + 91.8f * x - 47.53f * y);
 
 		// green
-		float g = 98.8f + 77.73f * x + 23.066f * y;
+		float g = (float) (98.8f + 77.73f * x + 23.066f * y);
 
 		// blue
-		float b = 145.9f - 36.3f * x + 12.7f * y;
+		float b = (float) (145.9f - 36.3f * x + 12.7f * y);
 
 		return new Color(r / 255f, g / 255f, b / 255f);
 	}

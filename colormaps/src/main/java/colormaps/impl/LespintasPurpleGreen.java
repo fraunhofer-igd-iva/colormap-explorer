@@ -15,31 +15,25 @@ import colormaps.ColorSpace;
 public class LespintasPurpleGreen extends AbstractColormap2D {
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
 		// red
-		float r = 48.4101328012817f - 67.7679235599738f * x + 156.264587670182f
-				* y;
-//		if (r > 255)
-//			System.out.println("Red: " + r);
+		double r = 48.4101328012817f - 67.7679235599738f * x + 156.264587670182f * y;
+
 		r = Math.max(0, Math.min(255, r));
 
 		// green
-		float g = 109.79014168161f - 129.178754101385f * x + 95.3694735810212f
-				* y;
-//		if (g > 255)
-//			System.out.println("Green: " + g);
+		double g = 109.79014168161f - 129.178754101385f * x + 95.3694735810212f * y;
+
 		g = Math.max(0, Math.min(255, g));
 
 		// blue
-		float b = 49.2428539301213f - 67.7029702970293f * x + 156.629280866351f
-				* y;
-//		if (b > 255)
-//			System.out.println("Blue: " + b);
+		double b = 49.2428539301213f - 67.7029702970293f * x + 156.629280866351f * y;
+
 		b = Math.max(0, Math.min(255, b));
 
-		return new Color(r / 255f, g / 255f, b / 255f);
+		return new Color((float)(r / 255), (float)(g / 255), (float)(b / 255));
 	}
 
 	@Override

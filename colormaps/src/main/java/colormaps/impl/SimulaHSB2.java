@@ -48,10 +48,4 @@ public class SimulaHSB2 extends AbstractColormap2D {
 	public List<String> getReferences() {
 		return Arrays.asList("simula1999som", "himberg2001knowledgeengineering", "wallet2009latent", "royColormap2010", "matos2010seismic");
 	}
-
-	@Override
-	protected Color getColor(float x, float y) {
-		throw new IllegalStateException("this method shuld not be called");
-	}
-
 }

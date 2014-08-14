@@ -25,31 +25,25 @@ import colormaps.ColorSpace;
 public class BaumGreenYellowRedBlack extends AbstractColormap2D {
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
 		// red
-		float r = 0.789864892142907f + 255.89422028982f * x
-				+ 0.0184526315177488f * y;
-//		if (r > 255)
-//			System.out.println("Red: " + r);
+		double r = 0.789864892142907f + 255.89422028982f * x + 0.0184526315177488f * y;
+
 		r = Math.max(0, Math.min(255, r));
 
 		// green
-		float g = 0.0676231280670265f + 0.620400537432935f * x
-				+ 255.376889232313f * y;
-//		if (g > 255)
-//			System.out.println("Green: " + g);
+		double g = 0.0676231280670265f + 0.620400537432935f * x + 255.376889232313f * y;
+
 		g = Math.max(0, Math.min(255, g));
 
 		// blue
-		float b = 1.30667120293858f - 0.0487380129975751f * x
-				+ -0.186210117808519f * y;
-//		if (b > 255)
-//			System.out.println("Blue: " + b);
+		double b = 1.30667120293858f - 0.0487380129975751f * x + -0.186210117808519f * y;
+
 		b = Math.max(0, Math.min(255, b));
 
-		return new Color(r / 255f, g / 255f, b / 255f);
+		return new Color((float)(r / 255), (float)(g / 255), (float)(b / 255));
 	}
 
 	@Override

@@ -5,12 +5,12 @@ import java.awt.Color;
 public class TeulingFig4a extends TeulingStyle {
 
 	@Override
-	public Color getColor(float x, float y) {
-		float r = getChannel(x, y, Direction.SOUTH_WEST, 0.5f);
-		float g = getChannel(x, y, Direction.SOUTH_EAST, 1 - 0.2f);
-		float b = getChannel(x, y, Direction.NORTH_WEST, 0.2f);
+	public Color getColor(double x, double y) {
+		double r = getChannel(x, y, Direction.SOUTH_WEST, 0.5);
+		double g = getChannel(x, y, Direction.SOUTH_EAST, 1 - 0.2);
+		double b = getChannel(x, y, Direction.NORTH_WEST, 0.2);
 		// some inaccuracies seem to make use of clampSafe manadatory here.
-		return new Color(clampSafe(r, 0.001f), clampSafe(g, 0.001f), clampSafe(b, 0.001f));
+		return new Color((float) clampSafe(r, 0.001), (float) clampSafe(g, 0.001), (float) clampSafe(b, 0.001));
 	}
 
 	@Override
@@ -21,6 +21,7 @@ public class TeulingFig4a extends TeulingStyle {
 //				+ "It seems that it only served explanatory purposes in the paper.";
 	}
 
+	@Override
 	public String getName() {
 		return "Teuling et al. Fig. 4a";
 	}

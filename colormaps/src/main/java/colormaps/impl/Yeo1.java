@@ -12,7 +12,7 @@ public class Yeo1 extends AbstractColormap2D {
 	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(new Color(0, 128, 128), new Color(128, 0, 255), new Color(128,255,0), new Color(255, 128, 128));
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
 		return anchorColorMapParameterizable.getColor(x, y);

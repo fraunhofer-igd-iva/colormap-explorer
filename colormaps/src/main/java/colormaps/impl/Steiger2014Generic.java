@@ -65,7 +65,7 @@ public class Steiger2014Generic extends AbstractColormap2D {
     }
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		double[] low = new double[3];
         double[] top = new double[3];
         double[] k = new double[3];

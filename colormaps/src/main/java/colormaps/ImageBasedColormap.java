@@ -39,7 +39,7 @@ public abstract class ImageBasedColormap extends AbstractColormap2D
 	}
 
 	@Override
-	public Color getColor(float mx, float my)
+	public Color getColor(double mx, double my)
 	{
 		checkRanges(mx, my);
 

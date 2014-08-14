@@ -24,8 +24,8 @@ public class SimulaHSB3 extends AbstractColormap2D {
 		double nx = (float) (x * 2 - 1);
 		double ny = (float) (y * 2 - 1);
 		double dist = max(abs(ny), abs(nx));
-		double ang = (Math.atan2(ny, nx)+Math.PI)/(Math.PI*2);
-		return HSL.HSLtoRGB((float)ang, (float)1, (float)dist/2f);
+		double ang = (Math.atan2(ny, nx) + Math.PI) / (Math.PI * 2);
+		return HSL.HSLtoRGB((float) ang, 1, (float) dist / 2f);
 	}
 
 	@Override
@@ -42,12 +42,6 @@ public class SimulaHSB3 extends AbstractColormap2D {
 	public List<String> getReferences() {
 		return Collections.singletonList("simula1999som");
 	}
-
-	@Override
-	protected Color getColor(float x, float y) {
-		throw new IllegalStateException("this method shuld not be called");
-	}
-	
 
 	@Override
 	public ColorSpace getColorSpace() {

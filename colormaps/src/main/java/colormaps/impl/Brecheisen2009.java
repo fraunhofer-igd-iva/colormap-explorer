@@ -18,7 +18,7 @@ public class Brecheisen2009 extends AbstractColormap2D {
 			Color.MAGENTA, Color.WHITE, Color.BLACK, Color.GREEN);
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
 		return anchorColorMapParameterizable.getColor(x, y);

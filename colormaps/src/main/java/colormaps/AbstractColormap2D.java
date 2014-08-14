@@ -16,7 +16,6 @@
 
 package colormaps;
 
-import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,25 +27,9 @@ import com.google.common.base.Preconditions;
  */
 public abstract class AbstractColormap2D implements Colormap2D {
 
-	protected void checkRanges(float x, float y) {
+	protected void checkRanges(double x, double y) {
 		Preconditions.checkArgument(0 <= x && x <= 1, "X must in in range [0..1], but is %s", x);
 		Preconditions.checkArgument(0 <= y && y <= 1, "Y must in in range [0..1], but is %s", y);
-	}
-	
-	/**
-	 * Clamp to 0..1 for values close to that range.
-	 * @param v
-	 * @return
-	 */
-	public float clampSafe(float v, float headroom) {
-		if (v < -headroom || v > 1 + headroom)
-			throw new IllegalArgumentException("v way out of range.Fix your algo.");
-		if (v > 1)
-			return 1;
-		else if (v < 0)
-			return 0;
-		else
-			return v;
 	}
 
 	@Override
@@ -65,13 +48,4 @@ public abstract class AbstractColormap2D implements Colormap2D {
 	{
 		return Collections.emptyList();
 	}
-	
-	@Override
-	public Color getColor(double x, double y)
-	{
-		return getColor((float)x, (float)y);
-	}
-	
-	// TODO: remove by fixing all implementations
-	protected abstract Color getColor(float x, float y);
 }

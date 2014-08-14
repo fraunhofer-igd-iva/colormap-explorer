@@ -31,10 +31,10 @@ import colormaps.ColorSpace;
 public class Baum2DLookupTable extends AbstractColormap2D {
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
-		return new Color(x, x, y);
+		return new Color((float)x, (float)x, (float)y);
 	}
 
 	@Override

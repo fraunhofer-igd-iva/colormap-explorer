@@ -43,7 +43,7 @@ public class ConstantColormap2D extends AbstractColormap2D
 	}
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		return color;
 	}
 

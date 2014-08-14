@@ -28,8 +28,6 @@ import colormaps.AbstractColormap2D;
  */
 public abstract class TeulingStyle extends AbstractColormap2D
 {
-	
-	
 	private static final double WK_MAX_HYPOT = Math.hypot(0.5, 0.5);
 
 	/**
@@ -40,15 +38,31 @@ public abstract class TeulingStyle extends AbstractColormap2D
 	 * @param a the a coefficient (0-1), the drop from maximum along the WEST-EAST (x) axis
 	 * @return
 	 */
-	float getPlane(float xd, float yd, float a) {
+	protected double getPlane(double xd, double yd, double a) {
 		xd = 1 - xd;
 		yd = 1 - yd;
-		return (float) (1.0 - xd * a - yd * (1-a));
+		return 1.0 - xd * a - yd * (1-a);
 	}
 	
-	float getChannel(float x, float y, Direction d, float a) {
-		float xd;
-		float yd;
+	/**
+	 * Clamp to 0..1 for values close to that range.
+	 * @param v
+	 * @return
+	 */
+	protected double clampSafe(double v, double headroom) {
+		if (v < -headroom || v > 1 + headroom)
+			throw new IllegalArgumentException("v way out of range.Fix your algo.");
+		if (v > 1)
+			return 1;
+		else if (v < 0)
+			return 0;
+		else
+			return v;
+	}
+	
+	protected double getChannel(double x, double y, Direction d, double a) {
+		double xd;
+		double yd;
 		switch (d) {
 		case SOUTH_WEST:
 			xd = 1-x;
@@ -81,8 +95,8 @@ public abstract class TeulingStyle extends AbstractColormap2D
 	 * @param w the maximum value
 	 * @return the whitening at x, y for w
 	 */
-	float getWhitening(float x ,float y, float w) {
-		return (float) (w * (1-(Math.hypot(x - 0.5, y - 0.5) / WK_MAX_HYPOT)));
+	protected double getWhitening(double x ,double y, double w) {
+		return w * (1 - (Math.hypot(x - 0.5, y - 0.5) / WK_MAX_HYPOT));
 	}
 	
 	@Override

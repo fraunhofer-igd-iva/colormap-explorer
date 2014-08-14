@@ -26,10 +26,10 @@ import colormaps.ColorSpace;
 public class CubeDiagonalCuttingGreenMagenta extends AbstractColormap2D {
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
-		return new Color(x, (1 - y), y);
+		return new Color((float)x, (float)(1 - y), (float)y);
 	}
 
 	@Override

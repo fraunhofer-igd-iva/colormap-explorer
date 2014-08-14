@@ -52,10 +52,4 @@ public class Ramirez2012 extends AbstractColormap2D {
 	public List<String> getReferences() {
 		return Collections.singletonList("ramirez2012self");
 	}
-
-	@Override
-	protected Color getColor(float x, float y) {
-		throw new IllegalStateException("this method shuld not be called");
-	}
-
 }

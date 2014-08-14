@@ -85,7 +85,7 @@ public class CachedColormap2D extends ImageBasedColormap
 	}
 
 	@Override
-	public Color getColor(float mx, float my)
+	public Color getColor(double mx, double my)
 	{
 		return super.getColor(mx, my);
 	}

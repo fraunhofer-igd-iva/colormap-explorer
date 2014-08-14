@@ -28,29 +28,26 @@ public class WainerAndFrancolini extends AbstractColormap2D {
 	private FourCornersAnchorColorMapParameterizable[][] colorMaps;
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 
 		if (colorMaps == null)
 			initializeColorMap();
 
 		checkRanges(x, y);
 
-		float fx = x;
+		double fx = x;
 		int indexX = 0;
 		while (fx > 1 / 3.0f) {
 			indexX++;
 			fx -= 1 / 3.0f;
 		}
 
-		float fy = y;
+		double fy = y;
 		int indexY = 0;
 		while (fy > 1 / 3.0f) {
 			indexY++;
 			fy -= 1 / 3.0f;
 		}
-
-		if (indexX == 3 || indexY == 3)
-			System.out.println("argh");
 
 		return colorMaps[indexX][indexY].getColor(fx * 3, fy * 3);
 	}

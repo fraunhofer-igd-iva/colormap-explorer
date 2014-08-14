@@ -39,62 +39,62 @@ public abstract class GuoLabStyle extends AbstractColormap2D
 {
 	private static final Logger logger = LoggerFactory.getLogger(GuoLabStyle.class);
 	
-	private Function<Float, Float> lightnessFunc;
+	private Function<Double, Double> lightnessFunc;
 
-	private Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>> chromaFunc;
+	private Function<Map.Entry<Double, Double>, Map.Entry<Double, Double>> chromaFunc;
 
 	/**
 	 * @param lightnessFunc the lightness function, defined based on distance from the mid point 0..sqrt 2
 	 * @param chromaFunc The chroma function, defined based on x and y as in {@link colormaps.Colormap2D#getColor(float, float)}
 	 */
-	public GuoLabStyle(Function<Float, Float> lightnessFunc, Function<Entry<Float, Float>, Entry<Float, Float>> chromaFunc)
+	public GuoLabStyle(Function<Double, Double> lightnessFunc, Function<Entry<Double, Double>, Entry<Double, Double>> chromaFunc)
 	{
 		this.lightnessFunc = lightnessFunc;
 		this.chromaFunc = chromaFunc;
 	}
 	
-	public static Function<Float, Float> constant1f(final float constant) {
-		return new Function<Float, Float>() {
+	public static Function<Double, Double> constant1f(final float constant) {
+		return new Function<Double, Double>() {
 			
 			@Override
-			public Float apply(Float input) {
-				return 55f;  // guessed from poster
+			public Double apply(Double input) {
+				return 55d;  // guessed from poster
 			}
 		};
 	}
 
-	public static Function<Float, Float> cone(final float factor)
+	public static Function<Double, Double> cone(final float factor)
 	{
-		return new Function<Float, Float>()
+		return new Function<Double, Double>()
 		{
 			@Override
-			public Float apply(Float input)
+			public Double apply(Double input)
 			{
 				return 100.0f - (input * factor);
 			}
 		};
 	}
 
-	public static Function<Float, Float> pseudoGaussian(float sigma)
+	public static Function<Double, Double> pseudoGaussian(float sigma)
 	{
 		final float sigmasquare = sigma * sigma;
-		return new Function<Float, Float>()
+		return new Function<Double, Double>()
 		{
 			@Override
-			public Float apply(Float input)
+			public Double apply(Double input)
 			{
-				return (float) (100 * Math.exp(-((input * input) / 2 * sigmasquare)));
+				return 100 * Math.exp(-((input * input) / 2 * sigmasquare));
 			}
 		};
 	}
 
-	public static Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>> linearAB(final float xOffset,
+	public static Function<Map.Entry<Double, Double>, Map.Entry<Double, Double>> linearAB(final float xOffset,
 			final float xFactor, final float yOffset, final float yFactor)
 	{
-		return new Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>>()
+		return new Function<Map.Entry<Double, Double>, Map.Entry<Double, Double>>()
 		{
 			@Override
-			public Entry<Float, Float> apply(Entry<Float, Float> input)
+			public Entry<Double, Double> apply(Entry<Double, Double> input)
 			{
 				return new AbstractMap.SimpleEntry<>(
 						xOffset + input.getKey() * xFactor,
@@ -103,14 +103,14 @@ public abstract class GuoLabStyle extends AbstractColormap2D
 		};
 	}
 
-	public static Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>> linearBa(
+	public static Function<Map.Entry<Double, Double>, Map.Entry<Double, Double>> linearBa(
 			final float xOffset,
 			final float xFactor,
 			final float yOffset,
 			final float yFactor) {
-		return new Function<Map.Entry<Float,Float>, Map.Entry<Float,Float>>() {
+		return new Function<Map.Entry<Double,Double>, Map.Entry<Double,Double>>() {
 			@Override
-			public Entry<Float, Float> apply(Entry<Float, Float> input) {
+			public Entry<Double, Double> apply(Entry<Double, Double> input) {
 				return new AbstractMap.SimpleEntry<>(
 						yOffset + input.getValue() * yFactor,
 						xOffset + input.getKey() * xFactor);
@@ -119,14 +119,14 @@ public abstract class GuoLabStyle extends AbstractColormap2D
 	}
 	
 	@Override
-	public Color getColor(float x, float y)
+	public Color getColor(double x, double y)
 	{
 		// normalize to -1..1
-		float nx = x * 2 - 1;
-		float ny = y * 2 - 1;
-		float dist = (float) hypot(nx, ny);
-		float light = lightnessFunc.apply(dist);
-		Map.Entry<Float, Float> ab = chromaFunc.apply(new AbstractMap.SimpleEntry<>(nx, ny));
+		double nx = x * 2 - 1;
+		double ny = y * 2 - 1;
+		double dist = (float) hypot(nx, ny);
+		double light = lightnessFunc.apply(dist);
+		Map.Entry<Double, Double> ab = chromaFunc.apply(new AbstractMap.SimpleEntry<>(nx, ny));
 		double[] lab = new double[] { light, ab.getKey(), ab.getValue() };
 
 		double[] rgb = CIELAB.lab2rgb(lab);

@@ -26,10 +26,10 @@ import colormaps.ColorSpace;
 public class ConstantBlue extends AbstractColormap2D {
 
 	@Override
-	public Color getColor(float x, float y) {
+	public Color getColor(double x, double y) {
 		checkRanges(x, y);
 
-		return new Color(x, y, 0.5f);
+		return new Color((float)x, (float)y, 0.5f);
 	}
 
 	@Override
