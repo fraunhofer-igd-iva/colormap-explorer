@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap2D;
+import de.fhg.igd.iva.colormaps.AbstractColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
@@ -16,7 +16,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
  * 
  */
 @Deprecated
-public class RuppertGreenPurple extends AbstractColormap2D {
+public class RuppertGreenPurple extends AbstractColormap {
 
 	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(new Color(59, 197, 85), new Color(128, 128, 128), new Color(128, 128, 128), new Color(181, 75, 160));
 

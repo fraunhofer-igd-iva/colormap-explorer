@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.sampling.SamplingStrategy;
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 
 /**
@@ -43,7 +43,7 @@ public class AttentionQuality implements ColormapQuality
 	}
 	
 	@Override
-	public double getQuality(Colormap2D colormap)
+	public double getQuality(Colormap colormap)
 	{
 		// max L + max c (which is the same as a or b)
 		double normFac = Math.sqrt(100*100 + 150*150);

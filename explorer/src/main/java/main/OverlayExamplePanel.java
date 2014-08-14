@@ -36,7 +36,7 @@ import javax.swing.JPanel;
 
 import com.google.common.math.IntMath;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Displays a text overlay on a blurred colormap
@@ -46,7 +46,7 @@ public class OverlayExamplePanel extends JPanel
 {
 	private static final long serialVersionUID = 4842610449905121603L;
 
-	private Colormap2D colormap;
+	private Colormap colormap;
 
 	private Color overlayColor;
 
@@ -55,7 +55,7 @@ public class OverlayExamplePanel extends JPanel
 	/**
 	 * @param colormap the colormap to use
 	 */
-	public OverlayExamplePanel(Colormap2D colormap)
+	public OverlayExamplePanel(Colormap colormap)
 	{
 		this.colormap = colormap;
 	}
@@ -63,7 +63,7 @@ public class OverlayExamplePanel extends JPanel
 	/**
 	 * @param colormap the new colormap
 	 */
-	public void setColormap(Colormap2D colormap)
+	public void setColormap(Colormap colormap)
 	{
 		this.colormap = colormap;
 		repaint();

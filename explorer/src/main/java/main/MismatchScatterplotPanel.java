@@ -27,7 +27,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import algorithms.MedianDivergenceComputer;
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Displays a scatterplot of perceptual color distance over color map distance.
@@ -47,7 +47,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	
 	private static final long serialVersionUID = 4842610449905121603L;
 
-	private Colormap2D colormap;
+	private Colormap colormap;
 
 	private int lines;
 	
@@ -61,7 +61,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	 * @param colormap the colormap for the points
 	 * @param useLog use logarithmic scale
 	 */
-	public MismatchScatterplotPanel(Colormap2D colormap, boolean useLog)
+	public MismatchScatterplotPanel(Colormap colormap, boolean useLog)
 	{
 		this.colormap = colormap;
 		this.useLog = useLog;
@@ -71,7 +71,7 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	 * @param colormap the colormap for the points
 	 */
 	@Override
-	public void setColormap(Colormap2D colormap)
+	public void setColormap(Colormap colormap)
 	{
 		this.colormap = colormap;
 		repaint();

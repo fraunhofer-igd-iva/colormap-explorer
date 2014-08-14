@@ -30,8 +30,8 @@ import algorithms.sampling.EvenDistributedDistancePoints;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
-import de.fhg.igd.iva.colormaps.ConstantColormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.ConstantColormap;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
@@ -47,7 +47,7 @@ public class AnalysisPanel extends JPanel
 	
 	private int lines = 10000;
 	
-	private Colormap2D oldColormap;
+	private Colormap oldColormap;
 	
 	/**
 	 * Default constructor
@@ -59,8 +59,8 @@ public class AnalysisPanel extends JPanel
 		
 		setLayout(new GridLayout(rows, cols, 5, 5));
 		
-		MismatchScatterplotPanel mmPanelDirect = new MismatchScatterplotPanel(new ConstantColormap2D(Color.WHITE), false);
-		MismatchScatterplotPanel mmPanelLog = new MismatchScatterplotPanel(new ConstantColormap2D(Color.WHITE), true);
+		MismatchScatterplotPanel mmPanelDirect = new MismatchScatterplotPanel(new ConstantColormap(Color.WHITE), false);
+		MismatchScatterplotPanel mmPanelLog = new MismatchScatterplotPanel(new ConstantColormap(Color.WHITE), true);
 		mmPanelDirect.setBackground(Color.WHITE);
 		mmPanelLog.setBackground(Color.WHITE);
 		panels.add(mmPanelDirect);
@@ -93,7 +93,7 @@ public class AnalysisPanel extends JPanel
 		if (!this.isVisible())
 			return;
 
-		Colormap2D colormap = event.getSelection();
+		Colormap colormap = event.getSelection();
 		List<Point2D> points = Lists.newArrayList(new EvenDistributedDistancePoints(new Random(123), lines).getPoints());
 		MedianDivergenceComputer median = MedianDivergenceComputer.fromPoints(colormap, points);
 		for (MismatchScatterplotPanel panel : panels)

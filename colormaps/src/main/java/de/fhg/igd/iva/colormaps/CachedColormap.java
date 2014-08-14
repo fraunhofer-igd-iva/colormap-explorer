@@ -28,20 +28,20 @@ import java.awt.image.WritableRaster;
 import java.util.List;
 
 /**
- * A cached, but otherwise transparent {@link Colormap2D} 
+ * A cached, but otherwise transparent {@link Colormap} 
  * wrapper implementation.
  * @author Martin Steiger
  */
-public class CachedColormap2D extends ImageBasedColormap
+public class CachedColormap extends ImageBasedColormap
 {
-	private final Colormap2D delegate;
+	private final Colormap delegate;
 
 	/**
 	 * @param colormap the underlying color map
 	 * @param imgWidth the width of the cache image
 	 * @param imgHeight the height of the cache image
 	 */
-	public CachedColormap2D(Colormap2D colormap, int imgWidth, int imgHeight)
+	public CachedColormap(Colormap colormap, int imgWidth, int imgHeight)
 	{
 		super(createImage(imgWidth, imgHeight));
 		

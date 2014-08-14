@@ -18,7 +18,7 @@ package events;
 
 import com.google.common.base.Preconditions;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Fired when the colormap selection is changed
@@ -26,12 +26,12 @@ import de.fhg.igd.iva.colormaps.Colormap2D;
  */
 public class ColormapSelectionEvent
 {
-	private final Colormap2D selection;
+	private final Colormap selection;
 
 	/**
 	 * @param selection the selected colormap, never <code>null</code>
 	 */
-	public ColormapSelectionEvent(Colormap2D selection)
+	public ColormapSelectionEvent(Colormap selection)
 	{
 		// prefer NPE over IAE - Effective Java 2nd Edition, Item 60
 		Preconditions.checkNotNull(selection, "selection must not be null");
@@ -42,7 +42,7 @@ public class ColormapSelectionEvent
 	/**
 	 * @return the selected colormap, never <code>null</code>
 	 */
-	public Colormap2D getSelection()
+	public Colormap getSelection()
 	{
 		return selection;
 	}

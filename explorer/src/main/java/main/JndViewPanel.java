@@ -51,8 +51,8 @@ import algorithms.sampling.CircularSampling;
 
 import com.google.common.eventbus.Subscribe;
 
-import de.fhg.igd.iva.colormaps.CachedColormap2D;
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.CachedColormap;
+import de.fhg.igd.iva.colormaps.Colormap;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
@@ -66,8 +66,8 @@ public class JndViewPanel extends JPanel
 	
 	private static final long serialVersionUID = 5994307533367447487L;
 
-	private CachedColormap2D colormap;
-	private Colormap2D orgColormap;
+	private CachedColormap colormap;
+	private Colormap orgColormap;
 
 	private final JCheckBox drawColormap;
 	private final JCheckBox drawRegions;
@@ -144,7 +144,7 @@ public class JndViewPanel extends JPanel
 		if (!this.isVisible())
 			return;
 
-		colormap = new CachedColormap2D(event.getSelection(), 512, 512);
+		colormap = new CachedColormap(event.getSelection(), 512, 512);
 
 		int sampleRate = 100;
 //		GridSampling sampling = new GridSampling(sampleRate);

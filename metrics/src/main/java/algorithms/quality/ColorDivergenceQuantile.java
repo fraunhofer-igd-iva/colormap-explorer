@@ -21,7 +21,7 @@ import java.util.Random;
 
 import algorithms.MedianDivergenceComputer;
 import algorithms.sampling.EvenDistributedDistancePoints;
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Represents the color appearance divergence ratio as a quality measure. Higher ratio means
@@ -48,7 +48,7 @@ public class ColorDivergenceQuantile implements ColormapQuality {
 	}
 
 	@Override
-	public double getQuality(Colormap2D colormap2d) {
+	public double getQuality(Colormap colormap2d) {
 		MedianDivergenceComputer comp = MedianDivergenceComputer.fromSamplingStrategy(colormap2d, new EvenDistributedDistancePoints(new Random(123), 10000));
 		return comp.getQuantile(quantile);
 	}

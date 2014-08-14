@@ -39,7 +39,7 @@ import version.GitVersion;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * The main window, also the entry point for the application.
@@ -55,7 +55,7 @@ public class ColorMapExplorer extends JFrame
 	 * @param colorMaps a list of colormaps
 	 * @param database the BibTeX database
 	 */
-	public ColorMapExplorer(List<Colormap2D> colorMaps, BibTeXDatabase database) 
+	public ColorMapExplorer(List<Colormap> colorMaps, BibTeXDatabase database) 
 	{
 		super("ColorMap Explorer - " + GitVersion.getVersion());
 		
@@ -101,7 +101,7 @@ public class ColorMapExplorer extends JFrame
 			logger.error("Cannot set look & feel", e);
 		}
 		
-		List<Colormap2D> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+		List<Colormap> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
 		
 		BibTeXDatabase database = new BibTeXDatabase();
 		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib"))

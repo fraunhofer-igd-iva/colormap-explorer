@@ -38,8 +38,8 @@ import views.decomposed.SimpleColormapView.ViewType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
-import de.fhg.igd.iva.colormaps.ConstantColormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.ConstantColormap;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
@@ -68,7 +68,7 @@ public class DecomposedViewPanel extends JPanel
 		{
 			for (int col = 0; col < cols; col++)
 			{
-				ConstantColormap2D colormap = new ConstantColormap2D(Color.WHITE);
+				ConstantColormap colormap = new ConstantColormap(Color.WHITE);
 				SimpleColormapView view = new SimpleColormapView(colormap, REAL);
 				DecomposedPanel mini = new DecomposedPanel(view);
 				panels[row][col] = mini;
@@ -94,7 +94,7 @@ public class DecomposedViewPanel extends JPanel
 		{
 			for (int col = 0; col < cols; col++)
 			{
-				Colormap2D colormap = event.getSelection();
+				Colormap colormap = event.getSelection();
 				SimpleColormapView tColormap = new SimpleColormapView(colormap, types.get(typeIdx++));
 				panels[row][col].setColorMapView(tColormap);
 			}

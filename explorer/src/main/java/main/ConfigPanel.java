@@ -61,7 +61,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 import de.fhg.igd.iva.colorspaces.RGB;
 import de.fhg.igd.iva.colorspaces.XYZ;
@@ -91,14 +91,14 @@ public class ConfigPanel extends JPanel
 	 * @param colorMaps the (sorted) list of all available color maps
 	 * @param database the BibTeX database
 	 */
-	public ConfigPanel(List<Colormap2D> colorMaps, final BibTeXDatabase database)
+	public ConfigPanel(List<Colormap> colorMaps, final BibTeXDatabase database)
 	{
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
 		this.database = database;
 		
-		final JComboBox<Colormap2D> mapsCombo = new JComboBox<Colormap2D>(colorMaps.toArray(new Colormap2D[0]));
+		final JComboBox<Colormap> mapsCombo = new JComboBox<Colormap>(colorMaps.toArray(new Colormap[0]));
 		
 		final JPanel cmPanel = new JPanel(new BorderLayout(5, 5));
 		cmPanel.add(new JLabel("Colormap"), BorderLayout.NORTH);
@@ -133,7 +133,7 @@ public class ConfigPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				Colormap2D colormap = (Colormap2D) mapsCombo.getSelectedItem();
+				Colormap colormap = (Colormap) mapsCombo.getSelectedItem();
 				descLabel.setText("<html>" + colormap.getDescription() + "</html>");
 
 				String refs = getBibTeX(colormap);
@@ -152,7 +152,7 @@ public class ConfigPanel extends JPanel
 		MyEventBus.getInstance().register(this);
 	}
 
-	private String getStats(Colormap2D colormap)
+	private String getStats(Colormap colormap)
 	{
         SamplingStrategy circSampling = new CircularSampling(30);
         SamplingStrategy rectSampling = new GridSampling(50);	// 50x50 = 2500 sample points
@@ -196,7 +196,7 @@ public class ConfigPanel extends JPanel
 		return stats;
 	}
 
-	private String getBibTeX(Colormap2D colormap)
+	private String getBibTeX(Colormap colormap)
 	{
 		List<String> entries = Lists.newArrayList();
 		for (String ref : colormap.getReferences())

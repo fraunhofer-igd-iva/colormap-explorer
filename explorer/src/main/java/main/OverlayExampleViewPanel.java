@@ -26,8 +26,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
-import de.fhg.igd.iva.colormaps.ConstantColormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.ConstantColormap;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
@@ -58,7 +58,7 @@ public class OverlayExampleViewPanel extends JPanel
 		{
 			for (int col = 0; col < cols; col++)
 			{
-				OverlayExamplePanel mini = new OverlayExamplePanel(new ConstantColormap2D(Color.WHITE));
+				OverlayExamplePanel mini = new OverlayExamplePanel(new ConstantColormap(Color.WHITE));
 				mini.setOverlayColor(colors.get(col));
 				mini.setFontSize(fontSizes.get(row));
 				panels.add(mini);
@@ -79,7 +79,7 @@ public class OverlayExampleViewPanel extends JPanel
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
-		Colormap2D colormap = event.getSelection();
+		Colormap colormap = event.getSelection();
 		for (OverlayExamplePanel panel : panels)
 		{
 			panel.setColormap(colormap);

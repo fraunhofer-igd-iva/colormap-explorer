@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap2D;
+import de.fhg.igd.iva.colormaps.AbstractColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
@@ -12,7 +12,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
  * @author ??
  */
 @Deprecated
-public class Brecheisen2009 extends AbstractColormap2D {
+public class Brecheisen2009 extends AbstractColormap {
 
 	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(
 			Color.MAGENTA, Color.WHITE, Color.BLACK, Color.GREEN);

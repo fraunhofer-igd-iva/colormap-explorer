@@ -20,7 +20,7 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap2D;
+import de.fhg.igd.iva.colormaps.AbstractColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
@@ -28,7 +28,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
  * @author JB
  */
 @Deprecated
-public class Baum2DLookupTable extends AbstractColormap2D {
+public class Baum2DLookupTable extends AbstractColormap {
 
 	@Override
 	public Color getColor(double x, double y) {

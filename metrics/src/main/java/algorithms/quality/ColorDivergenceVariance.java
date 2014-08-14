@@ -24,7 +24,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.MedianDivergenceComputer;
 import algorithms.sampling.SamplingStrategy;
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Computes the variance of the color distance/map distance ratio.
@@ -40,7 +40,7 @@ public final class ColorDivergenceVariance implements ColormapQuality
 	}
 
 	@Override
-	public double getQuality(Colormap2D colormap)
+	public double getQuality(Colormap colormap)
 	{
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 		Iterator<Point2D> ptIt = strategy.getPoints().iterator();

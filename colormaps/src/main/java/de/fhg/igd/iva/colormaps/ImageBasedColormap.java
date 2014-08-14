@@ -26,7 +26,7 @@ import java.awt.image.WritableRaster;
  * An abstract colormap that is based on an image
  * @author Martin Steiger
  */
-public abstract class ImageBasedColormap extends AbstractColormap2D 
+public abstract class ImageBasedColormap extends AbstractColormap 
 {
 	private final BufferedImage image;
 

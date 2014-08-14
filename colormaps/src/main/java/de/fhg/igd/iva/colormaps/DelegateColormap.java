@@ -14,54 +14,63 @@
  * limitations under the License.
  */
 
+
 package de.fhg.igd.iva.colormaps;
 
 import java.awt.Color;
+import java.util.List;
 
 /**
- * A colormap with a constant gray value of 0.5
+ * Delegates all method calls to another implementation
  * @author Martin Steiger
  */
-public class ConstantColormap2D extends AbstractColormap2D
+public class DelegateColormap implements Colormap
 {
-	private final Color color;
+	private final Colormap delegate;
 
 	/**
-	 * Default constructor using 50% on all channels
+	 * @param colormap the underlying color map
 	 */
-	public ConstantColormap2D()
+	public DelegateColormap(Colormap colormap)
 	{
-		color = new Color(0.5f, 0.5f, 0.5f);
-	}
-
-	/**
-	 * @param color the constant color to use
-	 */
-	public ConstantColormap2D(Color color)
-	{
-		this.color = color;
+		this.delegate = colormap;
 	}
 
 	@Override
-	public Color getColor(double x, double y) {
-		return color;
+	public Color getColor(double x, double y)
+	{
+		return delegate.getColor(x, y);
 	}
 
 	@Override
 	public String getName()
 	{
-		return "Constant Gray 0.5";
+		return delegate.getName();
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return getName();
+		return delegate.getDescription();
 	}
 
 	@Override
 	public ColorSpace getColorSpace()
 	{
-		return ColorSpace.sRGB;
+		return delegate.getColorSpace();
+	}
+
+	@Override
+	public List<String> getReferences()
+	{
+		return delegate.getReferences();
+	}
+	
+	/**
+	 * @return the underlying delegate colormap
+	 */
+	protected Colormap getDelegate()
+	{
+		return delegate;
 	}
 }

@@ -26,7 +26,7 @@ import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.collect.Lists;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.pcolor.PColor;
 
 /**
@@ -48,7 +48,7 @@ public abstract class ColorDynamic implements ColormapQuality
 	}
 	
 	@Override
-	public double getQuality(Colormap2D colormap)
+	public double getQuality(Colormap colormap)
 	{
 		List<PColor> colors = Lists.newArrayList();
 		for (Point2D pt : sampling.getPoints())

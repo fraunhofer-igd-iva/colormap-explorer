@@ -20,10 +20,10 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap2D;
+import de.fhg.igd.iva.colormaps.AbstractColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
-public class ConstantRed extends AbstractColormap2D {
+public class ConstantRed extends AbstractColormap {
 
 	@Override
 	public Color getColor(double x, double y) {

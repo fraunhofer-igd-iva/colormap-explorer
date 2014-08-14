@@ -18,7 +18,7 @@ package de.fhg.igd.iva.colormaps.impl;
 
 import java.awt.Color;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap2D;
+import de.fhg.igd.iva.colormaps.AbstractColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
@@ -26,7 +26,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
  * between (RGB). The four colors are assigned at run-time.
  * 
  */
-class FourCornersAnchorColorMapParameterizable extends AbstractColormap2D {
+class FourCornersAnchorColorMapParameterizable extends AbstractColormap {
 
 	private Color lowerLeft;
 	private Color lowerRight;

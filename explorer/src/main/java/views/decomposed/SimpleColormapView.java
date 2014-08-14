@@ -18,7 +18,7 @@ package views.decomposed;
 
 import java.awt.Color;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 import de.fhg.igd.iva.colorspaces.RGB;
 
@@ -28,7 +28,7 @@ import de.fhg.igd.iva.colorspaces.RGB;
  */
 public class SimpleColormapView implements ColormapView
 {
-	private Colormap2D colormap;
+	private Colormap colormap;
 
 	public enum ViewType
 	{
@@ -64,7 +64,7 @@ public class SimpleColormapView implements ColormapView
 	 * @param colormap the original color map
 	 * @param viewType the filter type
 	 */
-	public SimpleColormapView(Colormap2D colormap, ViewType viewType)
+	public SimpleColormapView(Colormap colormap, ViewType viewType)
 	{
 		this.colormap = colormap;
 		this.viewType = viewType;

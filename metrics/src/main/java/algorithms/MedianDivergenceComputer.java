@@ -26,7 +26,7 @@ import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.collect.Lists;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
@@ -41,26 +41,26 @@ public final class MedianDivergenceComputer {
 	
 	private static final ViewingConditions comparisonVc = ViewingConditions.sRGB_typical_envirnonment;
 
-	private Colormap2D colormap;
+	private Colormap colormap;
 	
 	private List<Point2D> points;
 
 	private double[] ratios;
 	
-	private MedianDivergenceComputer(Colormap2D colormap, List<Point2D> points) {
+	private MedianDivergenceComputer(Colormap colormap, List<Point2D> points) {
 		super();
 		this.colormap = colormap;
 		this.points = points;
 	}
 
-	public static MedianDivergenceComputer fromSamplingStrategy(Colormap2D colormap, SamplingStrategy strategy) {
+	public static MedianDivergenceComputer fromSamplingStrategy(Colormap colormap, SamplingStrategy strategy) {
 		List<Point2D> points = Lists.newArrayList(strategy.getPoints());
 		MedianDivergenceComputer that = new MedianDivergenceComputer(colormap, points);
 		that.deriveMedianColormapToJNDRatio();
 		return that;
 	}
 	
-	public static MedianDivergenceComputer fromPoints(Colormap2D colormap, List<Point2D> points) {
+	public static MedianDivergenceComputer fromPoints(Colormap colormap, List<Point2D> points) {
 		MedianDivergenceComputer that = new MedianDivergenceComputer(colormap, points);
 		that.deriveMedianColormapToJNDRatio();
 		return that;

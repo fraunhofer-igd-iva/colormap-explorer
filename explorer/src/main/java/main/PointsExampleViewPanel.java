@@ -26,8 +26,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
-import de.fhg.igd.iva.colormaps.ConstantColormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.ConstantColormap;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
@@ -58,7 +58,7 @@ public class PointsExampleViewPanel extends JPanel
 		{
 			for (int col = 0; col < cols; col++)
 			{
-				PointsExamplePanel mini = new PointsExamplePanel(new ConstantColormap2D(Color.WHITE));
+				PointsExamplePanel mini = new PointsExamplePanel(new ConstantColormap(Color.WHITE));
 				mini.setBackground(backgrounds.get(row));
 				mini.setAlpha(alphas.get(col));
 				panels.add(mini);
@@ -79,7 +79,7 @@ public class PointsExampleViewPanel extends JPanel
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
-		Colormap2D colormap = event.getSelection();
+		Colormap colormap = event.getSelection();
 		for (ColormapPanel panel : panels)
 		{
 			panel.setColormap(colormap);

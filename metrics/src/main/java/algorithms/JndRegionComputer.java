@@ -36,7 +36,7 @@ import algorithms.sampling.SamplingStrategy;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
 import de.fhg.igd.pcolor.util.ColorTools;
@@ -58,14 +58,14 @@ public class JndRegionComputer
 
 	private final double jndThreshold;
 	private final SamplingStrategy sampling;
-	private final Colormap2D colormap;
+	private final Colormap colormap;
 
 	/**
 	 * @param colormap the colormap to use
 	 * @param sampling the sampling strategy for finding the jnd points
 	 * @param jndThreshold the jnd threshold for the set of distinguishable points
 	 */
-	public JndRegionComputer(Colormap2D colormap, SamplingStrategy sampling, double jndThreshold)
+	public JndRegionComputer(Colormap colormap, SamplingStrategy sampling, double jndThreshold)
 	{
 		this.colormap = colormap;
 		this.sampling = sampling;

@@ -20,7 +20,7 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap2D;
+import de.fhg.igd.iva.colormaps.AbstractColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
@@ -31,7 +31,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
  *             performed slightly better. [JB]
  */
 @Deprecated
-public class RobertsonAndOCallaghan3 extends AbstractColormap2D {
+public class RobertsonAndOCallaghan3 extends AbstractColormap {
 
 	private FourCornersAnchorColorMapParameterizable[][] colorMaps;
 

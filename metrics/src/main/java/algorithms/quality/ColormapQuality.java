@@ -16,7 +16,7 @@
 
 package algorithms.quality;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * TODO Type description
@@ -28,7 +28,7 @@ public interface ColormapQuality
 	 * @param colormap2d the colormap to use
 	 * @return the quality in [0..1]
 	 */
-	double getQuality(Colormap2D colormap2d);
+	double getQuality(Colormap colormap2d);
 
 	/**
 	 * @return true if higher quality score is "better", false if "lower" quality score is better

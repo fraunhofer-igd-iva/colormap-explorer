@@ -30,7 +30,7 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Entry point for the application
@@ -49,18 +49,18 @@ public final class ColorMapFinder
 	 * @param packageName the package name
 	 * @return a sorted list of Colormap2D instances
 	 */
-	public static List<Colormap2D> findInPackage(String packageName)
+	public static List<Colormap> findInPackage(String packageName)
 	{
 		Set<URL> urls = ClasspathHelper.forPackage(packageName);
 
 		ConfigurationBuilder config = new ConfigurationBuilder();
 		config.setUrls(urls);
 		Reflections ref = new Reflections(config);
-		Set<Class<? extends Colormap2D>> colormapClasses = ref.getSubTypesOf(Colormap2D.class);
+		Set<Class<? extends Colormap>> colormapClasses = ref.getSubTypesOf(Colormap.class);
 
-		List<Colormap2D> colorMaps = new ArrayList<>(colormapClasses.size());
+		List<Colormap> colorMaps = new ArrayList<>(colormapClasses.size());
 		
-		for (Class<? extends Colormap2D> clazz : colormapClasses) {
+		for (Class<? extends Colormap> clazz : colormapClasses) {
 			try
 			{
 				if (!clazz.getName().startsWith(packageName))
@@ -93,10 +93,10 @@ public final class ColorMapFinder
 			}
 		}
 		
-		Collections.sort(colorMaps, new Comparator<Colormap2D>()
+		Collections.sort(colorMaps, new Comparator<Colormap>()
 		{
 			@Override
-			public int compare(Colormap2D o1, Colormap2D o2)
+			public int compare(Colormap o1, Colormap o2)
 			{
 				return o1.getName().compareTo(o2.getName());
 			}

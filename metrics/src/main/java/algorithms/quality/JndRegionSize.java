@@ -24,7 +24,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.JndRegionComputer;
 import algorithms.sampling.SamplingStrategy;
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Computes the variance in jnd region size
@@ -43,7 +43,7 @@ public class JndRegionSize implements ColormapQuality
 	}
 	
 	@Override
-	public double getQuality(Colormap2D colormap)
+	public double getQuality(Colormap colormap)
 	{
 		JndRegionComputer computer = new JndRegionComputer(colormap, sampling, 3.0);
 

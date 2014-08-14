@@ -16,39 +16,36 @@
 
 package de.fhg.igd.iva.colormaps;
 
-import java.awt.Color;
+import java.util.Collections;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 /**
- * Defines a color map in 2D space
+ * A partly (default) implementation of {@link Colormap}
  * @author Martin Steiger
  */
-public interface Colormap2D 
-{
-	/**
-	 * @param x the x coordinate in the range [0..1]
-	 * @param y the x coordinate in the range [0..1]
-	 * @return the color value at [mx, my] 
-	 */
-	Color getColor(double x, double y);
+public abstract class AbstractColormap implements Colormap {
 
-	/**
-	 * @return the short name of the color map
-	 */
-	String getName();
+	protected void checkRanges(double x, double y) {
+		Preconditions.checkArgument(0 <= x && x <= 1, "X must in in range [0..1], but is %s", x);
+		Preconditions.checkArgument(0 <= y && y <= 1, "Y must in in range [0..1], but is %s", y);
+	}
 
-	/**
-	 * @return the full description
-	 */
-	String getDescription();
-
-	/**
-	 * @return the color space
-	 */
-	ColorSpace getColorSpace();
-
-	/**
-	 * @return a list of full BibTeX entries
-	 */
-	List<String> getReferences();
+	@Override
+	public String getName()
+	{
+		return getClass().getSimpleName();
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
+	@Override
+	public List<String> getReferences()
+	{
+		return Collections.emptyList();
+	}
 }

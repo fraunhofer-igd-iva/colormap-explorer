@@ -24,7 +24,7 @@ import java.awt.geom.AffineTransform;
  * Transforms a given colormap
  * @author Martin Steiger
  */
-public class TransformedColormap2D extends DelegateColormap2D
+public class TransformedColormap extends DelegateColormap
 {
 	private double m00;
 	private double m01;
@@ -33,9 +33,9 @@ public class TransformedColormap2D extends DelegateColormap2D
 	private double m11;
 	private double m12;
 
-	public static TransformedColormap2D identity(Colormap2D colormap)
+	public static TransformedColormap identity(Colormap colormap)
 	{
-		return new TransformedColormap2D(colormap, 1, 0, 0, 1, 0, 0);
+		return new TransformedColormap(colormap, 1, 0, 0, 1, 0, 0);
 	}
 	
 	/**
@@ -43,32 +43,32 @@ public class TransformedColormap2D extends DelegateColormap2D
 	 * @param colormap
 	 * @return
 	 */
-	public static TransformedColormap2D rotated90(Colormap2D colormap)
+	public static TransformedColormap rotated90(Colormap colormap)
 	{
-		return new TransformedColormap2D(colormap, 0, 1, -1, 0, 1, 0); 
+		return new TransformedColormap(colormap, 0, 1, -1, 0, 1, 0); 
 	}
 	
-	public static TransformedColormap2D rotated180(Colormap2D colormap)
+	public static TransformedColormap rotated180(Colormap colormap)
 	{
-		return new TransformedColormap2D(colormap, -1, 0, 0, -1, 1, 1); 
+		return new TransformedColormap(colormap, -1, 0, 0, -1, 1, 1); 
 	}
 	
-	public static TransformedColormap2D rotated270(Colormap2D colormap)
+	public static TransformedColormap rotated270(Colormap colormap)
 	{
-		return new TransformedColormap2D(colormap, 0, -1, 1, 0, 0, 1); 
+		return new TransformedColormap(colormap, 0, -1, 1, 0, 0, 1); 
 	}
 	
-	public static TransformedColormap2D flippedX(Colormap2D colormap)
+	public static TransformedColormap flippedX(Colormap colormap)
 	{
-		return new TransformedColormap2D(colormap, -1, 0, 0, 1, 1, 0); 
+		return new TransformedColormap(colormap, -1, 0, 0, 1, 1, 0); 
 	}
 	
-	public static TransformedColormap2D flippedY(Colormap2D colormap)
+	public static TransformedColormap flippedY(Colormap colormap)
 	{
-		return new TransformedColormap2D(colormap, 1, 0, 0, -1, 0, 1); 
+		return new TransformedColormap(colormap, 1, 0, 0, -1, 0, 1); 
 	}
 	
-	private TransformedColormap2D(Colormap2D colormap, 
+	private TransformedColormap(Colormap colormap, 
 			double m00, double m10,
             double m01, double m11,
             double m02, double m12)

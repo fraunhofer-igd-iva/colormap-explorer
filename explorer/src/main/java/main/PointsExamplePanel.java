@@ -24,7 +24,7 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Displays colored points on a given background
@@ -34,20 +34,20 @@ public class PointsExamplePanel extends JPanel implements ColormapPanel
 {
 	private static final long serialVersionUID = 4842610449905121603L;
 
-	private Colormap2D colormap;
+	private Colormap colormap;
 
 	private int alpha;
 	
 	/**
 	 * @param colormap the colormap for the points
 	 */
-	public PointsExamplePanel(Colormap2D colormap)
+	public PointsExamplePanel(Colormap colormap)
 	{
 		this.colormap = colormap;
 	}
 
 	@Override
-	public void setColormap(Colormap2D colormap)
+	public void setColormap(Colormap colormap)
 	{
 		this.colormap = colormap;
 		repaint();
