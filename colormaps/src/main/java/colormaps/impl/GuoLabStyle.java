@@ -53,12 +53,14 @@ public abstract class GuoLabStyle extends AbstractColormap2D
 		this.chromaFunc = chromaFunc;
 	}
 	
-	public static Function<Double, Double> constant1f(final float constant) {
+	public static Function<Double, Double> constant1f(double constant) {
+		final Double boxed = Double.valueOf(constant);
+		
 		return new Function<Double, Double>() {
 			
 			@Override
 			public Double apply(Double input) {
-				return 55d;  // guessed from poster
+				return boxed;
 			}
 		};
 	}
