@@ -34,9 +34,9 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import colormaps.Colormap2D;
-
 import com.google.common.math.IntMath;
+
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * Displays a text overlay on a blurred colormap

@@ -16,7 +16,7 @@
 
 package main;
 
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * Interface for panels that deal with a given colormap.

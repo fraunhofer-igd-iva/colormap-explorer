@@ -35,10 +35,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import version.GitVersion;
-import colormaps.Colormap2D;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * The main window, also the entry point for the application.

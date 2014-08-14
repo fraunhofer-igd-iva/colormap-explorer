@@ -16,7 +16,7 @@
 
 package algorithms.quality;
 
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * TODO Type description

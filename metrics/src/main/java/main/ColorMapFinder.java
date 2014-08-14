@@ -30,7 +30,7 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * Entry point for the application

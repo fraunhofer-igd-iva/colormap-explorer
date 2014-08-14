@@ -34,12 +34,12 @@ import javax.swing.JPanel;
 
 import views.decomposed.SimpleColormapView;
 import views.decomposed.SimpleColormapView.ViewType;
-import colormaps.Colormap2D;
-import colormaps.ConstantColormap2D;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 
+import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.ConstantColormap2D;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 

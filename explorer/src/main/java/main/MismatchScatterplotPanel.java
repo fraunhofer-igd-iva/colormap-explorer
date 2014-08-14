@@ -27,7 +27,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import algorithms.MedianDivergenceComputer;
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * Displays a scatterplot of perceptual color distance over color map distance.

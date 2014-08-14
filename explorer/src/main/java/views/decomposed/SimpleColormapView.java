@@ -18,9 +18,9 @@ package views.decomposed;
 
 import java.awt.Color;
 
-import colormaps.Colormap2D;
-import colorspaces.CIELABLch;
-import colorspaces.RGB;
+import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colorspaces.CIELABLch;
+import de.fhg.igd.iva.colorspaces.RGB;
 
 /**
  * Transforms a given colormap by filtering a channel

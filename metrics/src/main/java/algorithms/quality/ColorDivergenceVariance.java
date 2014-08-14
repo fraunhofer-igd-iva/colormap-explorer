@@ -24,7 +24,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.MedianDivergenceComputer;
 import algorithms.sampling.SamplingStrategy;
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * Computes the variance of the color distance/map distance ratio.

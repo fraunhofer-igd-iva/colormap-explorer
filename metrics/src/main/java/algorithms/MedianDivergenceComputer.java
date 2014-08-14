@@ -23,10 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import algorithms.sampling.SamplingStrategy;
-import colormaps.Colormap2D;
 
 import com.google.common.collect.Lists;
 
+import de.fhg.igd.iva.colormaps.Colormap2D;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;

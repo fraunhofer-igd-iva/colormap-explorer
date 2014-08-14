@@ -32,11 +32,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import algorithms.sampling.SamplingStrategy;
-import colormaps.Colormap2D;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import de.fhg.igd.iva.colormaps.Colormap2D;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
 import de.fhg.igd.pcolor.util.ColorTools;

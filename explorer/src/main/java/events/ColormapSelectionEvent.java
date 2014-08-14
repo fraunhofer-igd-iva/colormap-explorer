@@ -16,9 +16,9 @@
 
 package events;
 
-import colormaps.Colormap2D;
-
 import com.google.common.base.Preconditions;
+
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * Fired when the colormap selection is changed

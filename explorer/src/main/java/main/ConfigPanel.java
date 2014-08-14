@@ -56,15 +56,15 @@ import algorithms.sampling.CircularSampling;
 import algorithms.sampling.EvenDistributedDistancePoints;
 import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
-import colormaps.Colormap2D;
-import colorspaces.CIELABLch;
-import colorspaces.RGB;
-import colorspaces.XYZ;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
+import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colorspaces.CIELABLch;
+import de.fhg.igd.iva.colorspaces.RGB;
+import de.fhg.igd.iva.colorspaces.XYZ;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_CIECAM02;
 import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;

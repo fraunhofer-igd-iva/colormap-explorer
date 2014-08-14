@@ -21,7 +21,7 @@ import java.util.Random;
 
 import algorithms.MedianDivergenceComputer;
 import algorithms.sampling.EvenDistributedDistancePoints;
-import colormaps.Colormap2D;
+import de.fhg.igd.iva.colormaps.Colormap2D;
 
 /**
  * Represents the color appearance divergence ratio as a quality measure. Higher ratio means

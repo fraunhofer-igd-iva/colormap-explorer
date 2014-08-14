@@ -23,8 +23,8 @@ import java.awt.geom.Point2D;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.sampling.SamplingStrategy;
-import colormaps.Colormap2D;
-import colorspaces.CIELABLch;
+import de.fhg.igd.iva.colormaps.Colormap2D;
+import de.fhg.igd.iva.colorspaces.CIELABLch;
 
 /**
  * Computes the variance in attention steering

@@ -48,11 +48,11 @@ import org.slf4j.LoggerFactory;
 
 import algorithms.JndRegionComputer;
 import algorithms.sampling.CircularSampling;
-import colormaps.CachedColormap2D;
-import colormaps.Colormap2D;
 
 import com.google.common.eventbus.Subscribe;
 
+import de.fhg.igd.iva.colormaps.CachedColormap2D;
+import de.fhg.igd.iva.colormaps.Colormap2D;
 import events.ColormapSelectionEvent;
 import events.MyEventBus;
 
