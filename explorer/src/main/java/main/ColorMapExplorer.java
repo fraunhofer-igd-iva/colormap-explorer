@@ -16,11 +16,13 @@
 
 package main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
@@ -38,8 +40,10 @@ import version.GitVersion;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.ConstantColormap;
 
 /**
  * The main window, also the entry point for the application.
@@ -101,7 +105,7 @@ public class ColorMapExplorer extends JFrame
 			logger.error("Cannot set look & feel", e);
 		}
 		
-		List<Colormap> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+		List<Colormap> colorMaps = discoverColormaps();
 		
 		BibTeXDatabase database = new BibTeXDatabase();
 		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib"))
@@ -126,5 +130,33 @@ public class ColorMapExplorer extends JFrame
 		frame.setLocationByPlatform(true);
 
 		frame.setVisible(true);
+	}
+
+	private static List<Colormap> discoverColormaps()
+	{
+		ServiceLoader<Colormap> loader = ServiceLoader.load(Colormap.class);
+		List<Colormap> colorMaps = Lists.newArrayList();
+		
+		for (Colormap map : loader)
+		{
+			Class<? extends Colormap> clazz = map.getClass();
+			
+			if (clazz.isAnnotationPresent(Deprecated.class))
+			{
+				logger.info("Skipping deprecated implementation {}", clazz);
+			}
+			else
+			{
+				logger.debug("Discovered implementation {}", clazz);
+				colorMaps.add(map);
+			}
+		}
+		
+		if (colorMaps.isEmpty())
+		{
+			logger.warn("No colormaps were discovered - using default");
+			colorMaps.add(new ConstantColormap(Color.GRAY));
+		}
+		return colorMaps;
 	}	
 }

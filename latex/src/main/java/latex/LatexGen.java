@@ -15,6 +15,7 @@
  */
 package latex;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +26,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-
-import main.ColorMapFinder;
+import java.util.ServiceLoader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
+
 import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.ConstantColormap;
 
 /**
  * Generates LaTeX table output for a list of colormaps 
@@ -55,7 +58,7 @@ public final class LatexGen
 //		colorMaps.add(new Steiger2014Generic());
 //		colorMaps.add(new TeulingFig2());
 		
-		List<Colormap> colorMaps = ColorMapFinder.findInPackage("colormaps.impl");
+		List<Colormap> colorMaps = discoverColormaps();
 		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
@@ -64,6 +67,34 @@ public final class LatexGen
 		createQualityTable(colorMaps, output);
 	}
 
+	private static List<Colormap> discoverColormaps()
+	{
+		ServiceLoader<Colormap> loader = ServiceLoader.load(Colormap.class);
+		List<Colormap> colorMaps = Lists.newArrayList();
+		
+		for (Colormap map : loader)
+		{
+			Class<? extends Colormap> clazz = map.getClass();
+			
+			if (clazz.isAnnotationPresent(Deprecated.class))
+			{
+				logger.info("Skipping deprecated implementation {}", clazz);
+			}
+			else
+			{
+				logger.debug("Discovered implementation {}", clazz);
+				colorMaps.add(map);
+			}
+		}
+		
+		if (colorMaps.isEmpty())
+		{
+			logger.warn("No colormaps were discovered - using default");
+			colorMaps.add(new ConstantColormap(Color.GRAY));
+		}
+		return colorMaps;
+	}	
+	
 	private static void createQualityTable(List<Colormap> colorMaps, File output) throws Exception
 	{
 		File texFile = LatexTableQuality.generateTable(colorMaps, output);

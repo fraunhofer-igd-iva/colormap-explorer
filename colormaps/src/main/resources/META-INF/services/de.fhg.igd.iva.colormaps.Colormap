@@ -1,0 +1,37 @@
+# Provides Colormap interface and implementations 
+# (a comment line begins with a pound sign)
+de.fhg.igd.iva.colormaps.impl.BCP37
+de.fhg.igd.iva.colormaps.impl.Baum2DLookupTable
+de.fhg.igd.iva.colormaps.impl.BaumGreenYellowRedBlack
+de.fhg.igd.iva.colormaps.impl.BaumMagentaGreen
+de.fhg.igd.iva.colormaps.impl.BaumOrangeCyan
+de.fhg.igd.iva.colormaps.impl.Brecheisen2009
+de.fhg.igd.iva.colormaps.impl.BremmCIELabRegular
+de.fhg.igd.iva.colormaps.impl.BremmCIELabStretched
+de.fhg.igd.iva.colormaps.impl.SimulaHSB1
+de.fhg.igd.iva.colormaps.impl.SimulaHSB2
+de.fhg.igd.iva.colormaps.impl.ConstantBlue
+de.fhg.igd.iva.colormaps.impl.ConstantGreen
+de.fhg.igd.iva.colormaps.impl.ConstantRed
+de.fhg.igd.iva.colormaps.impl.CubeDiagonalCuttingRedCyan
+de.fhg.igd.iva.colormaps.impl.CubeDiagonalCuttingGreenMagenta
+de.fhg.igd.iva.colormaps.impl.FourCornersAnchor
+de.fhg.igd.iva.colormaps.impl.Griscom55
+de.fhg.igd.iva.colormaps.impl.Guo30Cone
+de.fhg.igd.iva.colormaps.impl.Guo30Gauss
+de.fhg.igd.iva.colormaps.impl.LespintasPurpleGreen
+de.fhg.igd.iva.colormaps.impl.Ramirez2012
+de.fhg.igd.iva.colormaps.impl.RobertsonAndOCallaghan1
+de.fhg.igd.iva.colormaps.impl.RobertsonAndOCallaghan2
+de.fhg.igd.iva.colormaps.impl.RobertsonAndOCallaghan3
+de.fhg.igd.iva.colormaps.impl.RuppertGreenPurple
+de.fhg.igd.iva.colormaps.impl.RuppertOrangeBlue
+de.fhg.igd.iva.colormaps.impl.SimulaHSB3
+de.fhg.igd.iva.colormaps.impl.Steiger2014Generic
+de.fhg.igd.iva.colormaps.impl.LuoUCSTest
+de.fhg.igd.iva.colormaps.impl.TeulingFig2
+de.fhg.igd.iva.colormaps.impl.TeulingFig3
+de.fhg.igd.iva.colormaps.impl.TeulingFig4a
+de.fhg.igd.iva.colormaps.impl.TeulingFig3NoWhitening
+de.fhg.igd.iva.colormaps.impl.WainerAndFrancolini
+de.fhg.igd.iva.colormaps.impl.Yeo1
