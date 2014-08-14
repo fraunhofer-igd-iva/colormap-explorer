@@ -18,21 +18,27 @@ package colormaps.impl;
 
 import static java.lang.Math.hypot;
 
+import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.base.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.fhg.igd.pcolor.PColor;
-import de.fhg.igd.pcolor.colorspace.CS_CIELab;
+import colormaps.AbstractColormap2D;
+import colorspaces.CIELAB;
+
+import com.google.common.base.Function;
 
 /**
  * Guo-style Lab 2D color spaces, based on functions that reflect the choices in the paper.
  * @author simon
  */
-public abstract class GuoLabStyle extends PColorBased
+public abstract class GuoLabStyle extends AbstractColormap2D
 {
+	private static final Logger logger = LoggerFactory.getLogger(GuoLabStyle.class);
+	
 	private Function<Float, Float> lightnessFunc;
 
 	private Function<Map.Entry<Float, Float>, Map.Entry<Float, Float>> chromaFunc;
@@ -113,7 +119,7 @@ public abstract class GuoLabStyle extends PColorBased
 	}
 	
 	@Override
-	public PColor getPColor(float x, float y)
+	public Color getColor(float x, float y)
 	{
 		// normalize to -1..1
 		float nx = x * 2 - 1;
@@ -121,7 +127,36 @@ public abstract class GuoLabStyle extends PColorBased
 		float dist = (float) hypot(nx, ny);
 		float light = lightnessFunc.apply(dist);
 		Map.Entry<Float, Float> ab = chromaFunc.apply(new AbstractMap.SimpleEntry<>(nx, ny));
-		return PColor.create(CS_CIELab.instance, new float[] { light, ab.getKey(), ab.getValue() });
+		double[] lab = new double[] { light, ab.getKey(), ab.getValue() };
+
+		double[] rgb = CIELAB.lab2rgb(lab);
+
+		for (int i = 0; i < rgb.length; i++)
+		{
+			// TODO clamp is not the best idea but it's unclear what Guo did
+			// also ATM we do not have a way of evaluating the delta E in the UI
+			// meaning we should have a color class supporting further analysis.
+			if (rgb[i] < 0)
+			{
+				rgb[i] = 0;
+				if (rgb[i] < -0.01)
+				{
+					logger.warn("Color channel {} was clamped from {} to 0", i, rgb[i]);
+				}
+			}
+
+			if (rgb[i] > 1)
+			{
+				rgb[i] = 1;
+				if (rgb[i] > 1.01)
+				{
+					logger.warn("Color channel {} was clamped from {} to 1", i, rgb[i]);
+				}
+			}
+
+		}
+		
+		return new Color((float)rgb[0], (float)rgb[1], (float)rgb[2]);
 	}
 	
 	@Override
