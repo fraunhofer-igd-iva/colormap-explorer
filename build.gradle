@@ -3,6 +3,13 @@ task wrapper(type: Wrapper) {
 }
 
 
+task installGitHooks(type: Copy) {
+	description = "Install git hooks (update version file after commit)"
+	
+	from 'config/git-hooks'
+	into '.git/hooks'
+}
+
 def getGitDesc() {
 	def cmd = "git describe --dirty"
 	
@@ -15,7 +22,6 @@ def getGitDesc() {
 		return new Date().format('yyyy-MM-dd-HH-mm-ss');
 	}
 }
-
 
 subprojects {
 	apply plugin: 'java'
