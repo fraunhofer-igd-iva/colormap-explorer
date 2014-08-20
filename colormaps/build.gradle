@@ -23,13 +23,15 @@ publishing {
     }
 	
     repositories {
-        maven {
-			credentials {
-				username sonatypeUsername
-				password sonatypePassword
-			}
+		if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
+			maven {
+				credentials {
+					username sonatypeUsername
+					password sonatypePassword
+				}
 			
-            url "http://a3srv:8081/nexus/content/repositories/releases/"
-        }
+				url "http://a3srv:8081/nexus/content/repositories/releases/"
+			}
+		}
     }
 }
