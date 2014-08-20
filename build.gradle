@@ -11,7 +11,7 @@ task installGitHooks(type: Copy) {
 }
 
 def getGitDesc() {
-	def cmd = "git describe --dirty"
+	def cmd = "git describe --match ?.?.?* --dirty"
 	
 	try {
 		def proc = cmd.execute()
