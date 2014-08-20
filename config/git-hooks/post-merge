@@ -2,13 +2,13 @@
 # this hook is in SCM so that it can be shared
 # to install it, create a symbolic link in the projects .git/hooks folder
 #
-#  $ ln -s config/git-hooks/post-commit .git/hooks/post-commit
+#  $ ln -s config/git-hooks/post-merge .git/hooks/post-merge
 #
 
 # run the gradle wrapper
 #./gradlew ..
 
-echo "Excuting post-commit hook"
+echo "Excuting post-merge hook"
 gradle explorer:createVersionFile
 
 # return the exit code
