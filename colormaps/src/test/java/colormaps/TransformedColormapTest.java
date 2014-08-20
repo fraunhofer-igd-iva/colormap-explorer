@@ -22,18 +22,22 @@ import java.awt.geom.AffineTransform;
 
 import org.junit.Test;
 
+import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.ConstantColormap;
+import de.fhg.igd.iva.colormaps.TransformedColormap;
+
 /**
  * Transforms a given colormap
  * @author Martin Steiger
  */
 public class TransformedColormapTest
 {
-	private static final Colormap2D cm = new ConstantColormap2D();
+	private static final Colormap cm = new ConstantColormap();
 
 	@Test
 	public void testIdentity()
 	{
-		verify(TransformedColormap2D.identity(cm), new AffineTransform());
+		verify(TransformedColormap.identity(cm), new AffineTransform());
 	}
 
 	@Test
@@ -41,7 +45,7 @@ public class TransformedColormapTest
 	{
 		AffineTransform at = new AffineTransform();
 		at.quadrantRotate(1, 0.5, 0.5);
-		verify(TransformedColormap2D.rotated90(cm), at);
+		verify(TransformedColormap.rotated90(cm), at);
 	}
 
 	@Test
@@ -49,7 +53,7 @@ public class TransformedColormapTest
 	{
 		AffineTransform at = new AffineTransform();
 		at.quadrantRotate(2, 0.5, 0.5);
-		verify(TransformedColormap2D.rotated180(cm), at);
+		verify(TransformedColormap.rotated180(cm), at);
 	}
 
 	@Test
@@ -57,7 +61,7 @@ public class TransformedColormapTest
 	{
 		AffineTransform at = new AffineTransform();
 		at.quadrantRotate(3, 0.5, 0.5);
-		verify(TransformedColormap2D.rotated270(cm), at);
+		verify(TransformedColormap.rotated270(cm), at);
 	}
 
 	@Test
@@ -66,7 +70,7 @@ public class TransformedColormapTest
 		AffineTransform at = new AffineTransform();
 		at.translate(1, 0);
 		at.scale(-1, 1);
-		verify(TransformedColormap2D.flippedX(cm), at);
+		verify(TransformedColormap.flippedX(cm), at);
 	}
 
 	@Test
@@ -75,10 +79,10 @@ public class TransformedColormapTest
 		AffineTransform at = new AffineTransform();
 		at.translate(0, 1);
 		at.scale(1, -1);
-		verify(TransformedColormap2D.flippedY(cm), at);
+		verify(TransformedColormap.flippedY(cm), at);
 	}
 
-	private void verify(TransformedColormap2D tcm, AffineTransform shouldBe)
+	private void verify(TransformedColormap tcm, AffineTransform shouldBe)
 	{
 		AffineTransform is = tcm.getTransformation();
 		
