@@ -15,7 +15,7 @@ de.fhg.igd.iva.colormaps.impl.ConstantGreen
 de.fhg.igd.iva.colormaps.impl.ConstantRed
 de.fhg.igd.iva.colormaps.impl.CubeDiagonalCuttingRedCyan
 de.fhg.igd.iva.colormaps.impl.CubeDiagonalCuttingGreenMagenta
-de.fhg.igd.iva.colormaps.impl.FourCornersAnchor
+de.fhg.igd.iva.colormaps.impl.FourCornersAnchorRBGY
 de.fhg.igd.iva.colormaps.impl.Griscom55
 de.fhg.igd.iva.colormaps.impl.Guo30Cone
 de.fhg.igd.iva.colormaps.impl.Guo30Gauss
@@ -35,3 +35,4 @@ de.fhg.igd.iva.colormaps.impl.TeulingFig4a
 de.fhg.igd.iva.colormaps.impl.TeulingFig3NoWhitening
 de.fhg.igd.iva.colormaps.impl.WainerAndFrancolini
 de.fhg.igd.iva.colormaps.impl.Yeo1
+de.fhg.igd.iva.colormaps.impl.Ziegler
