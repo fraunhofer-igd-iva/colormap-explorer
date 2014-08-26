@@ -28,7 +28,7 @@ public class HSL {
 		if(h*2f < 1)
 			return m2;
 		if (h*3f < 2)
-			return m1+(m2-m1)*(2f/3f-h)*6f;
+			return m1+(m2-m1)*(4f-h*6f);
 		return m1;
 	}
 
@@ -55,6 +55,7 @@ public class HSL {
 		float r = hueToRGB(m1, m2, h+1f/3f);
 		float g = hueToRGB(m1, m2, h);
 		float b = hueToRGB(m1, m2, h-1f/3f);
+
 		return new Color(r, g, b);
 	}
 

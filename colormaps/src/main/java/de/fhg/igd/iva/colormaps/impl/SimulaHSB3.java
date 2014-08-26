@@ -21,8 +21,8 @@ public class SimulaHSB3 extends AbstractColormap {
 	@Override
 	public Color getColor(double x, double y) {
 		// normalize to -1..1
-		double nx = (float) (x * 2 - 1);
-		double ny = (float) (y * 2 - 1);
+		double nx = (x * 2 - 1);
+		double ny = (y * 2 - 1);
 		double dist = max(abs(ny), abs(nx));
 		double ang = (Math.atan2(ny, nx) + Math.PI) / (Math.PI * 2);
 		return HSL.HSLtoRGB((float) ang, 1, (float) dist / 2f);
