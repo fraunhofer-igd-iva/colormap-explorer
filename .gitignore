@@ -10,8 +10,9 @@ explorer/src/main/java/version/GitVersion.java
 .classpath
 .project
 .settings/
-/bin
-build
+bin/
+build/
+/.metadata/
 
 # Other
 *.log
