@@ -1,4 +1,5 @@
-explorer/src/main/java/version/GitVersion.java
+/explorer/src/main/java/version/GitVersion.java
+/explorer/natives/
 
 # Gradle files
 .gradle

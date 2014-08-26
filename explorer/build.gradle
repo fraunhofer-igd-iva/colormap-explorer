@@ -10,14 +10,36 @@ repositories {
 		url "http://maven.jzy3d.org/releases"
 	}
 }
-	
+
+configurations {
+	natives
+}
+
 dependencies {
 	compile group: 'org.jbibtex', name: 'jbibtex', version: '1.0.13'
-	compile group: 'org.jzy3d', name: 'jzy3d-api', version: '0.9.1'
 	
 	compile project(':metrics')
 	compile project(':colormaps')
+	
+	compile fileTree(dir: 'natives', include: '*.jar')
+	
+	natives group: 'org.jzy3d', name: 'jzy3d-api', version: '0.9.1'	
 }
+
+// A rather ugly workaround until
+// https://issues.gradle.org/browse/GRADLE-2553
+// is resolved
+task copyNatives(type: Sync) {
+	from { configurations.natives }
+	into { "${projectDir}/natives" }
+	
+	doLast {
+		logger.lifecycle("Copied natives into ${projectDir}/natives")
+	}
+}
+
+compileJava.dependsOn copyNatives
+eclipseClasspath.dependsOn copyNatives
 
 task createVersionFile(type:Copy) {
 	description = 'Creates a java version file based on the template in the resources folder'
