@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main;
+package de.fhg.igd.iva.explorer.main;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -37,21 +37,21 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tiling.Direction;
-import tiling.HexTileModel;
-import tiling.Tile;
 import views.ColormapView;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.math.IntMath;
 
+import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
+import de.fhg.igd.iva.explorer.events.MyEventBus;
+import de.fhg.igd.iva.explorer.events.TileSelectionEvent;
+import de.fhg.igd.iva.explorer.tiling.Direction;
+import de.fhg.igd.iva.explorer.tiling.HexTileModel;
+import de.fhg.igd.iva.explorer.tiling.Tile;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.ViewingConditions;
 import de.fhg.igd.pcolor.util.ColorTools;
-import events.ColormapSelectionEvent;
-import events.MyEventBus;
-import events.TileSelectionEvent;
 
 /**
  * Displays the colormap based on rectangles

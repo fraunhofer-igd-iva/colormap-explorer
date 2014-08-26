@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main;
+package de.fhg.igd.iva.explorer.main;
 
 import java.awt.Color;
 import java.awt.Dimension;

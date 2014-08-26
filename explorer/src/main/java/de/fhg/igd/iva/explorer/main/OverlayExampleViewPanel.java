@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main;
+package de.fhg.igd.iva.explorer.main;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -28,29 +28,29 @@ import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colormaps.ConstantColormap;
-import events.ColormapSelectionEvent;
-import events.MyEventBus;
+import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
+import de.fhg.igd.iva.explorer.events.MyEventBus;
 
 /**
- * A grid of {@link PointsExamplePanel}s
+ * A grid of {@link OverlayExamplePanel}s
  * @author Martin Steiger
  */
-public class PointsExampleViewPanel extends JPanel
+public class OverlayExampleViewPanel extends JPanel
 {
 	private static final long serialVersionUID = 4842610449905121603L;
 
-	private final List<Color> backgrounds = ImmutableList.of(Color.WHITE, Color.GRAY, Color.BLACK);
-	private final List<Integer> alphas = ImmutableList.of(64, 128, 192, 255);
+	private final List<Color> colors = ImmutableList.of(Color.WHITE, Color.GRAY, Color.BLACK);
+	private final List<Integer> fontSizes = ImmutableList.of(10, 16, 22, 28);
 
-	private final List<ColormapPanel> panels = Lists.newArrayList();
+	private final List<OverlayExamplePanel> panels = Lists.newArrayList();
 	
 	/**
 	 * Default constructor
 	 */
-	public PointsExampleViewPanel()
+	public OverlayExampleViewPanel()
 	{
-		int rows = backgrounds.size();
-		int cols = alphas.size();
+		int rows = fontSizes.size(); 
+		int cols = colors.size();
 		
 		setLayout(new GridLayout(rows, cols, 5, 5));
 		
@@ -58,9 +58,9 @@ public class PointsExampleViewPanel extends JPanel
 		{
 			for (int col = 0; col < cols; col++)
 			{
-				PointsExamplePanel mini = new PointsExamplePanel(new ConstantColormap(Color.WHITE));
-				mini.setBackground(backgrounds.get(row));
-				mini.setAlpha(alphas.get(col));
+				OverlayExamplePanel mini = new OverlayExamplePanel(new ConstantColormap(Color.WHITE));
+				mini.setOverlayColor(colors.get(col));
+				mini.setFontSize(fontSizes.get(row));
 				panels.add(mini);
 				add(mini);
 			}
@@ -80,7 +80,7 @@ public class PointsExampleViewPanel extends JPanel
 	public void onSelect(ColormapSelectionEvent event)
 	{
 		Colormap colormap = event.getSelection();
-		for (ColormapPanel panel : panels)
+		for (OverlayExamplePanel panel : panels)
 		{
 			panel.setColormap(colormap);
 		}

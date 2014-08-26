@@ -15,7 +15,7 @@
  */
 
 
-package main;
+package de.fhg.igd.iva.explorer.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -53,8 +53,8 @@ import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.CachedColormap;
 import de.fhg.igd.iva.colormaps.Colormap;
-import events.ColormapSelectionEvent;
-import events.MyEventBus;
+import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
+import de.fhg.igd.iva.explorer.events.MyEventBus;
 
 /**
  * Display points with a certain jnd distance

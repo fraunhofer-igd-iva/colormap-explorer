@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package tiling;
+package de.fhg.igd.iva.explorer.tiling;
 
-import static tiling.Direction.NORTH;
-import static tiling.Direction.NORTH_EAST;
-import static tiling.Direction.NORTH_WEST;
-import static tiling.Direction.SOUTH;
-import static tiling.Direction.SOUTH_EAST;
-import static tiling.Direction.SOUTH_WEST;
+import static de.fhg.igd.iva.explorer.tiling.Direction.NORTH;
+import static de.fhg.igd.iva.explorer.tiling.Direction.NORTH_EAST;
+import static de.fhg.igd.iva.explorer.tiling.Direction.NORTH_WEST;
+import static de.fhg.igd.iva.explorer.tiling.Direction.SOUTH;
+import static de.fhg.igd.iva.explorer.tiling.Direction.SOUTH_EAST;
+import static de.fhg.igd.iva.explorer.tiling.Direction.SOUTH_WEST;
 
 import java.util.ArrayList;
 import java.util.Collection;

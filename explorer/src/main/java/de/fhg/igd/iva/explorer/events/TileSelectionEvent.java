@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package events;
+package de.fhg.igd.iva.explorer.events;
 
 import java.util.Set;
 
-import tiling.Tile;
-import tiling.TileModel;
 import views.ColormapView;
 
 import com.google.common.base.Preconditions;
+
+import de.fhg.igd.iva.explorer.tiling.Tile;
+import de.fhg.igd.iva.explorer.tiling.TileModel;
 
 /**
  * Fired when the tile selection is changed

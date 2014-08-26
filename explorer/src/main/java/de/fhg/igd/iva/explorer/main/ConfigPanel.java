@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main;
+package de.fhg.igd.iva.explorer.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,8 +40,6 @@ import org.jbibtex.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tiling.Tile;
-import tiling.TileModel;
 import views.ColormapView;
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
@@ -65,13 +63,15 @@ import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 import de.fhg.igd.iva.colorspaces.RGB;
 import de.fhg.igd.iva.colorspaces.XYZ;
+import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
+import de.fhg.igd.iva.explorer.events.MyEventBus;
+import de.fhg.igd.iva.explorer.events.TileSelectionEvent;
+import de.fhg.igd.iva.explorer.tiling.Tile;
+import de.fhg.igd.iva.explorer.tiling.TileModel;
 import de.fhg.igd.pcolor.PColor;
 import de.fhg.igd.pcolor.colorspace.CS_CIECAM02;
 import de.fhg.igd.pcolor.colorspace.CS_CIEXYZ;
 import de.fhg.igd.pcolor.colorspace.CS_sRGB;
-import events.ColormapSelectionEvent;
-import events.MyEventBus;
-import events.TileSelectionEvent;
 
 /**
  * The config and info panel at the left

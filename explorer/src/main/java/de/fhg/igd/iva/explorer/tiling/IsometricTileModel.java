@@ -14,33 +14,20 @@
  * limitations under the License.
  */
 
-package tiling;
+package de.fhg.igd.iva.explorer.tiling;
 
-import static tiling.Direction.EAST;
-import static tiling.Direction.NORTH;
-import static tiling.Direction.NORTH_EAST;
-import static tiling.Direction.NORTH_WEST;
-import static tiling.Direction.SOUTH;
-import static tiling.Direction.SOUTH_EAST;
-import static tiling.Direction.SOUTH_WEST;
-import static tiling.Direction.WEST;
-
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.base.Optional;
-import com.google.common.math.IntMath;
 
 
 /**
- * A rectangular tile model
+ * A diamond-shaped tile model
  * @author Martin Steiger
  */
-public class RectTileModel implements TileModel
+public class IsometricTileModel implements TileModel
 {
 	private int mapWidth;
 	private int mapHeight;
@@ -54,12 +41,17 @@ public class RectTileModel implements TileModel
 	 * @param mapWidth width of the map
 	 * @param mapHeight height of the map
 	 */
-	public RectTileModel(int tileWidth, int tileHeight, int mapWidth, int mapHeight)
+	public IsometricTileModel(int tileWidth, int tileHeight, int mapWidth, int mapHeight)
 	{
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
+	}
+
+	private static boolean isOdd(int v)
+	{
+		return v % 2 == 1;
 	}
 
 	@Override
@@ -72,6 +64,18 @@ public class RectTileModel implements TileModel
 	public int getMapWidth()
 	{
 		return mapWidth;
+	}
+	
+	@Override
+	public int getWorldWidth()
+	{
+		return tileWidth * mapWidth;
+	}
+	
+	@Override
+	public int getWorldHeight()
+	{
+		return tileHeight * mapHeight / 2;
 	}	
 	
 	/**
@@ -99,34 +103,43 @@ public class RectTileModel implements TileModel
 	@Override
 	public int getWorldX(int mapX, int mapY)
 	{
-		return mapX * tileWidth;
+		return mapX * tileWidth + (mapY % 2) * tileWidth / 2;
 	}
 
 	@Override
 	public int getWorldY(int x, int y)
 	{
-		return y * tileHeight;
-	}
-	
-	@Override
-	public int getWorldWidth()
-	{
-		return tileWidth * mapWidth;
-	}
-	
-	@Override
-	public int getWorldHeight()
-	{
-		return tileHeight * mapHeight;
+		return y * tileHeight / 2;
 	}
 	
 	@Override
 	public Optional<Tile> getTileAtWorldPos(int worldX, int worldY)
 	{
-		int x = IntMath.divide(worldX, tileWidth, RoundingMode.FLOOR);
-		int y = IntMath.divide(worldY, tileHeight, RoundingMode.FLOOR);
+		// Origin is at (0, h/2)
+		double worldY2 = worldY - tileHeight * 0.5; 
+
+		//     ( w/2 )        ( w/2 )
+		// r = (     )    c = (     ) 
+		//     ( h/2 )        (-h/2 )
 		
-		if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight)
+		// x = r * w + c * w
+		// y = r * h - c * h
+		
+		// solving for r gives r = y/h + c
+		
+		// Math.floor() rounds negative values down whereas casting to int rounds them up
+		int r = (int) Math.floor(worldX / (double) tileWidth + worldY2 / tileHeight); 
+		int c = (int) Math.floor(worldX / (double) tileWidth - worldY2 / tileHeight);
+
+		// r and c are only one tile edge long
+		int x = (int)Math.floor((r + c) / 2.0);
+		
+		// r - c always >= 0
+		int y = r - c;
+		
+		if (x >= 0 && x < mapWidth &&
+			y >= 0 && y < mapHeight)
+
 		{
 			return Optional.of(getTile(x, y));
 		}
@@ -137,14 +150,12 @@ public class RectTileModel implements TileModel
 	@Override
 	public List<Tile> getTilesInRect(int worldX0, int worldY0, int worldX1, int worldY1)
 	{
-		int x0 = IntMath.divide(worldX0, tileWidth, RoundingMode.FLOOR);
-		int y0 = IntMath.divide(worldY0, tileHeight, RoundingMode.FLOOR);
-		int x1 = IntMath.divide(worldX1, tileWidth, RoundingMode.FLOOR);
-		int y1 = IntMath.divide(worldY1, tileHeight, RoundingMode.FLOOR);
+		// this computes the map-y based on rectangular shapes 
+		// it is then independent of x - basically the inverse of getWorldY()
+		int y0 = (worldY0 * 2) / tileHeight - 1;
+		int y1 = (worldY1 * 2) / tileHeight;
 		
 		// Restrict to map bounds
-		int minX = Math.max(x0, 0);
-		int maxX = Math.min(x1, mapWidth - 1);
 		int minY = Math.max(y0, 0);
 		int maxY = Math.min(y1, mapHeight - 1);
 
@@ -152,7 +163,13 @@ public class RectTileModel implements TileModel
 
 		for (int y = minY; y <= maxY; y++)
 		{
-			for (int x = minX; y <= maxX; x++)
+			int x0 = (worldX0 - (y % 2) * tileWidth / 2) / tileWidth;
+			int x1 = (worldX1 - (y % 2) * tileWidth / 2) / tileWidth;
+
+			int minX = Math.max(x0, 0);
+			int maxX = Math.min(x1, mapWidth - 1);
+
+			for (int x = minX; x <= maxX; x++)
 			{
 				result.add(getTile(x, y));
 			}
@@ -164,33 +181,24 @@ public class RectTileModel implements TileModel
 	@Override
 	public Collection<Direction> validDirections(int x, int y)
 	{
-		Set<Direction> allowed = new HashSet<>();
-		
-		if (y > 0)
-			allowed.add(NORTH);
-
-		if (x > 0)
-			allowed.add(WEST);
-
-		if (y < mapHeight - 1)
-			allowed.add(SOUTH);
-
-		if (x < mapWidth - 1)
-			allowed.add(EAST);
-
-		if (x > 0 && y > 0)
-			allowed.add(NORTH_WEST);
-
-		if (x > 0 && y < mapHeight - 1)
-			allowed.add(SOUTH_WEST);
-
-		if (x < mapWidth - 1 && y > 0)
-			allowed.add(NORTH_EAST);
-
-		if (x < mapWidth - 1 && y < mapHeight - 1)
-			allowed.add(SOUTH_EAST);
-
-		return allowed;
+		throw new UnsupportedOperationException();
+//		Set<Direction> allowed = new HashSet<>();
+//		
+//		if (y > 0)
+//			allowed.add(NORTH);
+//
+//		if (x > 0)
+//			allowed.add(WEST);
+//
+//		if (y < mapHeight - 1)
+//			allowed.add(SOUTH);
+//
+//		if (x < mapWidth - 1)
+//			allowed.add(EAST);
+//
+		// TODO: add diagonal checks
+//
+//		return allowed;
 	}
 	
 	@Override
@@ -202,25 +210,31 @@ public class RectTileModel implements TileModel
 			return getTile(x + 1, y);
 			
 		case NORTH:
-			return getTile(x, y - 1);
+			return getTile(x, y - 2);
 
 		case SOUTH:
-			return getTile(x, y + 1);
+			return getTile(x, y + 2);
 			
 		case WEST:
 			return getTile(x - 1, y);
 
 		case NORTH_EAST:
-			return getTile(x + 1, y - 1); 
+			if (isOdd(y)) 
+				return getTile(x + 1, y - 1); else 
+				return getTile(x, y - 1);
 			
 		case NORTH_WEST:
-			return getTile(x - 1, y - 1);
-			
+			if (isOdd(y))
+				return getTile(x, y - 1); else
+				return getTile(x - 1, y - 1);
 		case SOUTH_EAST:
-			return getTile(x + 1, y + 1);
-			
+			if (isOdd(y))
+				return getTile(x + 1, y + 1); else
+				return getTile(x, y + 1);
 		case SOUTH_WEST:
-			return getTile(x - 1, y + 1);
+			if (isOdd(y))
+				return getTile(x, y + 1); else
+				return getTile(x - 1, y + 1);
 			
 		default:
 			throw new IllegalArgumentException("Invalid direction " + dir);

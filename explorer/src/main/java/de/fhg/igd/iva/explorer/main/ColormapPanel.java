@@ -14,36 +14,19 @@
  * limitations under the License.
  */
 
-package events;
-
-import com.google.common.base.Preconditions;
+package de.fhg.igd.iva.explorer.main;
 
 import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
- * Fired when the colormap selection is changed
- * @author Martin Steiger
+ * Interface for panels that deal with a given colormap.
+ * @author Simon Thum
  */
-public class ColormapSelectionEvent
-{
-	private final Colormap selection;
+public interface ColormapPanel {
 
 	/**
-	 * @param selection the selected colormap, never <code>null</code>
+	 * @param colormap the colormap for the panel
 	 */
-	public ColormapSelectionEvent(Colormap selection)
-	{
-		// prefer NPE over IAE - Effective Java 2nd Edition, Item 60
-		Preconditions.checkNotNull(selection, "selection must not be null");
-		
-		this.selection = selection;
-	}
-
-	/**
-	 * @return the selected colormap, never <code>null</code>
-	 */
-	public Colormap getSelection()
-	{
-		return selection;
-	}
+	void setColormap(Colormap colormap);
+	
 }

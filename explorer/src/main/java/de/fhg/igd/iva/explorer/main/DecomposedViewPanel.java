@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package main;
+package de.fhg.igd.iva.explorer.main;
 
 import static views.SimpleColormapView.ViewType.ATT;
 import static views.SimpleColormapView.ViewType.BLUE;
@@ -40,8 +40,8 @@ import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colormaps.ConstantColormap;
-import events.ColormapSelectionEvent;
-import events.MyEventBus;
+import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
+import de.fhg.igd.iva.explorer.events.MyEventBus;
 
 /**
  * The main display panel (right side)

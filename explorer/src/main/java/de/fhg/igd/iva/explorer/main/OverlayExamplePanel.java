@@ -15,7 +15,7 @@
  */
 
 
-package main;
+package de.fhg.igd.iva.explorer.main;
 
 import java.awt.Color;
 import java.awt.Font;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tiling;
+package de.fhg.igd.iva.explorer.tiling;
 
 import java.util.Map;
 

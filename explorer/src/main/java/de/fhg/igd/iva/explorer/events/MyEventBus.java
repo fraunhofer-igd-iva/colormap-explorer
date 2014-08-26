@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package events;
+package de.fhg.igd.iva.explorer.events;
 
 import java.util.Map;
 
