@@ -44,6 +44,7 @@ import com.google.common.collect.Lists;
 
 import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colormaps.ConstantColormap;
+import de.fhg.igd.iva.explorer.plot.ColormapPlotter;
 
 /**
  * The main window, also the entry point for the application.
@@ -52,34 +53,36 @@ import de.fhg.igd.iva.colormaps.ConstantColormap;
 public class ColorMapExplorer extends JFrame
 {
 	private static final Logger logger = LoggerFactory.getLogger(ColorMapExplorer.class);
-	
+
 	private static final long serialVersionUID = 339070765825907575L;
-	
+
 	/**
 	 * @param colorMaps a list of colormaps
 	 * @param database the BibTeX database
 	 */
-	public ColorMapExplorer(List<Colormap> colorMaps, BibTeXDatabase database) 
+	public ColorMapExplorer(List<Colormap> colorMaps, BibTeXDatabase database)
 	{
 		super("ColorMap Explorer - " + GitVersion.getVersion());
-		
+
 		Preconditions.checkArgument(!colorMaps.isEmpty());
-		
+
 		final ConfigPanel configPane = new ConfigPanel(colorMaps, database);
-		
+
 		final DecomposedViewPanel viewPanel = new DecomposedViewPanel();
 		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel();
 		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel();
 		final AnalysisPanel analysisPanel = new AnalysisPanel();
 		final JndViewPanel jndViewPanel = new JndViewPanel();
-		
+		final ColormapPlotter plotterPanel = new ColormapPlotter();
+
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Decomposed Colormap", viewPanel);
 		tabPane.add("Points Example View", pointsExampleView);
 		tabPane.add("Overlay Example View", overlayExampleView);
 		tabPane.add("Analysis View", analysisPanel);
 		tabPane.add("JND View", jndViewPanel);
-		
+		tabPane.add("3D View", plotterPanel);
+
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);
 		splitPane.setDividerLocation(250);
 
@@ -87,7 +90,7 @@ public class ColorMapExplorer extends JFrame
 		Dimension minimumSize = new Dimension(50, 50);
 		configPane.setMinimumSize(minimumSize);
 		tabPane.setMinimumSize(minimumSize);
-		
+
 		getContentPane().add(splitPane);
 	}
 
@@ -104,9 +107,9 @@ public class ColorMapExplorer extends JFrame
 		{
 			logger.error("Cannot set look & feel", e);
 		}
-		
+
 		List<Colormap> colorMaps = discoverColormaps();
-		
+
 		BibTeXDatabase database = new BibTeXDatabase();
 		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib"))
 		{
@@ -122,7 +125,7 @@ public class ColorMapExplorer extends JFrame
 		{
 			logger.error("Could not parse bibtex file", e);
 		}
-		
+
 		ColorMapExplorer frame = new ColorMapExplorer(colorMaps, database);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -136,11 +139,11 @@ public class ColorMapExplorer extends JFrame
 	{
 		ServiceLoader<Colormap> loader = ServiceLoader.load(Colormap.class);
 		List<Colormap> colorMaps = Lists.newArrayList();
-		
+
 		for (Colormap map : loader)
 		{
 			Class<? extends Colormap> clazz = map.getClass();
-			
+
 			if (clazz.isAnnotationPresent(Deprecated.class))
 			{
 				logger.info("Skipping deprecated implementation {}", clazz);
@@ -151,12 +154,12 @@ public class ColorMapExplorer extends JFrame
 				colorMaps.add(map);
 			}
 		}
-		
+
 		if (colorMaps.isEmpty())
 		{
 			logger.warn("No colormaps were discovered - using default");
 			colorMaps.add(new ConstantColormap(Color.GRAY));
 		}
 		return colorMaps;
-	}	
+	}
 }

@@ -5,8 +5,15 @@ apply plugin: 'application'
 
 mainClassName = "main.ColorMapExplorer"
 
+repositories {
+	maven {
+		url "http://maven.jzy3d.org/releases"
+	}
+}
+	
 dependencies {
 	compile group: 'org.jbibtex', name: 'jbibtex', version: '1.0.13'
+	compile group: 'org.jzy3d', name: 'jzy3d-api', version: '0.9.1'
 	
 	compile project(':metrics')
 	compile project(':colormaps')
