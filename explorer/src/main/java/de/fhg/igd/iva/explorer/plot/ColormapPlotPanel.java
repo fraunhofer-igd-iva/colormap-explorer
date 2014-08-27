@@ -84,10 +84,7 @@ public class ColormapPlotPanel extends JPanel
     	chart.getAxeLayout().setZTickRenderer(new FixedDecimalTickRenderer(digits));
     }
 
-    void setBounds(
-        double minX, double maxX,
-        double minY, double maxY,
-        double minZ, double maxZ)
+    void setBounds(double minX, double maxX, double minY, double maxY, double minZ, double maxZ)
     {
         boundingBox = new BoundingBox3d(
             (float)minX, (float)maxX,
@@ -97,32 +94,14 @@ public class ColormapPlotPanel extends JPanel
     }
 
     /**
-     * Update the shape that is displayed, using the most recent
-     * {@link Colormap} that was set with {@link #setColormap(Colormap)}
-     */
-    public void updateShape()
-    {
-        if (colormapShape == null)
-        {
-            createShape();
-        }
-        if (colormapShape != null)
-        {
-            colormapShape.setColormap(colormap);
-        }
-    }
-
-    /**
      * Set the function that converts a color (that was looked up in
      * the {@link Colormap}) to a 3D position in the cube.
      *
      * @param colorToCubeCoordinates The function
      */
-    void setColorToCubeCoordinates(
-        Function<Color, float[]> colorToCubeCoordinates)
+    void setColorToCubeCoordinates(Function<Color, float[]> colorToCubeCoordinates)
     {
         this.colorToCubeCoordinates = colorToCubeCoordinates;
-        createShape();
         updateShape();
     }
 
@@ -134,11 +113,9 @@ public class ColormapPlotPanel extends JPanel
      *
      * @param cubeCoordinatesToRgbColorComponents The function
      */
-    void setCubeCoordinatesToRgbColorComponents(
-        Function<float[], float[]> cubeCoordinatesToRgbColorComponents)
+    void setCubeCoordinatesToRgbColorComponents(Function<float[], float[]> cubeCoordinatesToRgbColorComponents)
     {
         this.cubeCoordinatesToRgbColorComponents = cubeCoordinatesToRgbColorComponents;
-        createShape();
         updateShape();
     }
 
@@ -152,11 +129,8 @@ public class ColormapPlotPanel extends JPanel
      */
     void setCoordinateConverter(CoordinateConverter coordinateConverter)
     {
-        this.cubeCoordinatesToRgbColorComponents =
-            coordinateConverter.getCubeCoordinatesToRgbColorComponents();
-        this.colorToCubeCoordinates =
-            coordinateConverter.getColorToCubeCoordinates();
-        createShape();
+        this.cubeCoordinatesToRgbColorComponents = coordinateConverter.getCubeCoordinatesToRgbColorComponents();
+        this.colorToCubeCoordinates = coordinateConverter.getColorToCubeCoordinates();
         updateShape();
     }
 
@@ -167,18 +141,17 @@ public class ColormapPlotPanel extends JPanel
         updateShape();
     }
 
-    private void createShape()
+    private void updateShape()
     {
         if (colormapShape != null)
         {
             graph.remove(colormapShape.getShape());
         }
-        if (colormap != null && cubeCoordinatesToRgbColorComponents != null &&
-            colorToCubeCoordinates != null)
+        if (colormap != null && cubeCoordinatesToRgbColorComponents != null && colorToCubeCoordinates != null)
         {
-            colormapShape = new ColormapShape(colormap,
-                cubeCoordinatesToRgbColorComponents, colorToCubeCoordinates);
+            colormapShape = new ColormapShape(colormap, cubeCoordinatesToRgbColorComponents, colorToCubeCoordinates);
             graph.add(colormapShape.getShape());
+            colormapShape.setColormap(colormap);
         }
         chart.getView().setBoundManual(boundingBox);
     }

@@ -20,7 +20,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-import de.fhg.igd.iva.colormaps.impl.Steiger2014Generic;
+import de.fhg.igd.iva.colormaps.impl.CubeDiagonalCuttingGreenMagenta;
 import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
 import de.fhg.igd.iva.explorer.plot.ColormapPlotter;
 
@@ -38,8 +38,9 @@ public class Plot3d
 		frame.setLocationRelativeTo(null);
 
 		final ColormapPlotter plotterPanel = new ColormapPlotter();
-		plotterPanel.onSelect(new ColormapSelectionEvent(new Steiger2014Generic()));
+		plotterPanel.onSelect(new ColormapSelectionEvent(new CubeDiagonalCuttingGreenMagenta()));
 
+		frame.setTitle("3D Plotter");
 		frame.setLayout(new BorderLayout());
 		frame.add(plotterPanel);
 
