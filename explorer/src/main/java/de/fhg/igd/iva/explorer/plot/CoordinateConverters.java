@@ -2,6 +2,7 @@ package de.fhg.igd.iva.explorer.plot;
 
 import java.awt.Color;
 import java.awt.color.ColorSpace;
+import java.util.Arrays;
 
 import com.google.common.base.Function;
 
@@ -145,15 +146,34 @@ public class CoordinateConverters
                 int g = (int)(t[1]*255);
                 int b = (int)(t[2]*255);
                 Color.RGBtoHSB(r, g, b, t);
+
+                double h = t[0] * Math.PI * 2.0;
+                double hx = 0.5 + t[1] * 0.5 * Math.cos(h);
+                double hy = 0.5 + t[1] * 0.5 * Math.sin(h);
+
+                t[0] = (float) hx;
+                t[1] = (float) hy;
+                t[2] = t[2];
+
                 return t;
             }
         };
         Function<float[], float[]> cubeCoordinatesToRgbColorComponents = new Function<float[], float[]>()
         {
             @Override
-            public float[] apply(float[] s)
+            public float[] apply(float[] arr)
             {
-                int rgb = Color.HSBtoRGB(s[0], s[1], s[2]);
+            	double hx = arr[0] - 0.5;
+            	double hy = arr[1] - 0.5;
+            	double h = Math.atan2(hy, hx);
+
+            	// normalize h
+            	h = h / (Math.PI * 2.0);
+
+            	double b = arr[2];
+            	double s = Math.sqrt(hx * hx + hy * hy) * 2;
+
+                int rgb = Color.HSBtoRGB((float)h, (float)s, (float)b);
                 Color c = new Color(rgb);
                 return c.getRGBColorComponents(null);
             }
