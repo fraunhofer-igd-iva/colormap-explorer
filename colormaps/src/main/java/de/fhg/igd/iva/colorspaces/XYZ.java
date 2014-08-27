@@ -21,9 +21,9 @@ import java.awt.Color;
  * @author Sebastian Mittelstaedt
  */
 public class XYZ extends AbstractColorSpace{
-	
+
 	public static final double[] D65 = {95.047 ,	100.000 ,	108.883};
-	
+
 	public static double[] rgb2xyz(double[] rgb) {
 
 		double varR = rgb[0];
@@ -93,10 +93,14 @@ public class XYZ extends AbstractColorSpace{
 			varB = 12.92 * varB;
 		}
 
-		return new double[] { varR, varG, varB };
+		double[] rgb = new double[] { varR, varG, varB };
+
+		fixRoundingErrors(rgb);
+
+		return rgb;
 
 	}
-	
+
 	@Override
 	public double[] toRGB(double[] v) {
 		return xyz2rgb(v);

@@ -21,10 +21,25 @@ import java.awt.Color;
  * @author Sebastian Mittelstaedt
  */
 public abstract class AbstractColorSpace {
-	
+
 	public abstract double[] toRGB(double[] v);
 	public abstract Color toColor(double[] v, boolean returnBlackForUndefinedRGB);
 	public abstract double[] fromRGB(double[] rgb);
 	public abstract double[] fromColor(Color c);
+
+	protected static void fixRoundingErrors(double[] rgb)
+	{
+		final double eps = 0.01;
+
+		for (int i = 0; i < rgb.length; i++)
+		{
+			double v = rgb[i];
+			if (v > 1 && v < 1 + eps)
+				rgb[i] = 1;
+
+			if (v < 0 && v > -eps)
+				rgb[i] = 0;
+		}
+	}
 
 }

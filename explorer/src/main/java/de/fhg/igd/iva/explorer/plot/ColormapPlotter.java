@@ -51,8 +51,9 @@ public class ColormapPlotter extends JPanel
         final ColormapPlotPanel colormapPlotPanelXyz = new ColormapPlotPanel();
         colormapPlotPanelXyz.setBorder(BorderFactory.createTitledBorder("XYZ"));
         colormapPlotPanelXyz.setCoordinateConverter(CoordinateConverters.createXyz());
+        colormapPlotPanelXyz.setBounds(0, 100, 0, 100, 0, 100);
         colormapPlotPanelXyz.setLabels("X", "Y", "Z");
-        colormapPlotPanelXyz.setLabelDigits(1);
+        colormapPlotPanelXyz.setLabelDigits(0);
         plotsContainer.add(colormapPlotPanelXyz);
         panels.add(colormapPlotPanelXyz);
 
