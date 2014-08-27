@@ -25,6 +25,7 @@ import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.maths.BoundingBox3d;
 import org.jzy3d.maths.Coord3d;
+import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 import org.jzy3d.plot3d.rendering.scene.Graph;
 
@@ -56,10 +57,9 @@ public class ColormapPlotPanel extends JPanel
     {
         super(new GridLayout(1, 1));
 
-        chart = AWTChartComponentFactory.chart(Quality.Intermediate, "awt");
+        chart = AWTChartComponentFactory.chart(Quality.Nicest, "awt");
         graph = chart.getScene().getGraph();
-        chart.getView().setViewPoint(
-            new Coord3d(Math.toRadians(300), Math.toRadians(22.5), 0));
+        chart.getView().setViewPoint(new Coord3d(Math.toRadians(300), Math.toRadians(22.5), 0));
         float delta = 0.0f;
         setBounds(
             -delta, 1.0f + delta,
@@ -68,6 +68,20 @@ public class ColormapPlotPanel extends JPanel
         chart.addMouseController();
         add((Component) chart.getCanvas());
         setCoordinateConverter(CoordinateConverters.createRgb());
+    }
+
+    void setLabels(String labelX, String labelY, String labelZ)
+    {
+        chart.getAxeLayout().setXAxeLabel(labelX);
+        chart.getAxeLayout().setYAxeLabel(labelY);
+        chart.getAxeLayout().setZAxeLabel(labelZ);
+    }
+
+    void setLabelDigits(int digits)
+    {
+    	chart.getAxeLayout().setXTickRenderer(new FixedDecimalTickRenderer(digits));
+    	chart.getAxeLayout().setYTickRenderer(new FixedDecimalTickRenderer(digits));
+    	chart.getAxeLayout().setZTickRenderer(new FixedDecimalTickRenderer(digits));
     }
 
     void setBounds(

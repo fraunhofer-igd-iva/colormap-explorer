@@ -43,18 +43,24 @@ public class ColormapPlotter extends JPanel
 
         ColormapPlotPanel colormapPlotPanelRgb = new ColormapPlotPanel();
         colormapPlotPanelRgb.setBorder(BorderFactory.createTitledBorder("RGB"));
+        colormapPlotPanelRgb.setLabels("R", "G", "B");
+        colormapPlotPanelRgb.setLabelDigits(1);
         plotsContainer.add(colormapPlotPanelRgb);
         panels.add(colormapPlotPanelRgb);
 
         final ColormapPlotPanel colormapPlotPanelXyz = new ColormapPlotPanel();
         colormapPlotPanelXyz.setBorder(BorderFactory.createTitledBorder("XYZ"));
         colormapPlotPanelXyz.setCoordinateConverter(CoordinateConverters.createXyz());
+        colormapPlotPanelXyz.setLabels("X", "Y", "Z");
+        colormapPlotPanelXyz.setLabelDigits(1);
         plotsContainer.add(colormapPlotPanelXyz);
         panels.add(colormapPlotPanelXyz);
 
         final ColormapPlotPanel colormapPlotPanelHsb = new ColormapPlotPanel();
         colormapPlotPanelHsb.setBorder(BorderFactory.createTitledBorder("HSB"));
         colormapPlotPanelHsb.setCoordinateConverter(CoordinateConverters.createHsb());
+        colormapPlotPanelHsb.setLabels("HSX", "HSY", "B");
+        colormapPlotPanelHsb.setLabelDigits(1);
         plotsContainer.add(colormapPlotPanelHsb);
         panels.add(colormapPlotPanelHsb);
 
@@ -69,6 +75,8 @@ public class ColormapPlotter extends JPanel
         colormapPlotPanelLab.setBorder(BorderFactory.createTitledBorder("Lab"));
         colormapPlotPanelLab.setCoordinateConverter(CoordinateConverters.createLab());
         colormapPlotPanelLab.setBounds(0, 100, -100, 100, -100, 100);
+        colormapPlotPanelLab.setLabels("L", "a", "b");
+        colormapPlotPanelLab.setLabelDigits(0);
         plotsContainer.add(colormapPlotPanelLab);
         panels.add(colormapPlotPanelLab);
 

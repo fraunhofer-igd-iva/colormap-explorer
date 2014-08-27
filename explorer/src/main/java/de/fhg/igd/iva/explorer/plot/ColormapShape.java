@@ -103,6 +103,7 @@ class ColormapShape
         shp.setColorMapper(colorMapper);
         shp.setFaceDisplayed(true);
         shp.setWireframeDisplayed(true);
+        shp.setWireframeColor(org.jzy3d.colors.Color.GRAY);
         return shp;
     }
 
