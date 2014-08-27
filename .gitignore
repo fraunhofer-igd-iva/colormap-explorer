@@ -14,6 +14,7 @@
 bin/
 build/
 /.metadata/
+/.recommenders/
 
 # Other
 *.log
