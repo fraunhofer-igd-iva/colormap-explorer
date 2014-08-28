@@ -26,7 +26,7 @@ import java.awt.image.WritableRaster;
  * An abstract colormap that is based on an image
  * @author Martin Steiger
  */
-public abstract class ImageBasedColormap extends AbstractColormap 
+public abstract class ImageBasedColormap extends AbstractColormap
 {
 	private final BufferedImage image;
 
@@ -45,13 +45,13 @@ public abstract class ImageBasedColormap extends AbstractColormap
 
 		double x = mx * (image.getWidth() - 1);
 		double y = my * (image.getHeight() - 1);
-		
+
 		int minX = (int)Math.floor(x);
         int maxX = (int)Math.ceil(x);
 
         int minY = (int)Math.floor(y);
         int maxY = (int)Math.ceil(y);
-        
+
         Color q00 = readColor(minX, minY);
         Color q10 = readColor(maxX, minY);
         Color q01 = readColor(minX, maxY);
@@ -68,29 +68,29 @@ public abstract class ImageBasedColormap extends AbstractColormap
 	private Color readColor(int x, int y)
 	{
 		WritableRaster raster = image.getRaster();
-		
+
 		if (raster.getSampleModel().getDataType() == DataBuffer.TYPE_FLOAT)
-		{		
+		{
 			float r = raster.getSampleFloat(x, y, 0);
 			float g = raster.getSampleFloat(x, y, 1);
 			float b = raster.getSampleFloat(x, y, 2);
-			
+
 			return new Color(r, g, b);
 		}
-		
+
 		if (raster.getSampleModel().getDataType() == DataBuffer.TYPE_BYTE)
-		{		
+		{
 			int r = raster.getSample(x, y, 0);
 			int g = raster.getSample(x, y, 1);
 			int b = raster.getSample(x, y, 2);
-		
+
 			return new Color(r, g, b);
 		}
-		
+
 		// use this more general (and slower approach) if necessary
 
 		ColorModel colorModel = image.getColorModel();
-		
+
 		Object inData = raster.getDataElements(x, y, null);
 		float[] norm = colorModel.getNormalizedComponents(inData, null, 0);
         float[] rgb = colorModel.getColorSpace().toRGB(norm);
@@ -98,18 +98,18 @@ public abstract class ImageBasedColormap extends AbstractColormap
         return new Color(rgb[0], rgb[1], rgb[2]);
 	}
 
-	protected static Color bilerp(Color xt1, Color xt2, Color xb1, Color xb2, double ipx, double ipy) 
+	protected static Color bilerp(Color xt1, Color xt2, Color xb1, Color xb2, double ipx, double ipy)
 	{
 		float[] arrt1 = xt1.getColorComponents(new float[3]);
 		float[] arrt2 = xt2.getColorComponents(new float[3]);
-		
+
 		double rt = arrt1[0] * (1.0 - ipx) + arrt2[0] * ipx;
 		double gt = arrt1[1] * (1.0 - ipx) + arrt2[1] * ipx;
 		double bt = arrt1[2] * (1.0 - ipx) + arrt2[2] * ipx;
 
 		float[] arrb1 = xb1.getColorComponents(new float[3]);
 		float[] arrb2 = xb2.getColorComponents(new float[3]);
-		
+
 		double rb = arrb1[0] * (1.0 - ipx) + arrb2[0] * ipx;
 		double gb = arrb1[1] * (1.0 - ipx) + arrb2[1] * ipx;
 		double bb = arrb1[2] * (1.0 - ipx) + arrb2[2] * ipx;
@@ -120,7 +120,7 @@ public abstract class ImageBasedColormap extends AbstractColormap
 
 		return new Color((float)r, (float)g, (float)b);
     }
-	
+
 	/**
 	 * @return the underlying image
 	 */

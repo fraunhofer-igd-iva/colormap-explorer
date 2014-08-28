@@ -18,6 +18,7 @@
 package de.fhg.igd.iva.colormaps;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,22 +28,51 @@ import javax.imageio.ImageIO;
  * Loads a colormap from an image file
  * @author Martin Steiger
  */
-public abstract class FileImageColormap extends ImageBasedColormap
+public class FileImageColormap extends ImageBasedColormap
 {
+	private final String name;
+	private final String desc;
+
 	/**
-	 * @param imagePath the (relative) path to the image
+	 * @param imageResource the (relative) path to the image
 	 * @throws IOException if the image cannot be loaded
 	 */
-	public FileImageColormap(String imagePath) throws IOException
+	public FileImageColormap(String imageResource) throws IOException
 	{
-		super(loadImage(imagePath));
+		super(loadImageResource(imageResource));
+		this.name = imageResource;
+		this.desc = "Internal Image";
 	}
-	
-	private static BufferedImage loadImage(String imagePath) throws IOException
+
+	public FileImageColormap(File imageFile) throws IOException
+	{
+		super(ImageIO.read(imageFile));
+		this.name = imageFile.getName();
+		this.desc = imageFile.getCanonicalPath();
+	}
+
+	private static BufferedImage loadImageResource(String imagePath) throws IOException
 	{
 		URL imageUrl = FileImageColormap.class.getResource(imagePath);
-		
 		BufferedImage image = ImageIO.read(imageUrl);
 		return image;
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return desc;
+	}
+
+	@Override
+	public ColorSpace getColorSpace()
+	{
+		return ColorSpace.sRGB;
 	}
 }

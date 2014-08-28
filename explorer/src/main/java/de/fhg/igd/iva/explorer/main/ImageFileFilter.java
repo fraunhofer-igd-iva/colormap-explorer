@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -85,14 +84,15 @@ class ImageFileFilter extends FileFilter
 	/**
 	 * @param reader
 	 */
-	ImageFileFilter(ImageReader reader)
+	ImageFileFilter(ImageReaderSpi reader)
 	{
-		this.provider = reader.getOriginatingProvider();
+		this.provider = reader;
 	}
 
 	@Override
 	public String getDescription()
 	{
+//		String desc = provider.getDescription(Locale.getDefault());
 		String[] sufs = provider.getFileSuffixes();
 		String matches = Joiner.on("; *.").join(sufs);
 		String primary = provider.getFormatNames()[0];
@@ -111,39 +111,6 @@ class ImageFileFilter extends FileFilter
 		}
 
 		return false;
-	}
-
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((provider == null) ? 0 : provider.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-
-		if (obj == null)
-			return false;
-
-		if (getClass() != obj.getClass())
-			return false;
-
-		ImageFileFilter other = (ImageFileFilter) obj;
-		if (provider == null)
-		{
-			if (other.provider != null)
-				return false;
-		}
-		else if (!provider.equals(other.provider))
-			return false;
-
-		return true;
 	}
 }
 

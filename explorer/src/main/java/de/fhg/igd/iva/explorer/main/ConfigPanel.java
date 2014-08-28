@@ -18,6 +18,7 @@ package de.fhg.igd.iva.explorer.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -37,6 +38,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.imageio.spi.ImageReaderSpi;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -44,10 +46,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileFilter;
 
 import org.jbibtex.BibTeXDatabase;
 import org.jbibtex.BibTeXEntry;
@@ -72,10 +76,13 @@ import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.FileImageColormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 import de.fhg.igd.iva.colorspaces.RGB;
 import de.fhg.igd.iva.colorspaces.XYZ;
@@ -103,6 +110,14 @@ public class ConfigPanel extends JPanel
 
 	private final BibTeXDatabase database;
 
+	private JComboBox<Colormap> mapsCombo;
+
+	private JLabel descLabel;
+	private JLabel refsLabel;
+	private JLabel statsLabel;
+
+	private final JFileChooser fileDialog;
+
 	/**
 	 * @param colorMaps the (sorted) list of all available color maps
 	 * @param database the BibTeX database
@@ -114,54 +129,32 @@ public class ConfigPanel extends JPanel
 
 		this.database = database;
 
-		Icon icon = loadIconImage("/icons/icon.png");
-		final JButton importButton = new JButton("Import from image", icon);
+		this.fileDialog = createOpenImageDialog();
+
+		mapsCombo = new JComboBox<Colormap>(colorMaps.toArray(new Colormap[0]));
+
+		final JButton importButton = new JButton("Import colormap from image", loadIconImage("/icons/icon.png"));
 		importButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(ActionEvent event)
 			{
-				JFileChooser fc = new JFileChooser();
-				String[] formats = ImageIO.getReaderFormatNames();
 				JRootPane parent = ConfigPanel.this.getRootPane();
-				List<ImageFileFilter> filters = Lists.newArrayList();
-				fc.addChoosableFileFilter(ImageFileFilter.ALL_IMAGES);
-
-				for (String fmt : formats)
-				{
-					ImageReader reader = ImageIO.getImageReadersByFormatName(fmt).next();
-					ImageFileFilter filter = new ImageFileFilter(reader);
-
-					if (!filters.contains(filter))
-						filters.add(filter);
-				}
-
-				Collections.sort(filters, ImageFileFilter.COMPARATOR);
-
-				for (ImageFileFilter filter : filters)
-				{
-					fc.addChoosableFileFilter(filter);
-				}
-				if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION)
-				{
-					File file = fc.getSelectedFile();
-				}
+				importImage(parent);
 			}
 		});
 
-		final JComboBox<Colormap> mapsCombo = new JComboBox<Colormap>(colorMaps.toArray(new Colormap[0]));
-
 		final JPanel cmPanel = new JPanel(new BorderLayout(5, 5));
-		cmPanel.add(importButton, BorderLayout.NORTH);
-		cmPanel.add(mapsCombo, BorderLayout.CENTER);
+		cmPanel.add(mapsCombo, BorderLayout.NORTH);
+		cmPanel.add(importButton, BorderLayout.CENTER);
 
 		JPanel cmInfoPanel = new JPanel(new BorderLayout(5, 5));
-		final JLabel descLabel = new JLabel();
+		descLabel = new JLabel();
 		descLabel.setBorder(BorderFactory.createTitledBorder("Description"));
-		final JLabel refsLabel = new JLabel();
+		refsLabel = new JLabel();
 		refsLabel.setBorder(BorderFactory.createTitledBorder("References"));
 
-		final JLabel statsLabel = new JLabel();
+		statsLabel = new JLabel();
 		statsLabel.setBorder(BorderFactory.createTitledBorder("Statistics"));
 
 		cmInfoPanel.add(descLabel, BorderLayout.NORTH);
@@ -184,23 +177,80 @@ public class ConfigPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				Colormap colormap = (Colormap) mapsCombo.getSelectedItem();
-				descLabel.setText("<html>" + colormap.getDescription() + "</html>");
-
-				String refs = getBibTeX(colormap);
-				refsLabel.setText("<html>" + refs + "</html>");
-
-				String stats = getStats(colormap);
-				statsLabel.setText("<html>" + stats + "</html>");
-
-				MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
-				logger.debug("Selected colormap " + colormap);
+				updateSelection();
 			}
 
 		});
 		mapsCombo.setSelectedIndex(0);
 
 		MyEventBus.getInstance().register(this);
+	}
+
+	protected void updateSelection()
+	{
+		Colormap colormap = (Colormap) mapsCombo.getSelectedItem();
+		descLabel.setText("<html>" + colormap.getDescription() + "</html>");
+
+		String refs = getBibTeX(colormap);
+		refsLabel.setText("<html>" + refs + "</html>");
+
+		String stats = getStats(colormap);
+		statsLabel.setText("<html>" + stats + "</html>");
+
+		MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
+		logger.debug("Selected colormap " + colormap);
+	}
+
+	protected void importImage(Component parent)
+	{
+		if (fileDialog.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION)
+		{
+			Colormap colormap;
+			try
+			{
+				colormap = new FileImageColormap(fileDialog.getSelectedFile());
+				mapsCombo.addItem(colormap);
+				mapsCombo.setSelectedItem(colormap);
+			}
+			catch (IOException e)
+			{
+				String msg = "Could not open image file\n" + e.getLocalizedMessage();
+				logger.error("Could not open image file", e);
+				JOptionPane.showMessageDialog(parent, msg, "An error occurred", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	private static JFileChooser createOpenImageDialog()
+	{
+		JFileChooser fc = new JFileChooser();
+		String[] formats = ImageIO.getReaderFormatNames();
+		Set<ImageReaderSpi> readers = Sets.newHashSet();
+		List<FileFilter> filters = Lists.newArrayList();
+		fc.addChoosableFileFilter(ImageFileFilter.ALL_IMAGES);
+
+		// putting them in a set first avoids duplicate entries
+		for (String fmt : formats)
+		{
+			ImageReader reader = ImageIO.getImageReadersByFormatName(fmt).next();
+			readers.add(reader.getOriginatingProvider());
+		}
+
+		// we then add them to a list to be able to sort them later
+		for (ImageReaderSpi reader : readers)
+		{
+			filters.add(new ImageFileFilter(reader));
+		}
+
+		Collections.sort(filters, ImageFileFilter.COMPARATOR);
+
+		// we finally add them to the file chooser
+		for (FileFilter filter : filters)
+		{
+			fc.addChoosableFileFilter(filter);
+		}
+
+		return fc;
 	}
 
 	private Icon loadIconImage(String fname)
