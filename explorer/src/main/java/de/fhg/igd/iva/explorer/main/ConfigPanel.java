@@ -19,17 +19,33 @@ package de.fhg.igd.iva.explorer.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -80,7 +96,7 @@ import de.fhg.igd.pcolor.colorspace.CS_sRGB;
 public class ConfigPanel extends JPanel
 {
 	private static final Logger logger = LoggerFactory.getLogger(ConfigPanel.class);
-	
+
 	private static final long serialVersionUID = -3147864756762616815L;
 
 	private final JPanel tileInfoPanel;
@@ -95,24 +111,59 @@ public class ConfigPanel extends JPanel
 	{
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		
+
 		this.database = database;
-		
+
+		Icon icon = loadIconImage("/icons/icon.png");
+		final JButton importButton = new JButton("Import from image", icon);
+		importButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				JFileChooser fc = new JFileChooser();
+				String[] formats = ImageIO.getReaderFormatNames();
+				JRootPane parent = ConfigPanel.this.getRootPane();
+				List<ImageFileFilter> filters = Lists.newArrayList();
+				fc.addChoosableFileFilter(ImageFileFilter.ALL_IMAGES);
+
+				for (String fmt : formats)
+				{
+					ImageReader reader = ImageIO.getImageReadersByFormatName(fmt).next();
+					ImageFileFilter filter = new ImageFileFilter(reader);
+
+					if (!filters.contains(filter))
+						filters.add(filter);
+				}
+
+				Collections.sort(filters, ImageFileFilter.COMPARATOR);
+
+				for (ImageFileFilter filter : filters)
+				{
+					fc.addChoosableFileFilter(filter);
+				}
+				if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+				}
+			}
+		});
+
 		final JComboBox<Colormap> mapsCombo = new JComboBox<Colormap>(colorMaps.toArray(new Colormap[0]));
-		
+
 		final JPanel cmPanel = new JPanel(new BorderLayout(5, 5));
-		cmPanel.add(new JLabel("Colormap"), BorderLayout.NORTH);
+		cmPanel.add(importButton, BorderLayout.NORTH);
 		cmPanel.add(mapsCombo, BorderLayout.CENTER);
-		
+
 		JPanel cmInfoPanel = new JPanel(new BorderLayout(5, 5));
 		final JLabel descLabel = new JLabel();
 		descLabel.setBorder(BorderFactory.createTitledBorder("Description"));
 		final JLabel refsLabel = new JLabel();
 		refsLabel.setBorder(BorderFactory.createTitledBorder("References"));
-		
+
 		final JLabel statsLabel = new JLabel();
 		statsLabel.setBorder(BorderFactory.createTitledBorder("Statistics"));
-		
+
 		cmInfoPanel.add(descLabel, BorderLayout.NORTH);
 		cmInfoPanel.add(statsLabel, BorderLayout.CENTER);
 		cmInfoPanel.add(refsLabel, BorderLayout.SOUTH);
@@ -120,9 +171,9 @@ public class ConfigPanel extends JPanel
 		cmPanel.add(cmInfoPanel, BorderLayout.SOUTH);
 
 		add(cmPanel, BorderLayout.NORTH);
-		
+
 		JPanel centerPanel = new JPanel(new BorderLayout());
-		
+
 		tileInfoPanel = new JPanel(new GridLayout(0, 2, 5, 5));
 		tileInfoPanel.setBorder(BorderFactory.createTitledBorder("Tile Info"));
 		centerPanel.add(tileInfoPanel, BorderLayout.NORTH);
@@ -141,7 +192,7 @@ public class ConfigPanel extends JPanel
 
 				String stats = getStats(colormap);
 				statsLabel.setText("<html>" + stats + "</html>");
-				
+
 				MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
 				logger.debug("Selected colormap " + colormap);
 			}
@@ -152,6 +203,23 @@ public class ConfigPanel extends JPanel
 		MyEventBus.getInstance().register(this);
 	}
 
+	private Icon loadIconImage(String fname)
+	{
+		Icon icon = null;
+		try (InputStream stream = getClass().getResourceAsStream(fname))
+//		try (InputStream stream = ClassLoader.getSystemResourceAsStream(fname))
+		{
+			if (stream == null)
+				throw new FileNotFoundException(fname);
+
+			icon = new ImageIcon(ImageIO.read(stream));
+		} catch (IOException e)
+		{
+			logger.error("Could not load image", e);
+		}
+		return icon;
+	}
+
 	private String getStats(Colormap colormap)
 	{
         SamplingStrategy circSampling = new CircularSampling(30);
@@ -160,11 +228,11 @@ public class ConfigPanel extends JPanel
 		EvenDistributedDistancePoints smallDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0, 0.1);
 		EvenDistributedDistancePoints midDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0.1, 0.3);
 		EvenDistributedDistancePoints largeDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0.3, 1);
-		
+
 		// TODO: iterate over all available quality measures
 		List<ColormapQuality> measures = Lists.newArrayList();
 		List<String> results = Lists.newArrayList();
-		
+
 //        measures.add(new ColorExploitation(circSampling));
 //        measures.add(new JndRegionSize(circSampling));
         measures.add(new AttentionQuality(rectSampling));
@@ -181,11 +249,11 @@ public class ConfigPanel extends JPanel
 		measures.add(new ColorAppearanceDivergence(0.05, 0.95, midDistSampling));
 		measures.add(new ColorAppearanceDivergence(0.05, 0.95, largeDistSampling));
 		measures.add(new ColorAppearanceDivergence(0.05, 0.95, overallDistSampling));
-		
+
 		//        measures.add(new ColorDivergenceQuantile(0.5));
 //        measures.add(new ColorDivergenceQuantile(0.1));
 //        measures.add(new ColorDivergenceQuantile(0.9));
-		
+
 		for (ColormapQuality measure : measures)
 		{
 			double quality = measure.getQuality(colormap);
@@ -204,9 +272,9 @@ public class ConfigPanel extends JPanel
 			BibTeXEntry entry = database.resolveEntry(new Key(ref));
 			if (entry != null)
 			{
-				entries.add(getField(entry, BibTeXEntry.KEY_TITLE));					
-				entries.add(getField(entry, BibTeXEntry.KEY_AUTHOR));					
-				entries.add(getField(entry, BibTeXEntry.KEY_YEAR));					
+				entries.add(getField(entry, BibTeXEntry.KEY_TITLE));
+				entries.add(getField(entry, BibTeXEntry.KEY_AUTHOR));
+				entries.add(getField(entry, BibTeXEntry.KEY_YEAR));
 				entries.add(getField(entry, BibTeXEntry.KEY_HOWPUBLISHED));
 				entries.add("");
 			}
@@ -215,7 +283,7 @@ public class ConfigPanel extends JPanel
 				logger.warn("Invalid BibTeX reference " + ref);
 			}
 		}
-		
+
 		String refs = Joiner.on("<br/>").skipNulls().join(entries);
 		return refs;
 	}
@@ -225,18 +293,18 @@ public class ConfigPanel extends JPanel
 		Value field = entry.getField(key);
 		if (field == null)
 			return null;
-		
+
 		String left = key.toString();
 		left = Character.toUpperCase(left.charAt(0)) + left.substring(1);
 		left = "<b>" + left + ":</b> ";
-		
+
 		// remove capitalization-preserving brackets { }
 		String userString = field.toUserString();
 		if (userString.startsWith("{") && userString.endsWith("}"))
 		{
 			userString = userString.substring(1, userString.length() - 2);
 		}
-		
+
 		userString = userString.replaceAll("\\\\\"\\{u\\}", "ü");	// matches \"{u}
 		userString = userString.replaceAll("\\{\\\\\"u\\}", "ü");	// matches {\"u}
 
@@ -248,7 +316,7 @@ public class ConfigPanel extends JPanel
 
 		return left + userString;
 	}
-	
+
 	@Subscribe
 	public void onSelect(TileSelectionEvent event)
 	{
@@ -256,7 +324,7 @@ public class ConfigPanel extends JPanel
 
 		ColormapView colormap = event.getColormap();
 		TileModel tileModel = event.getTileModel();
-		
+
 		Set<Tile> tiles = event.getSelection();
 
 		for (Tile tile : tiles)
@@ -265,10 +333,10 @@ public class ConfigPanel extends JPanel
 			int y = tile.getMapY();
 			int worldX = tileModel.getWorldX(x, y);
 			int worldY = tileModel.getWorldY(x, y);
-			
+
 			double mapX = (double)worldX / tileModel.getWorldWidth();
 			double mapY = (double)worldY / tileModel.getWorldHeight();
-			
+
 			Color color = colormap.getColor(mapX, mapY);
 
 			int red = color.getRed();
@@ -281,14 +349,14 @@ public class ConfigPanel extends JPanel
 			double[] lch = new CIELABLch().fromColor(color);
 			double attention = Math.sqrt(lch[0]*lch[0]+lch[1]*lch[1]);
 			float[] appearanceCorrelates = getAppearance(color);
-			
+
 			addInfo(tileInfoPanel, "Relative X", String.format("%.3f", mapX));
 			addInfo(tileInfoPanel, "Relative Y", String.format("%.3f", mapY));
 
 			addInfo(tileInfoPanel, "Red", String.valueOf(red));
 			addInfo(tileInfoPanel, "Green", String.valueOf(green));
 			addInfo(tileInfoPanel, "Blue", String.valueOf(blue));
-			
+
 			addInfo(tileInfoPanel, "Hue", String.valueOf((int)(hsb[0] * 360)) + " °");
 			addInfo(tileInfoPanel, "Saturation", String.valueOf((int)(hsb[1] * 100)) + "%");
 			addInfo(tileInfoPanel, "Value", String.valueOf((int)(hsb[2] * 100)) + "%");
@@ -302,9 +370,9 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "CAM Colorfulness", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.C]));
 			addInfo(tileInfoPanel, "CAM Saturation", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.s]));
 			addInfo(tileInfoPanel, "CAM Lightness (J)", String.format("%.1f", appearanceCorrelates[CS_CIECAM02.J]));
-			
+
 		}
-		
+
 		tileInfoPanel.revalidate();
 	}
 
