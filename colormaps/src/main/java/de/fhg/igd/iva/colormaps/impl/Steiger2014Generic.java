@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 import de.fhg.igd.iva.colorspaces.AbstractColorSpace;
 import de.fhg.igd.iva.colorspaces.CAT02;
@@ -31,7 +31,7 @@ import de.fhg.igd.iva.colorspaces.HSI;
  * @author Sebastian Mittelstädt
  *
  */
-public class Steiger2014Generic extends AbstractColormap {
+public class Steiger2014Generic extends AbstractKnownColormap {
 	
 	private Color topLeft, topRight, bottumRight, bottumLeft;
     private double[] tl,tr,br,bl;

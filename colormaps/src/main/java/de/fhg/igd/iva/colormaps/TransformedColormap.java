@@ -24,7 +24,7 @@ import java.awt.geom.AffineTransform;
  * Transforms a given colormap
  * @author Martin Steiger
  */
-public class TransformedColormap extends DelegateColormap
+public class TransformedColormap implements Colormap
 {
 	private double m00;
 	private double m01;
@@ -33,11 +33,13 @@ public class TransformedColormap extends DelegateColormap
 	private double m11;
 	private double m12;
 
+	private final Colormap original;
+
 	public static TransformedColormap identity(Colormap colormap)
 	{
 		return new TransformedColormap(colormap, 1, 0, 0, 1, 0, 0);
 	}
-	
+
 	/**
 	 * counter-clockwise
 	 * @param colormap
@@ -45,36 +47,36 @@ public class TransformedColormap extends DelegateColormap
 	 */
 	public static TransformedColormap rotated90(Colormap colormap)
 	{
-		return new TransformedColormap(colormap, 0, 1, -1, 0, 1, 0); 
+		return new TransformedColormap(colormap, 0, 1, -1, 0, 1, 0);
 	}
-	
+
 	public static TransformedColormap rotated180(Colormap colormap)
 	{
-		return new TransformedColormap(colormap, -1, 0, 0, -1, 1, 1); 
+		return new TransformedColormap(colormap, -1, 0, 0, -1, 1, 1);
 	}
-	
+
 	public static TransformedColormap rotated270(Colormap colormap)
 	{
-		return new TransformedColormap(colormap, 0, -1, 1, 0, 0, 1); 
+		return new TransformedColormap(colormap, 0, -1, 1, 0, 0, 1);
 	}
-	
+
 	public static TransformedColormap flippedX(Colormap colormap)
 	{
-		return new TransformedColormap(colormap, -1, 0, 0, 1, 1, 0); 
+		return new TransformedColormap(colormap, -1, 0, 0, 1, 1, 0);
 	}
-	
+
 	public static TransformedColormap flippedY(Colormap colormap)
 	{
-		return new TransformedColormap(colormap, 1, 0, 0, -1, 0, 1); 
+		return new TransformedColormap(colormap, 1, 0, 0, -1, 0, 1);
 	}
-	
-	private TransformedColormap(Colormap colormap, 
+
+	private TransformedColormap(Colormap colormap,
 			double m00, double m10,
             double m01, double m11,
             double m02, double m12)
 	{
-		super(colormap);
-	
+		this.original = colormap;
+
         this.m00 = m00;
         this.m10 = m10;
         this.m01 = m01;
@@ -82,18 +84,18 @@ public class TransformedColormap extends DelegateColormap
         this.m02 = m02;
         this.m12 = m12;
 	}
-	
+
 	@Override
 	public Color getColor(double ox, double oy)
 	{
 		double x = ox * m00 + oy * m01 + m02;
 		double y = ox * m10 + oy * m11 + m12;
 
-		return getDelegate().getColor(x, y);
+		return original.getColor(x, y);
 	}
-	
+
 	/**
-	 * @return a <b>new</b> transformation 
+	 * @return a <b>new</b> transformation
 	 */
 	public AffineTransform getTransformation()
 	{

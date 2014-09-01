@@ -34,7 +34,7 @@ import views.SimpleColormapView.ViewType;
 
 import com.google.common.collect.Lists;
 
-import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 
 /**
  * Generates LaTeX table output for a list of decomposed colormaps 
@@ -49,7 +49,7 @@ public final class LatexTableDecomp
 		// private
 	}
 	
-	public static File generateTable(List<Colormap> colormaps, File outputFolder) throws IOException 
+	public static File generateTable(List<KnownColormap> colormaps, File outputFolder) throws IOException 
     {
     	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources/latex");
         templateDir.delimiterStartChar = '$';
@@ -62,7 +62,7 @@ public final class LatexTableDecomp
 		File imageFolder = new File(outputFolder, imgFolderName);
         imageFolder.mkdir();
         
-        for (Colormap cm : colormaps)
+        for (KnownColormap cm : colormaps)
         {
         	LatexColormap lcm = new LatexColormap(cm);
 			lcms.add(lcm);

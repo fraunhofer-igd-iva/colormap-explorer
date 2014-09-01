@@ -69,6 +69,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 import de.fhg.igd.iva.colormaps.FileImageColormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 import de.fhg.igd.iva.colorspaces.RGB;
@@ -97,7 +98,7 @@ public class ConfigPanel extends JPanel
 
 	private final BibTeXDatabase database;
 
-	private JComboBox<Colormap> mapsCombo;
+	private JComboBox<KnownColormap> mapsCombo;
 
 	private JLabel descLabel;
 	private JLabel refsLabel;
@@ -109,7 +110,7 @@ public class ConfigPanel extends JPanel
 	 * @param colorMaps the (sorted) list of all available color maps
 	 * @param database the BibTeX database
 	 */
-	public ConfigPanel(List<Colormap> colorMaps, final BibTeXDatabase database)
+	public ConfigPanel(List<KnownColormap> colorMaps, final BibTeXDatabase database)
 	{
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -118,7 +119,7 @@ public class ConfigPanel extends JPanel
 
 		this.fileDialog = FileDialogs.createOpenImageDialog();
 
-		mapsCombo = new JComboBox<Colormap>(colorMaps.toArray(new Colormap[0]));
+		mapsCombo = new JComboBox<KnownColormap>(colorMaps.toArray(new KnownColormap[0]));
 
 		final JButton importButton = new JButton("Import colormap from image", loadIconImage("/icons/icon.png"));
 		importButton.addActionListener(new ActionListener()
@@ -175,7 +176,7 @@ public class ConfigPanel extends JPanel
 
 	protected void updateSelection()
 	{
-		Colormap colormap = (Colormap) mapsCombo.getSelectedItem();
+		KnownColormap colormap = (KnownColormap) mapsCombo.getSelectedItem();
 		descLabel.setText("<html>" + colormap.getDescription() + "</html>");
 
 		String refs = getBibTeX(colormap);
@@ -192,7 +193,7 @@ public class ConfigPanel extends JPanel
 	{
 		if (fileDialog.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION)
 		{
-			Colormap colormap;
+			KnownColormap colormap;
 			try
 			{
 				colormap = new FileImageColormap(fileDialog.getSelectedFile());
@@ -269,7 +270,7 @@ public class ConfigPanel extends JPanel
 		return stats;
 	}
 
-	private String getBibTeX(Colormap colormap)
+	private String getBibTeX(KnownColormap colormap)
 	{
 		List<String> entries = Lists.newArrayList();
 		for (String ref : colormap.getReferences())

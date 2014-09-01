@@ -19,14 +19,14 @@ package de.fhg.igd.iva.colormaps.impl;
 import java.util.Collections;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 
 /**
  * Helper class for implementing Teuling-style color maps. These are built from RGB planes
  * and some whitening on top.
  * @author simon
  */
-public abstract class TeulingStyle extends AbstractColormap
+public abstract class TeulingStyle extends AbstractKnownColormap
 {
 	private static final double WK_MAX_HYPOT = Math.hypot(0.5, 0.5);
 

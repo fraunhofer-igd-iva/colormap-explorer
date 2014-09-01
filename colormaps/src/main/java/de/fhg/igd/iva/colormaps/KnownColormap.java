@@ -16,52 +16,31 @@
 
 package de.fhg.igd.iva.colormaps;
 
-import java.awt.Color;
+import java.util.List;
 
 /**
- * A colormap with a constant gray value of 0.5
+ * Defines a color map in 2D space
  * @author Martin Steiger
  */
-public class ConstantColormap extends AbstractColormap
+public interface KnownColormap extends Colormap 
 {
-	private final Color color;
+	/**
+	 * @return the short name of the color map
+	 */
+	String getName();
 
 	/**
-	 * Default constructor using 50% on all channels
+	 * @return the full description
 	 */
-	public ConstantColormap()
-	{
-		color = new Color(0.5f, 0.5f, 0.5f);
-	}
+	String getDescription();
 
 	/**
-	 * @param color the constant color to use
+	 * @return the color space
 	 */
-	public ConstantColormap(Color color)
-	{
-		this.color = color;
-	}
+	ColorSpace getColorSpace();
 
-	@Override
-	public Color getColor(double x, double y) {
-		return color;
-	}
-
-	@Override
-	public String getName()
-	{
-		return "Constant Gray 0.5";
-	}
-
-	@Override
-	public String getDescription()
-	{
-		return getName();
-	}
-
-	@Override
-	public ColorSpace getColorSpace()
-	{
-		return ColorSpace.sRGB;
-	}
+	/**
+	 * @return a list of full BibTeX entries
+	 */
+	List<String> getReferences();
 }

@@ -11,11 +11,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 import de.fhg.igd.iva.colorspaces.HSL;
 
-public class Ramirez2012 extends AbstractColormap {
+public class Ramirez2012 extends AbstractKnownColormap {
 
 	Logger _log = LoggerFactory.getLogger(getClass());
 	

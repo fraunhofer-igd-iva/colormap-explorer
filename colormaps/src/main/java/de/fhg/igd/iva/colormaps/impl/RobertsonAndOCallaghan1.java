@@ -20,10 +20,10 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
-public class RobertsonAndOCallaghan1 extends AbstractColormap {
+public class RobertsonAndOCallaghan1 extends AbstractKnownColormap {
 
 	private FourCornersAnchorColorMapParameterizable[][] colorMaps;
 

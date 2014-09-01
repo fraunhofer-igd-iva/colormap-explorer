@@ -17,14 +17,17 @@
 package de.fhg.igd.iva.colormaps.impl;
 
 import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 
 import de.fhg.igd.iva.colormaps.ColorSpace;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 
 /**
  * A colormap with four color anchors in the edges: Red, Blue, Green, and Yellow
  * @author Martin Steiger
  */
-public class FourCornersAnchorRBGY extends FourCornersAnchorColorMapParameterizable {
+public class FourCornersAnchorRBGY extends FourCornersAnchorColorMapParameterizable implements KnownColormap {
 
 	public FourCornersAnchorRBGY()
 	{
@@ -44,5 +47,11 @@ public class FourCornersAnchorRBGY extends FourCornersAnchorColorMapParameteriza
 	@Override
 	public ColorSpace getColorSpace() {
 		return ColorSpace.sRGB;
+	}
+
+	@Override
+	public List<String> getReferences()
+	{
+		return Collections.emptyList();
 	}
 }

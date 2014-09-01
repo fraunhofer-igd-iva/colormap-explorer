@@ -20,7 +20,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
@@ -28,7 +28,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
  * @since 2012-01-10
  * @version 1.01
  */
-public class Ziegler extends AbstractColormap {
+public class Ziegler extends AbstractKnownColormap {
 
 	public Ziegler() {
 	}

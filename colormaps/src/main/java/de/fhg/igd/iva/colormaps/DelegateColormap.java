@@ -24,14 +24,14 @@ import java.util.List;
  * Delegates all method calls to another implementation
  * @author Martin Steiger
  */
-public class DelegateColormap implements Colormap
+public class DelegateColormap implements KnownColormap
 {
-	private final Colormap delegate;
+	private final KnownColormap delegate;
 
 	/**
 	 * @param colormap the underlying color map
 	 */
-	public DelegateColormap(Colormap colormap)
+	public DelegateColormap(KnownColormap colormap)
 	{
 		this.delegate = colormap;
 	}
@@ -65,7 +65,7 @@ public class DelegateColormap implements Colormap
 	{
 		return delegate.getReferences();
 	}
-	
+
 	/**
 	 * @return the underlying delegate colormap
 	 */

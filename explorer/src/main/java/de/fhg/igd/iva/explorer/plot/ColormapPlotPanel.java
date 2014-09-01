@@ -32,9 +32,10 @@ import org.jzy3d.plot3d.rendering.scene.Graph;
 import com.google.common.base.Function;
 
 import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 
 /**
- * A panel that contains a jzy3d chart and can plot a {@link Colormap}.
+ * A panel that contains a jzy3d chart and can plot a {@link KnownColormap}.
  */
 public class ColormapPlotPanel extends JPanel
 {

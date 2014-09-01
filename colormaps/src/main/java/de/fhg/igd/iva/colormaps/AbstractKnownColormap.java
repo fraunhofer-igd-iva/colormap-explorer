@@ -16,16 +16,25 @@
 
 package de.fhg.igd.iva.colormaps;
 
-import com.google.common.base.Preconditions;
+import java.util.Collections;
+import java.util.List;
+
 
 /**
- * A partly (default) implementation of {@link KnownColormap}
+ * A partly, default implementation of {@link KnownColormap} that extends {@link AbstractColormap}
  * @author Martin Steiger
  */
-public abstract class AbstractColormap implements Colormap {
+public abstract class AbstractKnownColormap extends AbstractColormap implements KnownColormap
+{
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
 
-	protected void checkRanges(double x, double y) {
-		Preconditions.checkArgument(0 <= x && x <= 1, "X must in in range [0..1], but is %s", x);
-		Preconditions.checkArgument(0 <= y && y <= 1, "Y must in in range [0..1], but is %s", y);
+	@Override
+	public List<String> getReferences()
+	{
+		return Collections.emptyList();
 	}
 }

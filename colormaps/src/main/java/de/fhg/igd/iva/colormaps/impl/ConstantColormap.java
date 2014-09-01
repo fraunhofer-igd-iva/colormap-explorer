@@ -17,38 +17,54 @@
 package de.fhg.igd.iva.colormaps.impl;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
 
 import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
-public class ConstantRed extends AbstractKnownColormap {
+/**
+ * A colormap with a constant gray value of 0.5
+ * @author Martin Steiger
+ */
+public class ConstantColormap extends AbstractKnownColormap
+{
+	private final Color color;
+
+	/**
+	 * Default constructor using 50% on all channels
+	 */
+	public ConstantColormap()
+	{
+		color = new Color(0.5f, 0.5f, 0.5f);
+	}
+
+	/**
+	 * @param color the constant color to use
+	 */
+	public ConstantColormap(Color color)
+	{
+		this.color = color;
+	}
 
 	@Override
 	public Color getColor(double x, double y) {
-		checkRanges(x, y);
-
-		return new Color(0.5f, (float)x, (float)y);
+		return color;
 	}
 
 	@Override
-	public String getName() {
-		return "Constant Red";
+	public String getName()
+	{
+		return "Constant Gray 0.5";
 	}
 
 	@Override
-	public String getDescription() {
-		return "RGB colormap with constant Red. Green and Blue span one axis each.";
+	public String getDescription()
+	{
+		return getName();
 	}
 
 	@Override
-	public ColorSpace getColorSpace() {
+	public ColorSpace getColorSpace()
+	{
 		return ColorSpace.sRGB;
-	}
-	
-	@Override
-	public List<String> getReferences() {
-		return Arrays.asList("Bremm2011");
 	}
 }

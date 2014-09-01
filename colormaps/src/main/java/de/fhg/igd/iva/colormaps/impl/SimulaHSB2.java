@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 import de.fhg.igd.iva.colorspaces.HSI;
 
@@ -16,7 +16,7 @@ import de.fhg.igd.iva.colorspaces.HSI;
  * @author Simon Thum
  */
 @Deprecated
-public class SimulaHSB2 extends AbstractColormap {
+public class SimulaHSB2 extends AbstractKnownColormap {
 	
 	@Override
 	public Color getColor(double x, double y) {

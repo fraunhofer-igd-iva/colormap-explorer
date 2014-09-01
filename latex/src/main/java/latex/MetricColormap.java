@@ -23,7 +23,7 @@ import algorithms.quality.ColormapQuality;
 
 import com.google.common.collect.Maps;
 
-import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 
 /**
  * Defines a colormap in the LaTeX output
@@ -31,12 +31,12 @@ import de.fhg.igd.iva.colormaps.Colormap;
  */
 public class MetricColormap
 {
-	private final Colormap colormap;
+	private final KnownColormap colormap;
 	private final Map<ColormapQuality, String> metrics = Maps.newHashMap();
 	private final Map<ColormapQuality, String> colors = Maps.newHashMap();
 	private final String imagePath;
 
-	public MetricColormap(Colormap cm, String imagePath)
+	public MetricColormap(KnownColormap cm, String imagePath)
 	{
 		this.colormap = cm;
 		this.imagePath = imagePath;

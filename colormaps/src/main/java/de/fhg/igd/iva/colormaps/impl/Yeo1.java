@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
-public class Yeo1 extends AbstractColormap {
+public class Yeo1 extends AbstractKnownColormap {
 
 	FourCornersAnchorColorMapParameterizable anchorColorMapParameterizable = new FourCornersAnchorColorMapParameterizable(new Color(0, 128, 128), new Color(128, 0, 255), new Color(128,255,0), new Color(255, 128, 128));
 

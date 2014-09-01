@@ -50,6 +50,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
 
 import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 
 /**
  * Generates LaTeX table output for a list of colormaps 
@@ -62,15 +63,15 @@ public final class LatexTableQuality
 		// private
 	}
 	
-	public static File generateTable(List<Colormap> colormaps, File outputFolder) throws IOException 
+	public static File generateTable(List<KnownColormap> colormaps, File outputFolder) throws IOException 
     {
     	STRawGroupDir templateDir = new STRawGroupDir("src/main/resources/latex");
         templateDir.delimiterStartChar = '$';
         templateDir.delimiterStopChar = '$';
         
-        Map<Colormap, MetricColormap> mcms = Maps.newLinkedHashMap();
+        Map<KnownColormap, MetricColormap> mcms = Maps.newLinkedHashMap();
 
-        for (Colormap cm : colormaps)
+        for (KnownColormap cm : colormaps)
         {
         	String fname = cm.getName() + "_" + SimpleColormapView.ViewType.REAL.toString();
             String relativePath = "images/gen/" + toFilename(fname);
@@ -100,9 +101,9 @@ public final class LatexTableQuality
 
         for (ColormapQuality measure : measures)
         {
-        	Map<Colormap, Double> mapQualities = computeQuality(colormaps, measure);
-        	Map<Colormap, Integer> mapPoints = computePoints(mapQualities);
-        	Map<Colormap, Integer> mapRanks = computeRanks(mapQualities);
+        	Map<KnownColormap, Double> mapQualities = computeQuality(colormaps, measure);
+        	Map<KnownColormap, Integer> mapPoints = computePoints(mapQualities);
+        	Map<KnownColormap, Integer> mapRanks = computeRanks(mapQualities);
         	
         
             for (Colormap cm : colormaps)
@@ -129,14 +130,14 @@ public final class LatexTableQuality
         return texFile;
     }
 
-	private static Map<Colormap, Integer> computeRanks(Map<Colormap, Double> mapQualities)
+	private static Map<KnownColormap, Integer> computeRanks(Map<KnownColormap, Double> mapQualities)
 	{
-		Map<Colormap, Double> sorted = sortByValue(mapQualities);
-		Map<Colormap, Integer> result = Maps.newLinkedHashMap();
+		Map<KnownColormap, Double> sorted = sortByValue(mapQualities);
+		Map<KnownColormap, Integer> result = Maps.newLinkedHashMap();
 		
 		int rank = 1;
 		
-		for (Map.Entry<Colormap, Double> entry : sorted.entrySet())
+		for (Map.Entry<KnownColormap, Double> entry : sorted.entrySet())
 		{
 			result.put(entry.getKey(), rank++);
 		}
@@ -183,10 +184,10 @@ public final class LatexTableQuality
 		return colors;
 	}
 	
-	private static Map<Colormap, Double> computeQuality(List<Colormap> colormaps, ColormapQuality measure)
+	private static Map<KnownColormap, Double> computeQuality(List<KnownColormap> colormaps, ColormapQuality measure)
 	{
-		Map<Colormap, Double> qualityMap = Maps.newHashMap();
-        for (Colormap cm : colormaps)
+		Map<KnownColormap, Double> qualityMap = Maps.newHashMap();
+        for (KnownColormap cm : colormaps)
         {
         	double quality = measure.getQuality(cm);
         	qualityMap.put(cm, Double.valueOf(quality));
@@ -215,14 +216,14 @@ public final class LatexTableQuality
 		return Range.closed(min, max);
 	}
 
-    private static Map<Colormap, Integer> computePoints(Map<Colormap, Double> qualityMap)
+    private static Map<KnownColormap, Integer> computePoints(Map<KnownColormap, Double> qualityMap)
     {
-		Map<Colormap, Integer> result = Maps.newHashMap();
+		Map<KnownColormap, Integer> result = Maps.newHashMap();
 
 		Range<Double> range = getMinMax(qualityMap.values());
 		
 		double span = range.upperEndpoint() - range.lowerEndpoint();
-        for (Colormap cm : qualityMap.keySet())
+        for (KnownColormap cm : qualityMap.keySet())
         {
         	double val = qualityMap.get(cm);
         	if (Double.isInfinite(val) || Double.isNaN(val))

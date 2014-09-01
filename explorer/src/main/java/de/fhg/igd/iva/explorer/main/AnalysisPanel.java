@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.Colormap;
-import de.fhg.igd.iva.colormaps.ConstantColormap;
+import de.fhg.igd.iva.colormaps.impl.ConstantColormap;
 import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
 import de.fhg.igd.iva.explorer.events.MyEventBus;
 

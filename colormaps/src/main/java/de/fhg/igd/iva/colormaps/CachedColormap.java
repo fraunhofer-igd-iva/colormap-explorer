@@ -18,6 +18,7 @@
 package de.fhg.igd.iva.colormaps;
 
 import java.awt.Color;
+import java.awt.Transparency;
 import java.awt.image.BandedSampleModel;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -25,10 +26,9 @@ import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-import java.util.List;
 
 /**
- * A cached, but otherwise transparent {@link Colormap} 
+ * A cached, but otherwise transparent {@link KnownColormap}
  * wrapper implementation.
  * @author Martin Steiger
  */
@@ -44,14 +44,14 @@ public class CachedColormap extends ImageBasedColormap
 	public CachedColormap(Colormap colormap, int imgWidth, int imgHeight)
 	{
 		super(createImage(imgWidth, imgHeight));
-		
+
 		this.delegate = colormap;
 
 		float maxY = imgHeight - 1;
 		float maxX = imgWidth - 1;
 
 		float[] compArray = new float[3];
-		
+
 		WritableRaster raster = getImage().getRaster();
 
 		for (int y = 0; y < imgHeight; y++)
@@ -62,25 +62,25 @@ public class CachedColormap extends ImageBasedColormap
 				float mx = x / maxX;
 				Color color = colormap.getColor(mx, my);
 				color.getColorComponents(compArray);
-				
+
 				raster.setSample(x, y, 0, compArray[0]);
 				raster.setSample(x, y, 1, compArray[1]);
 				raster.setSample(x, y, 2, compArray[2]);
 			}
 		}
 	}
-	
+
 	private static BufferedImage createImage(int imgWidth, int imgHeight)
 	{
 		java.awt.color.ColorSpace space = java.awt.color.ColorSpace.getInstance(java.awt.color.ColorSpace.CS_sRGB);
-		ColorModel colorModel = new ComponentColorModel(space, false, false, ColorModel.OPAQUE, DataBuffer.TYPE_FLOAT);
+		ColorModel colorModel = new ComponentColorModel(space, false, false, Transparency.OPAQUE, DataBuffer.TYPE_FLOAT);
 		BandedSampleModel model = new BandedSampleModel(DataBuffer.TYPE_FLOAT, imgWidth, imgHeight, 3);
 		DataBuffer buffer = model.createDataBuffer();
 		WritableRaster raster = Raster.createWritableRaster(model, buffer, null);
 		BufferedImage image = new BufferedImage(colorModel, raster, false, null);
-		
+
 //		BufferedImage image = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
-		
+
 		return image;
 	}
 
@@ -89,7 +89,7 @@ public class CachedColormap extends ImageBasedColormap
 	{
 		return super.getColor(mx, my);
 	}
-	
+
 	/**
 	 * Returns the color as defined in the original colormap
 	 * @param x the x coordinate in the range [0..1]
@@ -100,28 +100,4 @@ public class CachedColormap extends ImageBasedColormap
 	{
 		return delegate.getColor(x, y);
 	}
-	
-	@Override
-	public String getName()
-	{
-		return delegate.getName();
-	}
-
-	@Override
-	public String getDescription()
-	{
-		return delegate.getDescription();
-	}
-
-	@Override
-	public ColorSpace getColorSpace()
-	{
-		return delegate.getColorSpace();
-	}
-
-	@Override
-	public List<String> getReferences()
-	{
-		return delegate.getReferences();
-	}	
 }

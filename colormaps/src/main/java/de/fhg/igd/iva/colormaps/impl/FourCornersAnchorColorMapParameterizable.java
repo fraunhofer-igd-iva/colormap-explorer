@@ -19,12 +19,13 @@ package de.fhg.igd.iva.colormaps.impl;
 import java.awt.Color;
 
 import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
  * Colormap with four anchor colors in the edges and linear interpolation in
  * between (RGB). The four colors are assigned at run-time.
- * 
+ *
  */
 class FourCornersAnchorColorMapParameterizable extends AbstractColormap {
 
@@ -59,21 +60,6 @@ class FourCornersAnchorColorMapParameterizable extends AbstractColormap {
 				lowerLeft.getBlue(), lowerRight.getBlue(), x, y);
 
 		return new Color((float)r / 255f, (float)g / 255f, (float)b / 255f);
-	}
-
-	@Override
-	public String getName() {
-		return "RGBFourAnchorColorMapDynamic";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Colormap with four anchor colors in the edges and linear interpolation in between (RGB). The four colors are assigned at run-time.";
-	}
-	
-	@Override
-	public ColorSpace getColorSpace() {
-		return ColorSpace.sRGB;
 	}
 
 	private double interpolate(double start, double end, double position) {

@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -28,7 +30,7 @@ import javax.imageio.ImageIO;
  * Loads a colormap from an image file
  * @author Martin Steiger
  */
-public class FileImageColormap extends ImageBasedColormap
+public class FileImageColormap extends ImageBasedColormap implements KnownColormap
 {
 	private final String name;
 	private final String desc;
@@ -74,5 +76,11 @@ public class FileImageColormap extends ImageBasedColormap
 	public ColorSpace getColorSpace()
 	{
 		return ColorSpace.sRGB;
+	}
+
+	@Override
+	public List<String> getReferences()
+	{
+		return Collections.emptyList();
 	}
 }

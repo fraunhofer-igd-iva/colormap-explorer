@@ -1,7 +1,6 @@
 package de.fhg.igd.iva.explorer.plot;
 
 import java.awt.Color;
-import java.util.Arrays;
 
 import com.google.common.base.Function;
 

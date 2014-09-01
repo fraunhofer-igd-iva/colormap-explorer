@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
-import de.fhg.igd.iva.colormaps.Colormap;
-import de.fhg.igd.iva.colormaps.ConstantColormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
+import de.fhg.igd.iva.colormaps.impl.ConstantColormap;
 
 /**
  * Generates LaTeX table output for a list of colormaps 
@@ -58,7 +58,7 @@ public final class LatexGen
 //		colorMaps.add(new Steiger2014Generic());
 //		colorMaps.add(new TeulingFig2());
 		
-		List<Colormap> colorMaps = discoverColormaps();
+		List<KnownColormap> colorMaps = discoverColormaps();
 		
 		File output = new File(System.getProperty("user.home"),  "colormaps");
 		output.mkdirs();
@@ -67,14 +67,14 @@ public final class LatexGen
 		createQualityTable(colorMaps, output);
 	}
 
-	private static List<Colormap> discoverColormaps()
+	private static List<KnownColormap> discoverColormaps()
 	{
-		ServiceLoader<Colormap> loader = ServiceLoader.load(Colormap.class);
-		List<Colormap> colorMaps = Lists.newArrayList();
+		ServiceLoader<KnownColormap> loader = ServiceLoader.load(KnownColormap.class);
+		List<KnownColormap> colorMaps = Lists.newArrayList();
 		
-		for (Colormap map : loader)
+		for (KnownColormap map : loader)
 		{
-			Class<? extends Colormap> clazz = map.getClass();
+			Class<? extends KnownColormap> clazz = map.getClass();
 			
 			if (clazz.isAnnotationPresent(Deprecated.class))
 			{
@@ -95,7 +95,7 @@ public final class LatexGen
 		return colorMaps;
 	}	
 	
-	private static void createQualityTable(List<Colormap> colorMaps, File output) throws Exception
+	private static void createQualityTable(List<KnownColormap> colorMaps, File output) throws Exception
 	{
 		File texFile = LatexTableQuality.generateTable(colorMaps, output);
 		File pdf = compileLaTeX(texFile);
@@ -103,7 +103,7 @@ public final class LatexGen
 		logger.info("PDF file created at " + pdf.getCanonicalPath());
 	}
 
-	private static void createDecomposedTable(List<Colormap> colorMaps, File output) throws IOException, Exception
+	private static void createDecomposedTable(List<KnownColormap> colorMaps, File output) throws IOException, Exception
 	{
 		File texFile = LatexTableDecomp.generateTable(colorMaps, output);
 

@@ -18,7 +18,7 @@ package latex;
 import java.util.Collections;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.Colormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 
 import com.google.common.collect.Lists;
 
@@ -28,10 +28,10 @@ import com.google.common.collect.Lists;
  */
 public class LatexColormap
 {
-	private Colormap colormap;
+	private KnownColormap colormap;
 	private final List<String> images = Lists.newArrayList();
 
-	public LatexColormap(Colormap cm)
+	public LatexColormap(KnownColormap cm)
 	{
 		this.colormap = cm;
 	}

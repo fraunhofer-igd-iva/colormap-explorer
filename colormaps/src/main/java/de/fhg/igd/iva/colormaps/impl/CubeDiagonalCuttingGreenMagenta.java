@@ -20,10 +20,10 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
-public class CubeDiagonalCuttingGreenMagenta extends AbstractColormap {
+public class CubeDiagonalCuttingGreenMagenta extends AbstractKnownColormap {
 
 	@Override
 	public Color getColor(double x, double y) {

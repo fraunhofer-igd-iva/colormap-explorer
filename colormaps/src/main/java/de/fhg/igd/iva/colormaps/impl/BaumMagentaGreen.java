@@ -20,7 +20,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 
@@ -30,7 +30,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
  * @author ??
  */
 @Deprecated
-public class BaumMagentaGreen extends AbstractColormap {
+public class BaumMagentaGreen extends AbstractKnownColormap {
 
 	@Override
 	public Color getColor(double x, double y) {

@@ -20,30 +20,30 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
 
 /**
  * <p>
  * Title: BCR37
  * </p>
- * 
+ *
  * <p>
  * Description: taken from Poster
  * "Cross-modal Sound-to-Sight Associations with Musical Timbre in Non-Synesthetes"
  * - William S. Griscom and Stephen E. Palmer - Department of Psychology,
  * University of California, Berkeley
  * </p>
- * 
+ *
  * <p>
  * Copyright: Copyright (c) 2014
  * </p>
- * 
+ *
  * @author Jürgen Bernard
- * 
+ *
  */
 
-public class BCP37 extends AbstractColormap {
+public class BCP37 extends AbstractKnownColormap {
 
 	@Override
 	public Color getColor(double x, double y) {

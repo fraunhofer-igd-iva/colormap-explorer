@@ -23,8 +23,8 @@ import java.awt.geom.AffineTransform;
 import org.junit.Test;
 
 import de.fhg.igd.iva.colormaps.Colormap;
-import de.fhg.igd.iva.colormaps.ConstantColormap;
 import de.fhg.igd.iva.colormaps.TransformedColormap;
+import de.fhg.igd.iva.colormaps.impl.ConstantColormap;
 
 /**
  * Transforms a given colormap
@@ -85,9 +85,9 @@ public class TransformedColormapTest
 	private void verify(TransformedColormap tcm, AffineTransform shouldBe)
 	{
 		AffineTransform is = tcm.getTransformation();
-		
+
 		assertEquals(shouldBe, is);
-		
+
 	}
 
 }

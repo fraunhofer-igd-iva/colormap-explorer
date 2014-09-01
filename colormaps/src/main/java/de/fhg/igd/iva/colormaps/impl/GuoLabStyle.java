@@ -28,14 +28,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 
-import de.fhg.igd.iva.colormaps.AbstractColormap;
+import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colorspaces.CIELAB;
 
 /**
  * Guo-style Lab 2D color spaces, based on functions that reflect the choices in the paper.
  * @author simon
  */
-public abstract class GuoLabStyle extends AbstractColormap
+public abstract class GuoLabStyle extends AbstractKnownColormap
 {
 	private static final Logger logger = LoggerFactory.getLogger(GuoLabStyle.class);
 	
@@ -45,7 +45,7 @@ public abstract class GuoLabStyle extends AbstractColormap
 
 	/**
 	 * @param lightnessFunc the lightness function, defined based on distance from the mid point 0..sqrt 2
-	 * @param chromaFunc The chroma function, defined based on x and y as in {@link de.fhg.igd.iva.colormaps.Colormap#getColor(float, float)}
+	 * @param chromaFunc The chroma function, defined based on x and y as in {@link de.fhg.igd.iva.colormaps.KnownColormap#getColor(float, float)}
 	 */
 	public GuoLabStyle(Function<Double, Double> lightnessFunc, Function<Entry<Double, Double>, Entry<Double, Double>> chromaFunc)
 	{

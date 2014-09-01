@@ -42,8 +42,8 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-import de.fhg.igd.iva.colormaps.Colormap;
-import de.fhg.igd.iva.colormaps.ConstantColormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
+import de.fhg.igd.iva.colormaps.impl.ConstantColormap;
 import de.fhg.igd.iva.explorer.plot.ColormapPlotterPanel;
 
 /**
@@ -60,7 +60,7 @@ public class ColorMapExplorer extends JFrame
 	 * @param colorMaps a list of colormaps
 	 * @param database the BibTeX database
 	 */
-	public ColorMapExplorer(List<Colormap> colorMaps, BibTeXDatabase database)
+	public ColorMapExplorer(List<KnownColormap> colorMaps, BibTeXDatabase database)
 	{
 		super("ColorMap Explorer - " + GitVersion.getVersion());
 
@@ -108,7 +108,7 @@ public class ColorMapExplorer extends JFrame
 			logger.error("Cannot set look & feel", e);
 		}
 
-		List<Colormap> colorMaps = discoverColormaps();
+		List<KnownColormap> colorMaps = discoverColormaps();
 
 		BibTeXDatabase database = new BibTeXDatabase();
 		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib");
@@ -135,14 +135,14 @@ public class ColorMapExplorer extends JFrame
 		frame.setVisible(true);
 	}
 
-	private static List<Colormap> discoverColormaps()
+	private static List<KnownColormap> discoverColormaps()
 	{
-		ServiceLoader<Colormap> loader = ServiceLoader.load(Colormap.class);
-		List<Colormap> colorMaps = Lists.newArrayList();
+		ServiceLoader<KnownColormap> loader = ServiceLoader.load(KnownColormap.class);
+		List<KnownColormap> colorMaps = Lists.newArrayList();
 
-		for (Colormap map : loader)
+		for (KnownColormap map : loader)
 		{
-			Class<? extends Colormap> clazz = map.getClass();
+			Class<? extends KnownColormap> clazz = map.getClass();
 
 			if (clazz.isAnnotationPresent(Deprecated.class))
 			{
