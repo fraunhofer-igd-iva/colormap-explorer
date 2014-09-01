@@ -44,7 +44,7 @@ import com.google.common.collect.Lists;
 
 import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colormaps.ConstantColormap;
-import de.fhg.igd.iva.explorer.plot.ColormapPlotter;
+import de.fhg.igd.iva.explorer.plot.ColormapPlotterPanel;
 
 /**
  * The main window, also the entry point for the application.
@@ -73,7 +73,7 @@ public class ColorMapExplorer extends JFrame
 		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel();
 		final AnalysisPanel analysisPanel = new AnalysisPanel();
 		final JndViewPanel jndViewPanel = new JndViewPanel();
-		final ColormapPlotter plotterPanel = new ColormapPlotter();
+		final ColormapPlotterPanel plotterPanel = new ColormapPlotterPanel();
 
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Decomposed Colormap", viewPanel);

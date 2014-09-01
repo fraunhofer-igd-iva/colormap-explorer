@@ -23,10 +23,7 @@ import java.util.LinkedHashSet;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import com.google.common.eventbus.Subscribe;
-
-import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
-import de.fhg.igd.iva.explorer.events.MyEventBus;
+import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
  * Organizes several {@link ColormapPlotPanel} instances in a panel
@@ -83,35 +80,18 @@ public class ColormapPlotter extends JPanel
 
         setLayout(new BorderLayout());
         this.add(plotsContainer, BorderLayout.CENTER);
-
-		MyEventBus.getInstance().register(this);
     }
 
-	@Subscribe
-	public void onSelect(ColormapSelectionEvent event)
+	/**
+	 * @param selection
+	 */
+	public void setColormap(Colormap selection)
 	{
-		if (!this.isVisible())
-			return;
-
 		for (ColormapPlotPanel panel : panels)
 		{
 //			colormap = new CachedColormap(event.getSelection(), 512, 512);
-			panel.setColormap(event.getSelection());
+			panel.setColormap(selection);
 		}
 
-		repaint();
 	}
-
-	@Override
-	public void setVisible(boolean aFlag)
-	{
-		super.setVisible(aFlag);
-
-		if (aFlag)
-		{
-			ColormapSelectionEvent event = MyEventBus.getLast(ColormapSelectionEvent.class);
-			onSelect(event);
-		}
-	}
-
 }
