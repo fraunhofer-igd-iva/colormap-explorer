@@ -20,6 +20,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -34,10 +35,10 @@ public class EvenDistributedDistancePoints implements SamplingStrategy
 {
 
 	private final List<Point2D> pts = Lists.newArrayList();
-	
+
 	private double lower = 0;
 	private double upper = 1;
-	
+
 	public EvenDistributedDistancePoints(Random random, int number, double lower, double upper) {
 		this.lower = lower;
 		this.upper = upper;
@@ -79,7 +80,7 @@ public class EvenDistributedDistancePoints implements SamplingStrategy
 	}
 
 	@Override
-	public Iterable<Point2D> getPoints()
+	public Collection<Point2D> getPoints()
 	{
 		return pts;
 	}

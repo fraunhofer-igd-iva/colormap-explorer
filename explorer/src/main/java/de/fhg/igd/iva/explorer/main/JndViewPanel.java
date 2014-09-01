@@ -41,11 +41,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 import javax.swing.border.BevelBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import progress.LoggingProgressListener;
+import progress.SwingProgressListener;
 import algorithms.JndRegionComputer;
 import algorithms.sampling.CircularSampling;
 
@@ -162,10 +166,61 @@ public class JndViewPanel extends JPanel
 
 		colormap = new CachedColormap(event.getSelection(), 512, 512);
 
-		int sampleRate = 100;
+		int sampleRate = 200;
 //		GridSampling sampling = new GridSampling(sampleRate);
 		CircularSampling sampling = new CircularSampling(sampleRate);
-		regionComputer = new JndRegionComputer(colormap, sampling, 6.0);
+		regionComputer = new JndRegionComputer(colormap, sampling, 3.0);
+
+		final SwingProgressListener progress1 = new SwingProgressListener(this, "Computing JND points")
+		{
+			private int oldPoints = 0;
+
+			@Override
+			public void step()
+			{
+				super.step();
+
+				int points = regionComputer.getPoints().size();
+
+				if (points != oldPoints)
+				{
+					oldPoints = points;
+					JndViewPanel.this.repaint();
+				}
+			}
+		};
+
+		final SwingProgressListener progress2 = new SwingProgressListener(this, "Updating Regions")
+		{
+			private int oldRegions = 0;
+
+			@Override
+			public void step()
+			{
+				super.step();
+
+				int regions = regionComputer.getRegionCount();
+
+				if (regions != oldRegions)
+				{
+					oldRegions = regions;
+					JndViewPanel.this.repaint();
+				}
+			}
+		};
+
+		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>()
+		{
+			@Override
+			protected Void doInBackground() throws Exception
+			{
+				regionComputer.computePoints(progress1);
+				regionComputer.computeJndRegions(progress2);
+
+				return null;
+			}
+		};
+		worker.execute();
 
 		repaint();
 	}
@@ -288,8 +343,11 @@ public class JndViewPanel extends JPanel
 		for (Point2D jndPt : regionComputer.getPoints())
 		{
 			List<Point2D> pts = regionComputer.getRegion(jndPt);
-			Polygon poly = createPolygon(pts);
-			g.draw(poly);
+			if (pts != null)
+			{
+				Polygon poly = createPolygon(pts);
+				g.draw(poly);
+			}
 		}
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);

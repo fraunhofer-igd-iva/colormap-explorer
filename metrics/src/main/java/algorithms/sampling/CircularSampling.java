@@ -37,37 +37,37 @@ public class CircularSampling implements SamplingStrategy
 	{
 		double cx = 0.5;
 		double cy = 0.5;
-		
+
 		double maxDist = 0.5 * Math.sqrt(2.0);
 		double sampleDist = 1.0 / resolution;
 		double dist = sampleDist;
-		
+
 		// add center point
 		pts.add(new Point2D.Double(cx, cy));
-		
+
 		while (dist < maxDist)
 		{
-			int sampleRate = (int) (2.0 * Math.PI * dist / sampleDist); 
+			int sampleRate = (int) (2.0 * Math.PI * dist / sampleDist);
 			for (int i = 0; i < sampleRate; i++)
 			{
 				double dx = Math.cos(i * 2.0 * Math.PI / sampleRate + dist);
 				double dy = Math.sin(i * 2.0 * Math.PI / sampleRate + dist);
 
-				double px = cx + dx * dist; 
+				double px = cx + dx * dist;
 				double py = cy + dy * dist;
-				
+
 				if (px < 0 || px > 1 || py < 0 || py > 1)
 					continue;
 
 				pts.add(new Point2D.Double(px, py));
 			}
-			
+
 			dist += sampleDist;
 		}
 	}
-	
+
 	@Override
-	public Iterable<Point2D> getPoints()
+	public List<Point2D> getPoints()
 	{
 		return pts;
 	}

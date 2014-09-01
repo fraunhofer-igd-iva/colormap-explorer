@@ -18,6 +18,7 @@
 package algorithms.sampling;
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
 
 /**
  * Defines a sampling strategy for a square [0..1] x [0..1]
@@ -28,6 +29,6 @@ public interface SamplingStrategy
 	/**
 	 * @return a order-preserving iterable for the sampling points
 	 */
-	Iterable<Point2D> getPoints();
+	Collection<Point2D> getPoints();
 
 }

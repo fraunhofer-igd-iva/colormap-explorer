@@ -30,7 +30,7 @@ public class GridSampling implements SamplingStrategy
 {
 	private int sampleRate;
 	private List<Point2D> pts = Lists.newArrayList();
-	
+
 	/**
 	 * @param resolution the resolution of the grid in rows/cols
 	 */
@@ -47,9 +47,9 @@ public class GridSampling implements SamplingStrategy
 			}
 		}
 	}
-	
+
 	@Override
-	public Iterable<Point2D> getPoints()
+	public List<Point2D> getPoints()
 	{
 		return pts;
 	}

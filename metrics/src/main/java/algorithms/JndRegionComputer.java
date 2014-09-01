@@ -28,13 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import progress.ProgressListener;
 import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.MapMaker;
 
 import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.pcolor.PColor;
@@ -48,13 +46,11 @@ import de.fhg.igd.pcolor.util.ColorTools;
  */
 public class JndRegionComputer
 {
-	private static final Logger logger = LoggerFactory.getLogger(JndRegionComputer.class);
-
 	private static final ViewingConditions VIEW_ENV = ViewingConditions.sRGB_typical_envirnonment;
 	private static final ColorSpace COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-	
-	private Map<Point2D, PColor> jndPoints;
-	private Map<Point2D, List<Point2D>> jndRegions;
+
+	private Map<Point2D, PColor> jndPoints = new MapMaker().concurrencyLevel(1).makeMap();
+	private Map<Point2D, List<Point2D>> jndRegions = new MapMaker().concurrencyLevel(1).makeMap();
 
 	private final double jndThreshold;
 	private final SamplingStrategy sampling;
@@ -72,17 +68,13 @@ public class JndRegionComputer
 		this.jndThreshold = jndThreshold;
 	}
 
-	private Map<Point2D, PColor> probe()
+	public void computePoints(final ProgressListener progress)
 	{
-		Map<Point2D, PColor> result = Maps.newHashMap();
 		Deque<PColor> list = new LinkedList<PColor>();
 
-		int idx = 0;
-		
-		List<Point2D> samples = Lists.newArrayList(sampling.getPoints()); 
+		final Collection<Point2D> samples = sampling.getPoints();
 
-		int logRate = samples.size() / 12;
-
+		progress.start(samples.size());
 		for (Point2D pt : samples)
 		{
 			Color color = colormap.getColor(pt.getX(), pt.getY());
@@ -90,17 +82,18 @@ public class JndRegionComputer
 
 			if (testColorDistance(pcolor, list))
 			{
-				result.put(pt, pcolor);
+				jndPoints.put(pt, pcolor);
 				list.addFirst(pcolor);
 			}
 
-			if (idx++ % logRate == 0)
-				logger.debug(String.format("Sampling: %3.0f%%", 100d * idx / samples.size()));
+			progress.step();
+
+			if (progress.isCancelled())
+				break;
 		}
-		
-		return result;
+		progress.finish();
 	}
-	
+
 	private boolean testColorDistance(PColor pcolor, Collection<? extends PColor> others)
 	{
 		for (PColor expcolor : others)
@@ -111,77 +104,70 @@ public class JndRegionComputer
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
-	private Map<Point2D, List<Point2D>> computeJndRegions()
+	public void computeJndRegions(ProgressListener listener)
 	{
-		Map<Point2D, List<Point2D>> regions = Maps.newHashMap();
-		
-		int idx = 0;
 		int size = jndPoints.keySet().size();
-		
+
+		listener.start(size);
 		for (Point2D pt : jndPoints.keySet())
 		{
-			if (idx % (size / 12) == 0)
-			{
-				logger.debug(String.format("Computing jnd regions: %3.0f%%", 100d * idx / size));
-			}
-			
 			List<Point2D> pts = computeJndRegion(pt.getX(), pt.getY());
-			regions.put(pt, pts);
-			idx++;
+			jndRegions.put(pt, pts);
+			listener.step();
+
+			if (listener.isCancelled())
+				break;
 		}
-		
-		logger.debug("Computing jnd regions: 100%");
-		
-		return regions;
+		listener.finish();
 	}
-	
+
 	private List<Point2D> computeJndRegion(double mx, double my)
 	{
 		Color color = colormap.getColor(mx, my);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
-		
+
 		int angleSteps = 128;
 		double sampleRateDist = 0.0005;
-		
+
 		List<Point2D> pts = Lists.newArrayList();
-		
+
 		for (int i = 0; i < angleSteps; i++)
 		{
 			double dx = Math.cos(i * 2.0 * Math.PI / angleSteps);
 			double dy = Math.sin(i * 2.0 * Math.PI / angleSteps);
-			
+
 			double jndDist = 0;
 			double mapDist = 0;
 			Point2D best = new Point2D.Double(mx, my);
-			
+
 			while (true)
 			{
 				mapDist += sampleRateDist;
-				
-				double px = mx + dx * mapDist; 
+
+				double px = mx + dx * mapDist;
 				double py = my + dy * mapDist;
-				
+
 				if (px < 0 || px > 1 || py < 0 || py > 1)
 					break;
-				
+
 				Color tcolor = colormap.getColor(px, py);
 				PColor ptcolor = PColor.create(COLOR_SPACE, tcolor.getColorComponents(new float[3]));
 
 				jndDist = ColorTools.distance(pcolor, ptcolor, VIEW_ENV);
-				
+
 				if (jndDist < jndThreshold * 0.5)
-					best = new Point2D.Double(px, py); 
-				else 
+					best = new Point2D.Double(px, py);
+				else
 					break;
 			}
-			
+
 			pts.add(best);
 		}
-		
+
 		return pts;
 	}
 
@@ -190,11 +176,6 @@ public class JndRegionComputer
 	 */
 	public Set<Point2D> getPoints()
 	{
-		if (jndPoints == null)
-		{
-			jndPoints = probe();
-		}
-		
 		return Collections.unmodifiableSet(jndPoints.keySet());
 	}
 
@@ -204,12 +185,15 @@ public class JndRegionComputer
 	 */
 	public List<Point2D> getRegion(Point2D jndPt)
 	{
-		if (jndRegions == null)
-		{
-			jndRegions = computeJndRegions();
-		}
-
 		return jndRegions.get(jndPt);
+	}
+
+	/**
+	 * @return the number of computed regions
+	 */
+	public int getRegionCount()
+	{
+		return jndRegions.size();
 	}
 
 	/**
@@ -219,5 +203,5 @@ public class JndRegionComputer
 	public PColor getPColor(Point2D jndPt)
 	{
 		return jndPoints.get(jndPt);
-	}	
+	}
 }

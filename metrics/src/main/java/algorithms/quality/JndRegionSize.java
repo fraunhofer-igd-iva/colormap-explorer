@@ -21,7 +21,10 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import progress.LoggingProgressListener;
 import algorithms.JndRegionComputer;
 import algorithms.sampling.SamplingStrategy;
 import de.fhg.igd.iva.colormaps.Colormap;
@@ -32,6 +35,8 @@ import de.fhg.igd.iva.colormaps.Colormap;
  */
 public class JndRegionSize implements ColormapQuality
 {
+	private static final Logger logger = LoggerFactory.getLogger(JndRegionSize.class);
+
 	private final SamplingStrategy sampling;
 
 	/**
@@ -41,11 +46,14 @@ public class JndRegionSize implements ColormapQuality
 	{
 		this.sampling = sampling;
 	}
-	
+
 	@Override
 	public double getQuality(Colormap colormap)
 	{
 		JndRegionComputer computer = new JndRegionComputer(colormap, sampling, 3.0);
+
+		computer.computePoints(new LoggingProgressListener(logger, "Sampling"));
+		computer.computeJndRegions(new LoggingProgressListener(logger, "Computing jnd regions"));
 
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 
@@ -53,14 +61,14 @@ public class JndRegionSize implements ColormapQuality
 		{
 			List<Point2D> poly = computer.getRegion(center);
 			double area = computeArea(poly, center);
-	        
+
 	        stats.addValue(area);
 		}
-		
+
 		// TODO: find a better scaling factor
 		return stats.getStandardDeviation() * 10000.d;
 	}
-	
+
 	@Override
 	public boolean moreIsBetter()
 	{
@@ -74,7 +82,7 @@ public class JndRegionSize implements ColormapQuality
 		{
 		    Point2D p0 = poly.get(i);
 		    Point2D p1 = poly.get((i + 1) % poly.size());
-		    
+
 			sum = sum + p0.getX() * p1.getY() - p0.getY() * p1.getX();
 		}
 
