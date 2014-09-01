@@ -51,7 +51,7 @@ public class OverlayExamplePanel extends JPanel
 	private Color overlayColor;
 
 	private int fontSize;
-	
+
 	/**
 	 * @param colormap the colormap to use
 	 */
@@ -68,7 +68,7 @@ public class OverlayExamplePanel extends JPanel
 		this.colormap = colormap;
 		repaint();
 	}
-	
+
 	/**
 	 * @param color the font color
 	 */
@@ -76,22 +76,22 @@ public class OverlayExamplePanel extends JPanel
 	{
 		this.overlayColor = color;
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g1)
 	{
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
-		
+
 		Font derivedFont = g.getFont().deriveFont(Font.PLAIN, fontSize);
-		
+
 		Random r = new Random(123456);
 		int gridX = 20;
 		int gridY = 20;
-		
+
 		int width = IntMath.divide(getWidth(), gridX, RoundingMode.CEILING);
 		int height = IntMath.divide(getHeight(), gridY, RoundingMode.CEILING);
-		
+
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 		for (int y = 0; y < height; y++)
@@ -100,15 +100,15 @@ public class OverlayExamplePanel extends JPanel
 			{
 				double cx = r.nextDouble();
 				double cy = r.nextDouble();
-			
+
 				Color color = colormap.getColor(cx, cy);
-			
+
 				img.setRGB(x, y, color.getRGB());
 			}
 		}
-		
+
 		// width * gridX is not identical with getWidt() due to rounding
-		
+
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.drawImage(img, 0, 0, width * gridX, height * gridY, null);
 
@@ -125,8 +125,8 @@ public class OverlayExamplePanel extends JPanel
 
 		g.setColor(overlayColor);
 
-		float tx = 0;
-        float ty = 0;
+		float tx = 2;	// add some tiny distance offset to the top/left corner
+        float ty = 2;
         while (measurer.getPosition() < iterator.getEndIndex())
         {
             TextLayout layout = measurer.nextLayout(getWidth());

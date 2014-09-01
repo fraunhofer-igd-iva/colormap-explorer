@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import javax.imageio.ImageIO;
-import javax.imageio.spi.ImageReaderSpi;
+import javax.imageio.spi.ImageReaderWriterSpi;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -40,51 +40,12 @@ import com.google.common.base.Joiner;
  */
 class ImageFileFilter extends FileFilter
 {
-	private final ImageReaderSpi provider;
-
-	/**
-	 * This acutally works with all FileFilter implementations
-	 */
-	public static final Comparator<FileFilter> COMPARATOR = new Comparator<FileFilter>()
-	{
-		@Override
-		public int compare(FileFilter o1, FileFilter o2)
-		{
-			return o1.getDescription().compareTo(o2.getDescription());
-		}
-	};
-
-	public static final FileFilter ALL_IMAGES = new FileFilter()
-	{
-		@Override
-		public String getDescription()
-		{
-			String[] sufs = ImageIO.getReaderFileSuffixes();
-			Arrays.sort(sufs);
-			String sufStr = Joiner.on("; *.").join(sufs);
-
-			return "All images (*." + sufStr + ")";
-		}
-
-		@Override
-		public boolean accept(File f)
-		{
-			String[] sufs = ImageIO.getReaderFileSuffixes();
-			String name = f.getName().toLowerCase();
-
-			for (String suf : sufs) {
-				if (name.endsWith(suf.toLowerCase()))
-					return true;
-			}
-
-			return false;
-		}
-	};
+	private final ImageReaderWriterSpi provider;
 
 	/**
 	 * @param reader
 	 */
-	ImageFileFilter(ImageReaderSpi reader)
+	ImageFileFilter(ImageReaderWriterSpi reader)
 	{
 		this.provider = reader;
 	}

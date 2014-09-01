@@ -20,25 +20,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.spi.ImageReaderSpi;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -51,7 +43,6 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileFilter;
 
 import org.jbibtex.BibTeXDatabase;
 import org.jbibtex.BibTeXEntry;
@@ -64,11 +55,9 @@ import views.ColormapView;
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
 import algorithms.quality.ColorDivergenceVariance;
-import algorithms.quality.ColorDynamicBrightest;
-import algorithms.quality.ColorDynamicDarkest;
 import algorithms.quality.ColorDynamicDistBlack;
 import algorithms.quality.ColorDynamicDistWhite;
-import algorithms.quality.ColorDynamicWhiteContrast;
+import algorithms.quality.ColorExploitation;
 import algorithms.quality.ColormapQuality;
 import algorithms.sampling.CircularSampling;
 import algorithms.sampling.EvenDistributedDistancePoints;
@@ -76,9 +65,7 @@ import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.Colormap;
@@ -129,7 +116,7 @@ public class ConfigPanel extends JPanel
 
 		this.database = database;
 
-		this.fileDialog = createOpenImageDialog();
+		this.fileDialog = FileDialogs.createOpenImageDialog();
 
 		mapsCombo = new JComboBox<Colormap>(colorMaps.toArray(new Colormap[0]));
 
@@ -221,38 +208,6 @@ public class ConfigPanel extends JPanel
 		}
 	}
 
-	private static JFileChooser createOpenImageDialog()
-	{
-		JFileChooser fc = new JFileChooser();
-		String[] formats = ImageIO.getReaderFormatNames();
-		Set<ImageReaderSpi> readers = Sets.newHashSet();
-		List<FileFilter> filters = Lists.newArrayList();
-		fc.addChoosableFileFilter(ImageFileFilter.ALL_IMAGES);
-
-		// putting them in a set first avoids duplicate entries
-		for (String fmt : formats)
-		{
-			ImageReader reader = ImageIO.getImageReadersByFormatName(fmt).next();
-			readers.add(reader.getOriginatingProvider());
-		}
-
-		// we then add them to a list to be able to sort them later
-		for (ImageReaderSpi reader : readers)
-		{
-			filters.add(new ImageFileFilter(reader));
-		}
-
-		Collections.sort(filters, ImageFileFilter.COMPARATOR);
-
-		// we finally add them to the file chooser
-		for (FileFilter filter : filters)
-		{
-			fc.addChoosableFileFilter(filter);
-		}
-
-		return fc;
-	}
-
 	private Icon loadIconImage(String fname)
 	{
 		Icon icon = null;
@@ -283,21 +238,21 @@ public class ConfigPanel extends JPanel
 		List<ColormapQuality> measures = Lists.newArrayList();
 		List<String> results = Lists.newArrayList();
 
-//        measures.add(new ColorExploitation(circSampling));
+        measures.add(new ColorExploitation(circSampling, 3.0));
 //        measures.add(new JndRegionSize(circSampling));
         measures.add(new AttentionQuality(rectSampling));
-        measures.add(new ColorDynamicBrightest(rectSampling));
-		measures.add(new ColorDynamicDarkest(rectSampling));
+//        measures.add(new ColorDynamicBrightest(rectSampling));
+//		measures.add(new ColorDynamicDarkest(rectSampling));
 		measures.add(new ColorDynamicDistBlack(rectSampling));
 		measures.add(new ColorDynamicDistWhite(rectSampling));
-		measures.add(new ColorDynamicWhiteContrast(rectSampling));
-		measures.add(new ColorDivergenceVariance(smallDistSampling));
-		measures.add(new ColorDivergenceVariance(midDistSampling));
-		measures.add(new ColorDivergenceVariance(largeDistSampling));
+//		measures.add(new ColorDynamicWhiteContrast(rectSampling));
+//		measures.add(new ColorDivergenceVariance(smallDistSampling));
+//		measures.add(new ColorDivergenceVariance(midDistSampling));
+//		measures.add(new ColorDivergenceVariance(largeDistSampling));
 		measures.add(new ColorDivergenceVariance(overallDistSampling));
-		measures.add(new ColorAppearanceDivergence(0.05, 0.95, smallDistSampling));
-		measures.add(new ColorAppearanceDivergence(0.05, 0.95, midDistSampling));
-		measures.add(new ColorAppearanceDivergence(0.05, 0.95, largeDistSampling));
+//		measures.add(new ColorAppearanceDivergence(0.05, 0.95, smallDistSampling));
+//		measures.add(new ColorAppearanceDivergence(0.05, 0.95, midDistSampling));
+//		measures.add(new ColorAppearanceDivergence(0.05, 0.95, largeDistSampling));
 		measures.add(new ColorAppearanceDivergence(0.05, 0.95, overallDistSampling));
 
 		//        measures.add(new ColorDivergenceQuantile(0.5));

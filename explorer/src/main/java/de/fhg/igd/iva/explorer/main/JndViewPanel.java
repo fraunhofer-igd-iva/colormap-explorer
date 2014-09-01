@@ -32,7 +32,6 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -40,6 +39,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
@@ -63,7 +63,7 @@ import de.fhg.igd.iva.explorer.events.MyEventBus;
 public class JndViewPanel extends JPanel
 {
 	private static final Logger logger = LoggerFactory.getLogger(JndViewPanel.class);
-	
+
 	private static final long serialVersionUID = 5994307533367447487L;
 
 	private CachedColormap colormap;
@@ -71,15 +71,17 @@ public class JndViewPanel extends JPanel
 
 	private final JCheckBox drawColormap;
 	private final JCheckBox drawRegions;
-	
+
 	private JndRegionComputer regionComputer;
-	
+
+	private final JFileChooser fileChooser = FileDialogs.createSaveImageDialog();
+
 	public JndViewPanel()
 	{
 		MyEventBus.getInstance().register(this);
-		
+
 		setLayout(new BorderLayout());
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		ActionListener repaintListener = new ActionListener()
@@ -94,7 +96,7 @@ public class JndViewPanel extends JPanel
 		Component jndView = new JComponent()
 		{
 			private static final long serialVersionUID = 240761518096949199L;
-			
+
 			@Override
 			protected void paintComponent(Graphics g)
 			{
@@ -102,7 +104,7 @@ public class JndViewPanel extends JPanel
 			}
 		};
 
-		
+
 		drawColormap = new JCheckBox("Draw colormap", true);
 		drawColormap.addActionListener(repaintListener);
 		panel.add(drawColormap);
@@ -117,18 +119,7 @@ public class JndViewPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				try
-				{
-					String safeFilename = colormap.getName().replaceAll("\\W+", "_");
-					File tmpFile = Files.createTempFile("colormap_explorer_" + safeFilename + "_", ".png").toFile();
-					renderToImage(tmpFile);
-					Desktop dt = Desktop.getDesktop();
-				    dt.open(tmpFile);
-				}
-				catch (IOException e)
-				{
-					logger.error("Could not save file", e);
-				}
+				saveImageToFile();
 			}
 		});
 		panel.add(saveImageBtn);
@@ -137,7 +128,32 @@ public class JndViewPanel extends JPanel
 		add(panel, BorderLayout.NORTH);
 		add(jndView, BorderLayout.CENTER);
 	}
-	
+
+	private void saveImageToFile()
+	{
+		if (fileChooser.showSaveDialog(JndViewPanel.this) == JFileChooser.APPROVE_OPTION)
+		{
+			try
+			{
+				File file = fileChooser.getSelectedFile();
+				int extIdx = file.getName().lastIndexOf('.');
+				String ext = extIdx >= 0 ? file.getName().substring(extIdx + 1) : null;
+				if (ext == null) {
+					ext = "png";
+					file = new File(file.getAbsolutePath() + "." + ext);
+				}
+
+				renderToImage(file, ext);
+				Desktop dt = Desktop.getDesktop();
+			    dt.open(file);
+			}
+			catch (IOException e)
+			{
+				logger.error("Could not save file", e);
+			}
+		}
+	}
+
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
@@ -158,7 +174,7 @@ public class JndViewPanel extends JPanel
 	public void setVisible(boolean aFlag)
 	{
 		super.setVisible(aFlag);
-		
+
 		if (aFlag)
 		{
 			ColormapSelectionEvent event = MyEventBus.getLast(ColormapSelectionEvent.class);
@@ -175,12 +191,12 @@ public class JndViewPanel extends JPanel
 	{
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
-		
+
 		if (drawColormap.isSelected())
 		{
 			drawColormap(g);
 		}
-		
+
 		drawJndPoints(g);
 
 		if (drawRegions.isSelected())
@@ -191,28 +207,28 @@ public class JndViewPanel extends JPanel
 		{
 			fillJndRegions(g);
 		}
-		
+
 	}
 
-	private void renderToImage(File file)
+	private void renderToImage(File file, String format)
 	{
 		BufferedImage bi = new BufferedImage(getScreenWidth(), getScreenHeight(), BufferedImage.TYPE_INT_RGB);
 		Graphics2D gi = bi.createGraphics();
-		
+
 		drawColormap(gi);
 		drawJndPoints(gi);
 		drawJndRegions(gi);
-		
+
 		gi.dispose();
-		
+
 		try {
-			ImageIO.write(bi, "png", file);
+			ImageIO.write(bi, format, file);
 		}
 		catch (IOException e) {
 			logger.error("Could not save to file", e);
 		}
 	}
-	
+
 	private int getScreenWidth()
 	{
 		return Math.min(getWidth(), getHeight());
@@ -232,14 +248,14 @@ public class JndViewPanel extends JPanel
 	{
 		return my * (getScreenHeight() - 1);
 	}
-	
+
 	private void drawColormap(Graphics2D g)
 	{
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		
+
 		g.drawImage(colormap.getImage(), 0, 0, getScreenWidth(), getScreenHeight(), null);
 	}
-	
+
 	private void drawJndPoints(Graphics2D g)
 	{
 		g.setColor(Color.WHITE);
@@ -251,7 +267,7 @@ public class JndViewPanel extends JPanel
 			g.fillOval(wx - r, wy - r, 2 * r , 2 * r);
 		}
 	}
-	
+
 	private void fillJndRegions(Graphics2D g)
 	{
 		for (Point2D jndPt : regionComputer.getPoints())
@@ -262,36 +278,36 @@ public class JndViewPanel extends JPanel
 			g.fill(poly);
 		}
 	}
-	
+
 	private void drawJndRegions(Graphics2D g)
 	{
 		g.setColor(Color.BLACK);
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		for (Point2D jndPt : regionComputer.getPoints())
 		{
 			List<Point2D> pts = regionComputer.getRegion(jndPt);
 			Polygon poly = createPolygon(pts);
 			g.draw(poly);
 		}
-		
+
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
 	}
 
-	private Polygon createPolygon(List<Point2D> pts) 
+	private Polygon createPolygon(List<Point2D> pts)
 	{
         int[] x = new int[pts.size()];
         int[] y = new int[pts.size()];
-        
-        for (int i = 0; i < pts.size(); i++) 
+
+        for (int i = 0; i < pts.size(); i++)
         {
 			int wx = (int) mapXtoScreenX(pts.get(i).getX());
 			int wy = (int) mapYtoScreenY(pts.get(i).getY());
             x[i] = wx;
             y[i] = wy;
         }
-        
+
         return new Polygon(x, y, pts.size());
     }
 

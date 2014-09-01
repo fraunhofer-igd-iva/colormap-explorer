@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'application'
 
-mainClassName = "main.ColorMapExplorer"
+mainClassName = "de.fhg.igd.iva.explorer.main.ColorMapExplorer"
 
 repositories {
 	maven {

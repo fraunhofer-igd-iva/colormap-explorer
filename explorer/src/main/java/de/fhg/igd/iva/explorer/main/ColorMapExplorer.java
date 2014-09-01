@@ -111,10 +111,10 @@ public class ColorMapExplorer extends JFrame
 		List<Colormap> colorMaps = discoverColormaps();
 
 		BibTeXDatabase database = new BibTeXDatabase();
-		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib"))
+		try (InputStream bibtex = ColorMapExplorer.class.getResourceAsStream("/latex/colorBib.bib");
+			 InputStreamReader reader = new InputStreamReader(bibtex, Charsets.ISO_8859_1))
 		{
 			BibTeXParser bibtexParser = new BibTeXParser();
-			InputStreamReader reader = new InputStreamReader(bibtex, Charsets.ISO_8859_1);
 			database = bibtexParser.parse(reader);
 		}
 		catch (IOException e)
@@ -129,8 +129,8 @@ public class ColorMapExplorer extends JFrame
 		ColorMapExplorer frame = new ColorMapExplorer(colorMaps, database);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(728, 600);
-		frame.setLocationByPlatform(true);
+		frame.setSize(1160, 855);
+		frame.setLocationRelativeTo(null);
 
 		frame.setVisible(true);
 	}
