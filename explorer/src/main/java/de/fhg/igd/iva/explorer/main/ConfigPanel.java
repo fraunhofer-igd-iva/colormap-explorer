@@ -102,7 +102,6 @@ public class ConfigPanel extends JPanel
 
 	private JLabel descLabel;
 	private JLabel refsLabel;
-	private JLabel statsLabel;
 
 	private final JFileChooser fileDialog;
 
@@ -142,11 +141,7 @@ public class ConfigPanel extends JPanel
 		refsLabel = new JLabel();
 		refsLabel.setBorder(BorderFactory.createTitledBorder("References"));
 
-		statsLabel = new JLabel();
-		statsLabel.setBorder(BorderFactory.createTitledBorder("Statistics"));
-
 		cmInfoPanel.add(descLabel, BorderLayout.NORTH);
-		cmInfoPanel.add(statsLabel, BorderLayout.CENTER);
 		cmInfoPanel.add(refsLabel, BorderLayout.SOUTH);
 
 		cmPanel.add(cmInfoPanel, BorderLayout.SOUTH);
@@ -181,9 +176,6 @@ public class ConfigPanel extends JPanel
 
 		String refs = getBibTeX(colormap);
 		refsLabel.setText("<html>" + refs + "</html>");
-
-		String stats = getStats(colormap);
-		statsLabel.setText("<html>" + stats + "</html>");
 
 		MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
 		logger.debug("Selected colormap " + colormap);
@@ -224,50 +216,6 @@ public class ConfigPanel extends JPanel
 			logger.error("Could not load image", e);
 		}
 		return icon;
-	}
-
-	private String getStats(Colormap colormap)
-	{
-        SamplingStrategy circSampling = new CircularSampling(30);
-        SamplingStrategy rectSampling = new GridSampling(50);	// 50x50 = 2500 sample points
-		EvenDistributedDistancePoints overallDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000);
-		EvenDistributedDistancePoints smallDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0, 0.1);
-		EvenDistributedDistancePoints midDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0.1, 0.3);
-		EvenDistributedDistancePoints largeDistSampling = new EvenDistributedDistancePoints(new Random(12345), 2000, 0.3, 1);
-
-		// TODO: iterate over all available quality measures
-		List<ColormapQuality> measures = Lists.newArrayList();
-		List<String> results = Lists.newArrayList();
-
-        measures.add(new ColorExploitation(circSampling, 3.0));
-//        measures.add(new JndRegionSize(circSampling));
-        measures.add(new AttentionQuality(rectSampling));
-//        measures.add(new ColorDynamicBrightest(rectSampling));
-//		measures.add(new ColorDynamicDarkest(rectSampling));
-		measures.add(new ColorDynamicDistBlack(rectSampling));
-		measures.add(new ColorDynamicDistWhite(rectSampling));
-//		measures.add(new ColorDynamicWhiteContrast(rectSampling));
-//		measures.add(new ColorDivergenceVariance(smallDistSampling));
-//		measures.add(new ColorDivergenceVariance(midDistSampling));
-//		measures.add(new ColorDivergenceVariance(largeDistSampling));
-		measures.add(new ColorDivergenceVariance(overallDistSampling));
-//		measures.add(new ColorAppearanceDivergence(0.05, 0.95, smallDistSampling));
-//		measures.add(new ColorAppearanceDivergence(0.05, 0.95, midDistSampling));
-//		measures.add(new ColorAppearanceDivergence(0.05, 0.95, largeDistSampling));
-		measures.add(new ColorAppearanceDivergence(0.05, 0.95, overallDistSampling));
-
-		//        measures.add(new ColorDivergenceQuantile(0.5));
-//        measures.add(new ColorDivergenceQuantile(0.1));
-//        measures.add(new ColorDivergenceQuantile(0.9));
-
-		for (ColormapQuality measure : measures)
-		{
-			double quality = measure.getQuality(colormap);
-			results.add(String.format("%s: %.1f", measure.getName(), quality));
-		}
-
-		String stats = Joiner.on("<br/>").join(results);
-		return stats;
 	}
 
 	private String getBibTeX(KnownColormap colormap)

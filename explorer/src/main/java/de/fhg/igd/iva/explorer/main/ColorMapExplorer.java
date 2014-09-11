@@ -17,6 +17,7 @@
 package de.fhg.igd.iva.explorer.main;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,14 +67,15 @@ public class ColorMapExplorer extends JFrame
 
 		Preconditions.checkArgument(!colorMaps.isEmpty());
 
-		final ConfigPanel configPane = new ConfigPanel(colorMaps, database);
+		ConfigPanel configPane = new ConfigPanel(colorMaps, database);
 
-		final DecomposedViewPanel viewPanel = new DecomposedViewPanel();
-		final PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel();
-		final OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel();
-		final AnalysisPanel analysisPanel = new AnalysisPanel();
-		final JndViewPanel jndViewPanel = new JndViewPanel();
-		final ColormapPlotterPanel plotterPanel = new ColormapPlotterPanel();
+		DecomposedViewPanel viewPanel = new DecomposedViewPanel();
+		PointsExampleViewPanel pointsExampleView = new PointsExampleViewPanel();
+		OverlayExampleViewPanel overlayExampleView = new OverlayExampleViewPanel();
+		AnalysisPanel analysisPanel = new AnalysisPanel();
+		JndViewPanel jndViewPanel = new JndViewPanel();
+		ColormapPlotterPanel plotterPanel = new ColormapPlotterPanel();
+		CompareView comparePanel = new CompareView(colorMaps);
 
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Decomposed Colormap", viewPanel);
@@ -82,6 +84,7 @@ public class ColorMapExplorer extends JFrame
 		tabPane.add("Analysis View", analysisPanel);
 		tabPane.add("JND View", jndViewPanel);
 		tabPane.add("3D View", plotterPanel);
+		tabPane.add("Comparative View", comparePanel);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);
 		splitPane.setDividerLocation(250);

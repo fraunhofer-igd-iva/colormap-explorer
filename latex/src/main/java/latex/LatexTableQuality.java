@@ -198,8 +198,8 @@ public final class LatexTableQuality
 	
 	private static Range<Double> getMinMax(Collection<Double> quals)
 	{
-		double min = Double.MAX_VALUE;
-		double max = Double.MIN_VALUE;
+		double min = Double.POSITIVE_INFINITY;
+		double max = Double.NEGATIVE_INFINITY;
 
 		for (Double quality : quals)
 		{	
