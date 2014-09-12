@@ -25,6 +25,7 @@ import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -35,6 +36,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.quality.AttentionQuality;
 import algorithms.quality.ColorAppearanceDivergence;
@@ -49,10 +52,12 @@ import algorithms.sampling.GridSampling;
 import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
+import com.google.common.collect.Table;
 
 import de.fhg.igd.iva.colormaps.CachedColormap;
 import de.fhg.igd.iva.colormaps.Colormap;
@@ -69,13 +74,11 @@ public class CompareViewPanel extends JPanel
 	private JLabel statsLabel;
 	private CachedColormap cachedColormap;
 	private JPanel statsBars;
-	private List<ColormapQuality> metrics;
-	private Function<ColormapQuality, Range<Double>> ranges;
+	private Table<KnownColormap, ColormapQuality, Double> table;
 
-	public CompareViewPanel(List<KnownColormap> colorMaps, List<ColormapQuality> metrics, Function<ColormapQuality, Range<Double>> ranges)
+	public CompareViewPanel(Table<KnownColormap, ColormapQuality, Double> info)
 	{
-		this.metrics = metrics;
-		this.ranges = ranges;
+		this.table = info;
 
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new BorderLayout());
@@ -90,7 +93,7 @@ public class CompareViewPanel extends JPanel
 		statsPanel.add(statsLabel, BorderLayout.SOUTH);
 		add(statsPanel, BorderLayout.SOUTH);
 
-		mapsCombo = new JComboBox<KnownColormap>(colorMaps.toArray(new KnownColormap[0]));
+		mapsCombo = new JComboBox<KnownColormap>(table.rowKeySet().toArray(new KnownColormap[0]));
 		mapsCombo.addActionListener(new ActionListener()
 		{
 			@Override
@@ -130,28 +133,16 @@ public class CompareViewPanel extends JPanel
 
 		statsBars.removeAll();
 
-		Map<ColormapQuality, Double> stats = getStats(colormap);
+		Map<ColormapQuality, Double> row = table.row(colormap);
 
-		for (ColormapQuality metric : stats.keySet())
+		for (ColormapQuality metric : row.keySet())
 		{
 			statsBars.add(new JLabel(metric.getName()));
-			statsBars.add(new JStatBar(metric, ranges.apply(metric), stats.get(metric)));
+			statsBars.add(new JStatBar(metric, computeStats(metric), row.get(metric)));
 		}
 
-		String statsText = formatMap(stats);
+		String statsText = formatMap(row);
 		statsLabel.setText("<html>" + statsText + "</html>");
-	}
-
-	private Map<ColormapQuality, Double> getStats(Colormap colormap)
-	{
-		Map<ColormapQuality, Double> qualityMap = Maps.newLinkedHashMap();
-		for (ColormapQuality metric : metrics)
-		{
-			double quality = metric.getQuality(colormap);
-			qualityMap.put(metric, quality);
-		}
-
-		return qualityMap;
 	}
 
 	private String formatMap(Map<ColormapQuality, Double> qualityMap)
@@ -166,5 +157,17 @@ public class CompareViewPanel extends JPanel
 		return stats;
 	}
 
+	private DescriptiveStatistics computeStats(ColormapQuality metric)
+	{
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+
+		for (Colormap cm : table.rowKeySet())
+		{
+			double quality = table.get(cm, metric);
+			stats.addValue(quality);
+		}
+
+		return stats;
+	}
 
 }

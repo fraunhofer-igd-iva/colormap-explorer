@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
 import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.collect.Lists;
@@ -34,19 +36,19 @@ import de.fhg.igd.pcolor.util.ColorTools;
 
 /**
  * Computes the median divergence of a color map and related quantiles.
- * 
+ *
  * @author Simon Thum
  */
 public final class MedianDivergenceComputer {
-	
+
 	private static final ViewingConditions comparisonVc = ViewingConditions.sRGB_typical_envirnonment;
 
 	private Colormap colormap;
-	
+
 	private List<Point2D> points;
 
 	private double[] ratios;
-	
+
 	private MedianDivergenceComputer(Colormap colormap, List<Point2D> points) {
 		super();
 		this.colormap = colormap;
@@ -59,46 +61,46 @@ public final class MedianDivergenceComputer {
 		that.deriveMedianColormapToJNDRatio();
 		return that;
 	}
-	
+
 	public static MedianDivergenceComputer fromPoints(Colormap colormap, List<Point2D> points) {
 		MedianDivergenceComputer that = new MedianDivergenceComputer(colormap, points);
 		that.deriveMedianColormapToJNDRatio();
 		return that;
 	}
-	
+
 	public double getQuantile(double p) {
 		return ratios[(int) ((ratios.length-1) * p)];
 	}
-	
+
 	// TODO: move elsewhere
 	public static PColor convert(Color color) {
 		return PColor.create(CS_sRGB.instance, color.getColorComponents(new float[3]));
 	}
-	
+
 	// TODO: move elsewhere
 	public static double colorDiff(Color c1, Color c2) {
 		return ColorTools.distance(convert(c1), convert(c2), comparisonVc);
 	}
-	
+
 	private void deriveMedianColormapToJNDRatio() {
 		int len = points.size()/2;
 		ratios = new double[len];
 		Iterator<Point2D> ptIt = points.iterator();
-		
+
 		int i = 0;
 		while (i < len && ptIt.hasNext())
 		{
 			Point2D p1 = ptIt.next();
 			Point2D p2 = ptIt.next();
-	
+
 			double dist = p1.distance(p2);
-			
+
 			Color colorA = colormap.getColor(p1.getX(), p1.getY());
 			Color colorB = colormap.getColor(p2.getX(), p2.getY());
-			
+
 			// color distance
 			double cdist = colorDiff(colorA, colorB);
-			
+
 			// filter zero divisions, as long as the value distance is small
 			// DON'T protect colormaps that contain duplicate colors
 			if (cdist == 0 && dist < 0.05)
@@ -109,5 +111,5 @@ public final class MedianDivergenceComputer {
 		}
 		Arrays.sort(ratios);
 	}
-	
+
 }

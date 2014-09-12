@@ -39,9 +39,13 @@ import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
+import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
 
 import de.fhg.igd.iva.colormaps.Colormap;
 import de.fhg.igd.iva.colormaps.KnownColormap;
@@ -60,11 +64,21 @@ public class CompareView extends JPanel
 
 		List<ColormapQuality> metrics = getMetrics();
 
-		Function<ColormapQuality, Range<Double>> ranges = computesRanges(colorMaps, metrics);
+		ImmutableTable.Builder<KnownColormap, ColormapQuality, Double> builder = ImmutableTable.builder();
 
-		add(new CompareViewPanel(colorMaps, metrics, ranges));
-		add(new CompareViewPanel(colorMaps, metrics, ranges));
-		add(new CompareViewPanel(colorMaps, metrics, ranges));
+		for (KnownColormap cm : colorMaps)
+		{
+			for (ColormapQuality metric : metrics)
+			{
+				builder.put(cm, metric, metric.getQuality(cm));
+			}
+		}
+
+		Table<KnownColormap, ColormapQuality, Double> infoTable = builder.build();
+
+		add(new CompareViewPanel(infoTable));
+		add(new CompareViewPanel(infoTable));
+		add(new CompareViewPanel(infoTable));
 	}
 
 	private List<ColormapQuality> getMetrics()
@@ -102,34 +116,5 @@ public class CompareView extends JPanel
 
 		return measures;
 	}
-
-	private Function<ColormapQuality, Range<Double>> computesRanges(Collection<? extends Colormap> colorMaps, Collection<ColormapQuality> metrics)
-	{
-		Map<ColormapQuality, Range<Double>> result = Maps.newHashMap();
-
-		for (ColormapQuality metric : metrics)
-		{
-			double min = Double.POSITIVE_INFINITY;
-			double max = Double.NEGATIVE_INFINITY;
-
-			for (Colormap cm : colorMaps)
-			{
-				double quality = metric.getQuality(cm);
-				if (!Double.isInfinite(quality) && !Double.isNaN(quality))
-				{
-			    	if (quality > max)
-			    		max = quality;
-
-			    	if (quality < min)
-			    		min = quality;
-				}
-			}
-
-			result.put(metric, Range.closed(min, max));
-		}
-
-		return Functions.forMap(result);
-	}
-
 
 }

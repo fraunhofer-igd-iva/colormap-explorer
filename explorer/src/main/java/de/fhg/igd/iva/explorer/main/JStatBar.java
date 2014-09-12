@@ -20,14 +20,17 @@ package de.fhg.igd.iva.explorer.main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.math.RoundingMode;
 
 import javax.swing.JComponent;
 
-import com.google.common.collect.Range;
-import com.google.common.math.DoubleMath;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import algorithms.quality.ColormapQuality;
+
+import com.google.common.collect.Range;
+import com.google.common.math.DoubleMath;
 
 /**
  * TODO Type description
@@ -38,17 +41,20 @@ public class JStatBar extends JComponent
 	private static final long serialVersionUID = 259663603963750291L;
 	private ColormapQuality metric;
 	private double quality;
-	private Range<Double> range;
+	private DescriptiveStatistics stats;
+	private int insetX = 2;
+	private int insetY = 2;
 
 	/**
 	 * @param metric
 	 * @param range
+	 * @param descriptiveStatistics
 	 * @param double1
 	 */
-	public JStatBar(ColormapQuality metric, Range<Double> range, double quality)
+	public JStatBar(ColormapQuality metric, DescriptiveStatistics stats, double quality)
 	{
 		this.metric = metric;
-		this.range = range;
+		this.stats = stats;
 		this.quality = quality;
 	}
 
@@ -59,29 +65,57 @@ public class JStatBar extends JComponent
 	}
 
 	@Override
-	protected void paintComponent(Graphics g)
+	protected void paintComponent(Graphics g1)
 	{
-		super.paintComponent(g);
+		super.paintComponent(g1);
+
+		Graphics2D g = (Graphics2D) g1;
 
 		int width = getWidth() - 1;
 		int height = getHeight() - 1;
 
-		int insetX = 2;
-		int insetY = 2;
+		drawFrame(g, width, height);
 
+		int q10X = mapXToScreen(stats.getPercentile(10.0), width);
+		int q25X = mapXToScreen(stats.getPercentile(25.0), width);
+		int q50X = mapXToScreen(stats.getPercentile(50.0), width);
+		int q75X = mapXToScreen(stats.getPercentile(75.0), width);
+		int q90X = mapXToScreen(stats.getPercentile(90.0), width);
+
+		g.setColor(Color.PINK);
+		g.fillRect(insetX + q25X, insetY+1, q75X - q25X, height - 2 * insetY-1);
+		g.drawLine(insetX + q10X, height / 2, insetX + q90X, height / 2);
+
+		g.setColor(Color.RED);
+		g.drawLine(insetX + q50X, insetY+1, insetX + q50X, height - insetY-1);
+
+		int buttonX = mapXToScreen(quality, width);
+		drawButton(g, buttonX, height);
+	}
+
+	private void drawButton(Graphics2D g, int dx, int height)
+	{
+		int barWidth = 4;
+		g.setColor(Color.BLACK);
+		g.drawRect(insetX + dx - barWidth / 2, 0, barWidth, height);
+		g.setColor(Color.GRAY);
+		g.fillRect(insetX + dx - barWidth / 2, 0, barWidth, height);
+	}
+
+	private int mapXToScreen(double val, int width)
+	{
+		double min = stats.getMin();
+		double max = stats.getMax();
+
+		return DoubleMath.roundToInt((width - 2 * insetX) * (val - min) / (max - min), RoundingMode.HALF_UP);
+	}
+
+	private void drawFrame(Graphics2D g, int width, int height)
+	{
 		g.setColor(Color.WHITE);
 		g.fillRect(insetX, insetY, width - 2 * insetX, height - 2 * insetY);
 
 		g.setColor(Color.BLACK);
 		g.drawRect(insetX, insetY, width - 2 * insetX, height - 2 * insetY);
-
-		double min = range.lowerEndpoint().doubleValue();		// assume that the range is closed
-		double max = range.upperEndpoint().doubleValue();		// assume that the range is closed
-
-		int dx = DoubleMath.roundToInt((width - 2 * insetX) * (quality - min) / (max - min), RoundingMode.HALF_UP);
-		int barWidth = 4;
-		g.drawRect(insetX + dx - barWidth / 2, 0, barWidth, height);
-		g.setColor(Color.GRAY);
-		g.fillRect(insetX + dx - barWidth / 2, 0, barWidth, height);
 	}
 }
