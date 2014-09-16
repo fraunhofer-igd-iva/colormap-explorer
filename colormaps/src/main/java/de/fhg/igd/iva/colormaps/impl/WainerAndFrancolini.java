@@ -17,8 +17,11 @@
 package de.fhg.igd.iva.colormaps.impl;
 
 import java.awt.Color;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
+
+import com.google.common.math.DoubleMath;
 
 import de.fhg.igd.iva.colormaps.AbstractKnownColormap;
 import de.fhg.igd.iva.colormaps.ColorSpace;
@@ -35,21 +38,27 @@ public class WainerAndFrancolini extends AbstractKnownColormap {
 
 		checkRanges(x, y);
 
-		double fx = x;
-		int indexX = 0;
-		while (fx > 1 / 3.0f) {
-			indexX++;
-			fx -= 1 / 3.0f;
+		double df = 1 / 3.0;
+
+		int indexX = DoubleMath.roundToInt(x / df, RoundingMode.FLOOR);
+		int indexY = DoubleMath.roundToInt(y / df, RoundingMode.FLOOR);
+		double fx = 3.0 * (x % df);
+		double fy = 3.0 * (y % df);
+
+		// explicitly test for this corner cases -> rounding errors
+		if (x == 1.0)
+		{
+			indexX = 2;
+			fx = 1.0;
 		}
 
-		double fy = y;
-		int indexY = 0;
-		while (fy > 1 / 3.0f) {
-			indexY++;
-			fy -= 1 / 3.0f;
+		if (y == 1.0)
+		{
+			indexY = 2;
+			fy = 1.0;
 		}
 
-		return colorMaps[indexX][indexY].getColor(fx * 3, fy * 3);
+		return colorMaps[indexX][indexY].getColor(fx, fy);
 	}
 
 	@Override
