@@ -19,7 +19,7 @@ import java.util.List;
 public class Griscom55 extends GuoLabStyle {
 	
 	public Griscom55() {
-		super(constant1f(0.55f), linearBa(-4, 40, -10, -25));
+		super(a-> 0.55d, linearBa(-4, 40, -10, -25));
 	}
 
 	@Override

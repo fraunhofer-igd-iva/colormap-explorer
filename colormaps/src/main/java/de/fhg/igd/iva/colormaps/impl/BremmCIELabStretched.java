@@ -23,7 +23,8 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
 
 public class BremmCIELabStretched extends GuoLabStyle {
 	public BremmCIELabStretched() {
-		super(constant1f(55f), linearBa(-10, 40, -20, 35));
+		super(a -> 55d, linearBa(-10, 40, -20, 35));
+		java.util.function.Function<Double, Double> f = ((Double a) -> a);
 	}
 
 	@Override

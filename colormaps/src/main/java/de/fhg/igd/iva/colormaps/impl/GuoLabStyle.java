@@ -52,57 +52,24 @@ public abstract class GuoLabStyle extends AbstractKnownColormap
 		this.lightnessFunc = lightnessFunc;
 		this.chromaFunc = chromaFunc;
 	}
-	
-	public static Function<Double, Double> constant1f(double constant) {
-		final Double boxed = Double.valueOf(constant);
-		
-		return new Function<Double, Double>() {
-			
-			@Override
-			public Double apply(Double input) {
-				return boxed;
-			}
-		};
-	}
 
 	public static Function<Double, Double> cone(final float factor)
 	{
-		return new Function<Double, Double>()
-		{
-			@Override
-			public Double apply(Double input)
-			{
-				return 100.0f - (input * factor);
-			}
-		};
+		return (input) -> 100.0f - (input * factor);
 	}
 
 	public static Function<Double, Double> pseudoGaussian(float sigma)
 	{
 		final float sigmasquare = sigma * sigma;
-		return new Function<Double, Double>()
-		{
-			@Override
-			public Double apply(Double input)
-			{
-				return 100 * Math.exp(-((input * input) / 2 * sigmasquare));
-			}
-		};
+		return input -> 100 * Math.exp(-((input * input) / 2 * sigmasquare));
 	}
 
 	public static Function<Map.Entry<Double, Double>, Map.Entry<Double, Double>> linearAB(final float xOffset,
 			final float xFactor, final float yOffset, final float yFactor)
 	{
-		return new Function<Map.Entry<Double, Double>, Map.Entry<Double, Double>>()
-		{
-			@Override
-			public Entry<Double, Double> apply(Entry<Double, Double> input)
-			{
-				return new AbstractMap.SimpleEntry<>(
+		return input -> new AbstractMap.SimpleEntry<>(
 						xOffset + input.getKey() * xFactor,
 						yOffset + input.getValue() * yFactor);
-			}
-		};
 	}
 
 	public static Function<Map.Entry<Double, Double>, Map.Entry<Double, Double>> linearBa(
@@ -110,14 +77,9 @@ public abstract class GuoLabStyle extends AbstractKnownColormap
 			final float xFactor,
 			final float yOffset,
 			final float yFactor) {
-		return new Function<Map.Entry<Double,Double>, Map.Entry<Double,Double>>() {
-			@Override
-			public Entry<Double, Double> apply(Entry<Double, Double> input) {
-				return new AbstractMap.SimpleEntry<>(
+		return input -> new AbstractMap.SimpleEntry<>(
 						yOffset + input.getValue() * yFactor,
 						xOffset + input.getKey() * xFactor);
-			}
-		};
 	}
 	
 	@Override
