@@ -27,7 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Random;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -52,25 +52,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import views.ColormapView;
-import algorithms.quality.AttentionQuality;
-import algorithms.quality.ColorAppearanceDivergence;
-import algorithms.quality.ColorDivergenceVariance;
-import algorithms.quality.ColorDynamicDistBlack;
-import algorithms.quality.ColorDynamicDistWhite;
-import algorithms.quality.ColorExploitation;
-import algorithms.quality.ColormapQuality;
-import algorithms.sampling.CircularSampling;
-import algorithms.sampling.EvenDistributedDistancePoints;
-import algorithms.sampling.GridSampling;
-import algorithms.sampling.SamplingStrategy;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
-import de.fhg.igd.iva.colormaps.Colormap;
-import de.fhg.igd.iva.colormaps.KnownColormap;
 import de.fhg.igd.iva.colormaps.FileImageColormap;
+import de.fhg.igd.iva.colormaps.KnownColormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 import de.fhg.igd.iva.colorspaces.RGB;
 import de.fhg.igd.iva.colorspaces.XYZ;
@@ -160,7 +148,9 @@ public class ConfigPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				updateSelection();
+				KnownColormap colormap = (KnownColormap) mapsCombo.getSelectedItem();
+				MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
+				updateSelection(colormap);
 			}
 
 		});
@@ -169,16 +159,23 @@ public class ConfigPanel extends JPanel
 		MyEventBus.getInstance().register(this);
 	}
 
-	protected void updateSelection()
+	@Subscribe
+	public void onSelect(ColormapSelectionEvent event)
 	{
-		KnownColormap colormap = (KnownColormap) mapsCombo.getSelectedItem();
+		KnownColormap colormap = event.getSelection();
+		if (!Objects.equals(colormap, mapsCombo.getSelectedItem()))
+		{
+			updateSelection(colormap);
+			mapsCombo.setSelectedItem(colormap);
+		}
+	}
+
+	protected void updateSelection(KnownColormap colormap)
+	{
 		descLabel.setText("<html>" + colormap.getDescription() + "</html>");
 
 		String refs = getBibTeX(colormap);
 		refsLabel.setText("<html>" + refs + "</html>");
-
-		MyEventBus.getInstance().post(new ColormapSelectionEvent(colormap));
-		logger.debug("Selected colormap " + colormap);
 	}
 
 	protected void importImage(Component parent)

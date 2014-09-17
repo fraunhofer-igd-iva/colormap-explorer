@@ -18,18 +18,14 @@
 package de.fhg.igd.iva.explorer.main;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -44,10 +40,9 @@ import algorithms.quality.ColormapQuality;
 
 import com.google.common.collect.Table;
 
-import de.fhg.igd.iva.colormaps.CachedColormap;
 import de.fhg.igd.iva.colormaps.Colormap;
-import de.fhg.igd.iva.colormaps.ImageBasedColormap;
 import de.fhg.igd.iva.colormaps.KnownColormap;
+import de.fhg.igd.iva.colormaps.impl.ConstantColormap;
 
 /**
  * TODO Type description
@@ -57,10 +52,9 @@ public class CompareViewPanel extends JPanel
 {
 	private static final long serialVersionUID = -262177345702993230L;
 	private JComboBox<KnownColormap> mapsCombo;
-	private JLabel statsLabel;
-	private CachedColormap cachedColormap;
 	private JPanel statsBars;
 	private Table<KnownColormap, ColormapQuality, Double> table;
+	private ColormapPanel cmView;
 
 	public CompareViewPanel(Table<KnownColormap, ColormapQuality, Double> info)
 	{
@@ -79,6 +73,10 @@ public class CompareViewPanel extends JPanel
 //		statsPanel.add(statsLabel, BorderLayout.SOUTH);
 		add(statsPanel, BorderLayout.SOUTH);
 
+		cmView = new ColormapPanel(new ConstantColormap());
+		cmView.setBorder(new EmptyBorder(5, 0, 5, 0));
+		add(cmView, BorderLayout.CENTER);
+
 		mapsCombo = new JComboBox<KnownColormap>(table.rowKeySet().toArray(new KnownColormap[0]));
 		mapsCombo.addActionListener(new ActionListener()
 		{
@@ -91,36 +89,15 @@ public class CompareViewPanel extends JPanel
 		});
 		mapsCombo.setSelectedIndex(0);
 
-		JComponent cmView = new JComponent()
-		{
-			private static final long serialVersionUID = 240761518096949199L;
-
-			@Override
-			protected void paintComponent(Graphics g1)
-			{
-				int size = Math.min(getWidth(), getHeight());
-
-				Graphics2D g = (Graphics2D) g1;
-				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				g.drawImage(getCachedColormap().getImage(), 0, 0, size, size, null);
-			}
-		};
-		cmView.setBorder(new EmptyBorder(5, 0, 5, 0));
-		add(cmView, BorderLayout.CENTER);
-
-
 		add(mapsCombo, BorderLayout.NORTH);
 	}
 
-	protected ImageBasedColormap getCachedColormap()
-	{
-		return cachedColormap;
-	}
 
 	protected void updateSelection()
 	{
 		KnownColormap colormap = (KnownColormap) mapsCombo.getSelectedItem();
-		cachedColormap = new CachedColormap(colormap, 512, 512);
+
+		cmView.setColormap(colormap);
 
 		statsBars.removeAll();
 

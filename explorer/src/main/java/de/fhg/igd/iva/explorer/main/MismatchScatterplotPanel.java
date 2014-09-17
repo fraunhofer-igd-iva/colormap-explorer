@@ -35,7 +35,7 @@ import de.fhg.igd.iva.colormaps.Colormap;
  * 	who shamelessly used as a template code from
  * @author Martin Steiger
  */
-public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
+public class MismatchScatterplotPanel extends JPanel
 {
 	private static final Color NORMAL_DOT_COLOR = new Color(0, 0, 0, 0.1f);
 
@@ -44,19 +44,19 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	private static final Color HELPER_LINE_COLOR = new Color(0, 0, 0, 0.5f);
 
 	private static final Color BORDERLINE_DOT_COLOR = new Color(1,0,0,0.5f);
-	
+
 	private static final long serialVersionUID = 4842610449905121603L;
 
 	private Colormap colormap;
 
 	private int lines;
-	
+
 	private boolean useLog;
 
 	private List<Point2D> points;
 
 	private MedianDivergenceComputer ratioStats;
-	
+
 	/**
 	 * @param colormap the colormap for the points
 	 * @param useLog use logarithmic scale
@@ -70,13 +70,12 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 	/**
 	 * @param colormap the colormap for the points
 	 */
-	@Override
 	public void setColormap(Colormap colormap)
 	{
 		this.colormap = colormap;
 		repaint();
 	}
-	
+
 	/**
 	 * @param num the number of points
 	 */
@@ -86,13 +85,13 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 		this.points = newPoints;
 		this.ratioStats = stats;
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g1)
 	{
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
-		
+
 		int dia = 3;
 
 		double maxX = getWidth() - dia;
@@ -100,42 +99,42 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 
 		Object oldAAhint = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		Iterator<Point2D> pstr = points.iterator();
-		
+
 		double medianRatio = ratioStats.getQuantile(0.5);
 
 		for (int i = 0; i < lines; i++)
 		{
 			Point2D p1 = pstr.next();
 			Point2D p2 = pstr.next();
-	
+
 			double dist = p1.distance(p2);
-			
+
 			Color colorA = colormap.getColor(p1.getX(), p1.getY());
 			Color colorB = colormap.getColor(p2.getX(), p2.getY());
-			
+
 			// roughly 0-100
 			double cdist = MedianDivergenceComputer.colorDiff(colorA, colorB);
-			
+
 			// make less relevant dots red
 			if (cdist < 1.0 || dist == 0 || dist > 1.0f)
 				g.setColor(BORDERLINE_DOT_COLOR);
 			else
 				g.setColor(NORMAL_DOT_COLOR);
-			
+
 			// normalize
 			cdist /= medianRatio;
-			
+
 			int xCoord = (int)(maxX * dist);
 			int yCoord = getYPos(maxY, dist, cdist);
 			g.fillOval(xCoord, yCoord, dia, dia);
 		}
-		
+
 		double upperQuantile = ratioStats.getQuantile(0.95);
 		double lowerQuantile = ratioStats.getQuantile(0.05);
-		
-		
+
+
 		if (useLog) {
 			g.setColor(MEDIAN_LINE_COLOR);
 			int yc = getYPos(maxY, 1, 1);
@@ -150,16 +149,16 @@ public class MismatchScatterplotPanel extends JPanel implements ColormapPanel
 			g.setColor(MEDIAN_LINE_COLOR);
 			int yc = getYPos(maxY, 1, 1);
 			g.drawLine(0, (int)maxY, (int)maxX, yc);
-			
+
 			g.setColor(HELPER_LINE_COLOR);
 			yc = getYPos(maxY, 1, lowerQuantile/medianRatio);
 			g.drawLine(0, (int)maxY, (int)maxX, yc);
 			yc = getYPos(maxY, 1, upperQuantile/medianRatio);
 			g.drawLine(0, (int)maxY, (int)maxX, yc);
-			
-			String text = String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f", 
+
+			String text = String.format("Median ratio delta E to colormap distance: %.1f, Lower: %.1f Upper: %.1f",
 					medianRatio, lowerQuantile, upperQuantile);
-			
+
 			g.drawString(text, 50, 50);
 		}
 

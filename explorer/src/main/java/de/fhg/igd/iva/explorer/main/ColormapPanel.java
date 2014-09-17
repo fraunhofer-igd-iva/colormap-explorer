@@ -16,17 +16,63 @@
 
 package de.fhg.igd.iva.explorer.main;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
+
+import de.fhg.igd.iva.colormaps.CachedColormap;
 import de.fhg.igd.iva.colormaps.Colormap;
 
 /**
- * Interface for panels that deal with a given colormap.
- * @author Simon Thum
+ * A panel that draw a square-shaped colormap
+ * @author Martin Steiger
  */
-public interface ColormapPanel {
+public class ColormapPanel extends JPanel
+{
+	private static final long serialVersionUID = 240761518096949199L;
+
+	private CachedColormap colormap;
+
+	private final int size;
 
 	/**
-	 * @param colormap the colormap for the panel
+	 * Uses a 512x512 image for caching
+	 * @param constantColormap
 	 */
-	void setColormap(Colormap colormap);
-	
+	public ColormapPanel(Colormap colormap)
+	{
+		this(colormap, 512);
+	}
+
+	/**
+	 * @param colormap the colormap to draw
+	 * @param size the size of the cache image
+	 */
+	public ColormapPanel(Colormap colormap, int size)
+	{
+		this.size = size;
+		this.colormap = new CachedColormap(colormap, size, size);
+	}
+
+	@Override
+	protected void paintComponent(Graphics g1)
+	{
+		int screenSize = Math.min(getWidth(), getHeight());
+
+		Graphics2D g = (Graphics2D) g1;
+		g.drawImage(colormap.getImage(), 0, 0, screenSize, screenSize, null);
+	}
+
+	public CachedColormap getColormap()
+	{
+		return colormap;
+	}
+
+	public void setColormap(Colormap colormap)
+	{
+		this.colormap = new CachedColormap(colormap, size, size);
+		repaint();
+	}
+
 }

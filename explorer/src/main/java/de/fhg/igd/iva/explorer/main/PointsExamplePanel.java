@@ -30,14 +30,14 @@ import de.fhg.igd.iva.colormaps.Colormap;
  * Displays colored points on a given background
  * @author Martin Steiger
  */
-public class PointsExamplePanel extends JPanel implements ColormapPanel
+public class PointsExamplePanel extends JPanel
 {
 	private static final long serialVersionUID = 4842610449905121603L;
 
 	private Colormap colormap;
 
 	private int alpha;
-	
+
 	/**
 	 * @param colormap the colormap for the points
 	 */
@@ -46,13 +46,12 @@ public class PointsExamplePanel extends JPanel implements ColormapPanel
 		this.colormap = colormap;
 	}
 
-	@Override
 	public void setColormap(Colormap colormap)
 	{
 		this.colormap = colormap;
 		repaint();
 	}
-	
+
 	/**
 	 * @param alpha the transparency of the points
 	 */
@@ -60,13 +59,13 @@ public class PointsExamplePanel extends JPanel implements ColormapPanel
 	{
 		this.alpha = alpha;
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g1)
 	{
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D)g1;
-		
+
 		Random r = new Random(123456);
 		int count = 100;
 		int dia = 15;
@@ -81,21 +80,21 @@ public class PointsExamplePanel extends JPanel implements ColormapPanel
 		{
 			int x = (int) (r.nextDouble() * maxX);
 			int y = (int) (r.nextDouble() * maxY);
-			
+
 			float cx = r.nextFloat();
 			float cy = r.nextFloat();
-			
+
 			Color color = colormap.getColor(cx, cy);
-			
+
 			if (color.getAlpha() != alpha)
 			{
 				color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
 			}
-			
+
 			g.setColor(color);
 			g.fillOval(x, y, dia, dia);
 		}
-		
+
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAhint);
 	}
 

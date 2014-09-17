@@ -42,8 +42,8 @@ public class PointsExampleViewPanel extends JPanel
 	private final List<Color> backgrounds = ImmutableList.of(Color.WHITE, Color.GRAY, Color.BLACK);
 	private final List<Integer> alphas = ImmutableList.of(64, 128, 192, 255);
 
-	private final List<ColormapPanel> panels = Lists.newArrayList();
-	
+	private final List<PointsExamplePanel> panels = Lists.newArrayList();
+
 	/**
 	 * Default constructor
 	 */
@@ -51,9 +51,9 @@ public class PointsExampleViewPanel extends JPanel
 	{
 		int rows = backgrounds.size();
 		int cols = alphas.size();
-		
+
 		setLayout(new GridLayout(rows, cols, 5, 5));
-		
+
 		for (int row = 0; row < rows; row++)
 		{
 			for (int col = 0; col < cols; col++)
@@ -65,7 +65,7 @@ public class PointsExampleViewPanel extends JPanel
 				add(mini);
 			}
 		}
-		
+
 		// get last selection event and trigger it manually to be up to date
 		ColormapSelectionEvent selEvent = MyEventBus.getLast(ColormapSelectionEvent.class);
 		if (selEvent != null)
@@ -75,12 +75,12 @@ public class PointsExampleViewPanel extends JPanel
 
 		MyEventBus.getInstance().register(this);
 	}
-	
+
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
 		Colormap colormap = event.getSelection();
-		for (ColormapPanel panel : panels)
+		for (PointsExamplePanel panel : panels)
 		{
 			panel.setColormap(colormap);
 		}
