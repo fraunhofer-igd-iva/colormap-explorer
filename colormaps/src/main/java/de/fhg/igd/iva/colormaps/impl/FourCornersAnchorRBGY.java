@@ -50,6 +50,12 @@ public class FourCornersAnchorRBGY extends FourCornersAnchorColorMapParameteriza
 	}
 
 	@Override
+	public String toString()
+	{
+		return getName();
+	}
+
+	@Override
 	public List<String> getReferences()
 	{
 		return Collections.emptyList();

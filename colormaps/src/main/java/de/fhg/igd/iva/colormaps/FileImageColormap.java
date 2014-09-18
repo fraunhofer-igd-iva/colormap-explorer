@@ -67,6 +67,12 @@ public class FileImageColormap extends ImageBasedColormap implements KnownColorm
 	}
 
 	@Override
+	public String toString()
+	{
+		return getName();
+	}
+
+	@Override
 	public String getDescription()
 	{
 		return desc;
