@@ -38,8 +38,10 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
@@ -75,10 +77,40 @@ public class JndViewPanel extends JPanel
 
 	private final JCheckBox drawColormap;
 	private final JCheckBox drawRegions;
+	private final JComboBox<Double> jndDistanceCombo;
+	private final JComboBox<RegionSampling> jndRegionCombo;
 
 	private JndRegionComputer regionComputer;
 
 	private final JFileChooser fileChooser = FileDialogs.createSaveImageDialog();
+
+	private static class RegionSampling
+	{
+		private final int angles;
+		private final double stepSize;
+
+		public RegionSampling(int angles, double stepSize)
+		{
+			this.angles = angles;
+			this.stepSize = stepSize;
+		}
+
+		public int getAngles()
+		{
+			return angles;
+		}
+
+		public double getStepSize()
+		{
+			return stepSize;
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.format("%d - %.4f", angles, stepSize);
+		}
+	}
 
 	public JndViewPanel()
 	{
@@ -116,6 +148,35 @@ public class JndViewPanel extends JPanel
 		drawRegions = new JCheckBox("Draw regions", true);
 		drawRegions.addActionListener(repaintListener);
 		panel.add(drawRegions);
+
+		jndDistanceCombo = new JComboBox<Double>();
+		jndDistanceCombo.addItem(1.0);
+		jndDistanceCombo.addItem(2.0);
+		jndDistanceCombo.addItem(3.0);
+		jndDistanceCombo.addItem(4.0);
+		jndDistanceCombo.addItem(5.0);
+		jndDistanceCombo.setSelectedIndex(2);
+		panel.add(new JLabel("JND Threshold"));
+		panel.add(jndDistanceCombo);
+
+		jndRegionCombo = new JComboBox<RegionSampling>();
+		jndRegionCombo.addItem(new RegionSampling(32, 0.005));
+		jndRegionCombo.addItem(new RegionSampling(128, 0.002));
+		jndRegionCombo.addItem(new RegionSampling(256, 0.0005));
+		jndDistanceCombo.setSelectedIndex(1);
+		panel.add(new JLabel("Region Sampling"));
+		panel.add(jndRegionCombo);
+
+		ActionListener updateSamplingListener = new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				updateSampling();
+			}
+		};
+		jndRegionCombo.addActionListener(updateSamplingListener);
+		jndDistanceCombo.addActionListener(updateSamplingListener);
 
 		JButton saveImageBtn = new JButton("Save Image");
 		saveImageBtn.addActionListener(new ActionListener()
@@ -169,7 +230,17 @@ public class JndViewPanel extends JPanel
 		int sampleRate = 200;
 //		GridSampling sampling = new GridSampling(sampleRate);
 		CircularSampling sampling = new CircularSampling(sampleRate);
-		regionComputer = new JndRegionComputer(colormap, sampling, 3.0);
+		regionComputer = new JndRegionComputer(colormap, sampling);
+
+		updateSampling();
+	}
+
+	private void updateSampling()
+	{
+		Double distanceThreshold = jndDistanceCombo.getItemAt(jndDistanceCombo.getSelectedIndex());
+		RegionSampling regionSampling = jndRegionCombo.getItemAt(jndRegionCombo.getSelectedIndex());
+		regionComputer.setJndThreshold(distanceThreshold.doubleValue());
+		regionComputer.setRegionSampling(regionSampling.getAngles(), regionSampling.getStepSize());
 
 		final SwingProgressListener progress1 = new SwingProgressListener(this, "Computing JND points")
 		{
@@ -328,9 +399,12 @@ public class JndViewPanel extends JPanel
 		for (Point2D jndPt : regionComputer.getPoints())
 		{
 			List<Point2D> pts = regionComputer.getRegion(jndPt);
-			Polygon poly = createPolygon(pts);
-			g.setColor(new Color(regionComputer.getPColor(jndPt).getARGB()));
-			g.fill(poly);
+			if (pts != null)	// the computation could have been cancelled and the region undefined
+			{
+				Polygon poly = createPolygon(pts);
+				g.setColor(new Color(regionComputer.getPColor(jndPt).getARGB()));
+				g.fill(poly);
+			}
 		}
 	}
 

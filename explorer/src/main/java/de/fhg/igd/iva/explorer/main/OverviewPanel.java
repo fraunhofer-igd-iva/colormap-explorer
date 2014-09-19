@@ -106,6 +106,9 @@ public class OverviewPanel extends JPanel
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
+		if (!this.isVisible())
+			return;
+
 		KnownColormap colormap = event.getSelection();
 		if (!Objects.equals(colormap, list.getSelectedValue()))
 		{

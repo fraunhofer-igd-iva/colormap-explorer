@@ -52,24 +52,40 @@ public class JndRegionComputer
 	private Map<Point2D, PColor> jndPoints = new MapMaker().concurrencyLevel(1).makeMap();
 	private Map<Point2D, List<Point2D>> jndRegions = new MapMaker().concurrencyLevel(1).makeMap();
 
-	private final double jndThreshold;
 	private final SamplingStrategy sampling;
 	private final Colormap colormap;
+
+	private double jndThreshold = 3.0;
+	private int angleSteps = 128;
+	private double stepSize = 0.0005;
 
 	/**
 	 * @param colormap the colormap to use
 	 * @param sampling the sampling strategy for finding the jnd points
 	 * @param jndThreshold the jnd threshold for the set of distinguishable points
 	 */
-	public JndRegionComputer(Colormap colormap, SamplingStrategy sampling, double jndThreshold)
+	public JndRegionComputer(Colormap colormap, SamplingStrategy sampling)
 	{
 		this.colormap = colormap;
 		this.sampling = sampling;
+	}
+
+	public void setJndThreshold(double jndThreshold)
+	{
+		if (jndThreshold == this.jndThreshold)
+			return;
+
+		jndPoints.clear();
+		jndRegions.clear();
+
 		this.jndThreshold = jndThreshold;
 	}
 
 	public void computePoints(final ProgressListener progress)
 	{
+		if (!jndPoints.isEmpty())
+			return;
+
 		Deque<PColor> list = new LinkedList<PColor>();
 
 		final Collection<Point2D> samples = sampling.getPoints();
@@ -110,6 +126,9 @@ public class JndRegionComputer
 
 	public void computeJndRegions(ProgressListener listener)
 	{
+		if (!jndRegions.isEmpty())
+			return;
+
 		int size = jndPoints.keySet().size();
 
 		listener.start(size);
@@ -130,9 +149,6 @@ public class JndRegionComputer
 		Color color = colormap.getColor(mx, my);
 		PColor pcolor = PColor.create(COLOR_SPACE, color.getColorComponents(new float[3]));
 
-		int angleSteps = 128;
-		double sampleRateDist = 0.0005;
-
 		List<Point2D> pts = Lists.newArrayList();
 
 		for (int i = 0; i < angleSteps; i++)
@@ -146,7 +162,7 @@ public class JndRegionComputer
 
 			while (true)
 			{
-				mapDist += sampleRateDist;
+				mapDist += stepSize;
 
 				double px = mx + dx * mapDist;
 				double py = my + dy * mapDist;
@@ -203,5 +219,20 @@ public class JndRegionComputer
 	public PColor getPColor(Point2D jndPt)
 	{
 		return jndPoints.get(jndPt);
+	}
+
+	/**
+	 * @param angles the number of angles to test
+	 * @param stepSize the step size to find the threshold
+	 */
+	public void setRegionSampling(int angles, double stepSize)
+	{
+		if (angles == angleSteps && stepSize == this.stepSize)
+			return;
+
+		jndRegions.clear();
+
+		this.angleSteps = angles;
+		this.stepSize = stepSize;
 	}
 }

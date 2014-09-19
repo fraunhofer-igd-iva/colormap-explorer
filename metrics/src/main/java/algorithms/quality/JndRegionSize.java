@@ -50,7 +50,8 @@ public class JndRegionSize implements ColormapQuality
 	@Override
 	public double getQuality(Colormap colormap)
 	{
-		JndRegionComputer computer = new JndRegionComputer(colormap, sampling, 3.0);
+		JndRegionComputer computer = new JndRegionComputer(colormap, sampling);
+		computer.setJndThreshold(3.0);
 
 		computer.computePoints(new LoggingProgressListener(logger, "Sampling"));
 		computer.computeJndRegions(new LoggingProgressListener(logger, "Computing jnd regions"));
