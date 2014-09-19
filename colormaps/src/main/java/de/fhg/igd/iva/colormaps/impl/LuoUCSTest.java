@@ -30,7 +30,7 @@ public class LuoUCSTest extends GuoLabStyle
 {
 	public LuoUCSTest()
 	{
-		super(constant1f(70f), linearAB(20, 80, 30, -60));
+		super(a->70d, linearAB(20, 80, 30, -60));
 	}
 
 	@Override

@@ -23,7 +23,7 @@ import de.fhg.igd.iva.colormaps.ColorSpace;
 
 public class BremmCIELabRegular extends GuoLabStyle {
 	public BremmCIELabRegular() {
-		super(constant1f(55f), linearBa(0, -55, 10, 55));
+		super(f -> 55d, linearBa(0, -55, 10, 55));
 	}
 
 	@Override
