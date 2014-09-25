@@ -61,7 +61,7 @@ public class JStatBar extends JComponent
 	@Override
 	public Dimension getPreferredSize()
 	{
-		return new Dimension(80, 15);
+		return new Dimension(80, 19);
 	}
 
 	@Override

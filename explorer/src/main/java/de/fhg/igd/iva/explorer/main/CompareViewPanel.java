@@ -121,7 +121,7 @@ public class CompareViewPanel extends JPanel
 		statsBars.add(new JLabel("\u2190Worse"), gbcStatL);
 		statsBars.add(new JLabel("Better\u2192"), gbcStatR);
 
-		GridBagConstraints gbcSpace = new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		GridBagConstraints gbcSpace = new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 0), 0, 0);
 		JSeparator spacing = new JSeparator(SwingConstants.HORIZONTAL);
 		statsBars.add(spacing, gbcSpace);
 

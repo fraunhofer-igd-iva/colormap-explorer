@@ -70,6 +70,13 @@ public class ColormapPlotPanel extends JPanel
         add((Component) chart.getCanvas());
         setCoordinateConverter(CoordinateConverters.createRgb());
     }
+    
+    public void enableRendering(boolean aFlag) 
+    {
+    	if (!aFlag)
+    		chart.pauseAnimator(); else
+    		chart.resumeAnimator();
+    }
 
     void setLabels(String labelX, String labelY, String labelZ)
     {

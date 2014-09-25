@@ -92,6 +92,13 @@ public class ColormapPlotter extends JPanel
 //			colormap = new CachedColormap(event.getSelection(), 512, 512);
 			panel.setColormap(selection);
 		}
-
+	}
+	
+	public void enableRendering(boolean aFlag) 
+	{
+		for (ColormapPlotPanel panel : panels)
+		{
+			panel.enableRendering(aFlag);
+		}
 	}
 }

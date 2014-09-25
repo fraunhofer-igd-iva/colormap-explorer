@@ -56,6 +56,8 @@ public class ColormapPlotterPanel extends JPanel
 	{
 		super.setVisible(aFlag);
 
+		plots.enableRendering(aFlag);
+		
 		if (aFlag)
 		{
 			ColormapSelectionEvent event = MyEventBus.getLast(ColormapSelectionEvent.class);
