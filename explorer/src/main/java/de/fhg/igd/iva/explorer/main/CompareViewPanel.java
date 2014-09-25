@@ -73,7 +73,7 @@ public class CompareViewPanel extends JPanel
 //		statsPanel.add(statsLabel, BorderLayout.SOUTH);
 		add(statsPanel, BorderLayout.SOUTH);
 
-		cmView = new ColormapPanel(new ConstantColormap());
+		cmView = new ColormapPanel(new ConstantColormap(), 256);
 		cmView.setBorder(new EmptyBorder(5, 0, 5, 0));
 		add(cmView, BorderLayout.CENTER);
 
@@ -109,39 +109,52 @@ public class CompareViewPanel extends JPanel
 		GridBagConstraints gbcName = new GridBagConstraints(0, 0, 1, 1, 0.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets, 0, 0);
 		GridBagConstraints gbcQual = new GridBagConstraints(1, 0, 1, 1, 0.0, 1.0, GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets5, 0, 0);
 		GridBagConstraints gbcRank = new GridBagConstraints(2, 0, 1, 1, 0.0, 1.0, GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets5, 0, 0);
-		GridBagConstraints gcbStat = new GridBagConstraints(3, 0, 1, 1, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets5, 0, 0);
+		GridBagConstraints gbcStatL = new GridBagConstraints(3, 0, 1, 1, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.NONE, insets5, 0, 0);
+		GridBagConstraints gbcStatR = new GridBagConstraints(4, 0, 1, 1, 1.0, 1.0, GridBagConstraints.LINE_END, GridBagConstraints.NONE, insets5, 0, 0);
+		GridBagConstraints gbcStat = new GridBagConstraints(3, 0, 2, 1, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets5, 0, 0);
 
 		statsBars.add(new JLabel("Name"), gbcName);
 		statsBars.add(new JLabel("Score"), gbcQual);
 		statsBars.add(new JLabel("Rank"), gbcRank);
 
-		GridBagConstraints gbcSpace = new GridBagConstraints(0, 1, 4, 1, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		// maybe use a best/worst arrow down marker instead? unicode: \u2193
+		statsBars.add(new JLabel("\u2190Worse"), gbcStatL);
+		statsBars.add(new JLabel("Better\u2192"), gbcStatR);
+
+		GridBagConstraints gbcSpace = new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insets, 0, 0);
 		JSeparator spacing = new JSeparator(SwingConstants.HORIZONTAL);
 		statsBars.add(spacing, gbcSpace);
+
+		int count = table.rowKeySet().size();
 
 		int rowIdx = 2;
 		for (ColormapQuality metric : row.keySet())
 		{
 			double quality = row.get(metric);
 			DescriptiveStatistics stats = computeStats(metric);
-			int rank = Arrays.binarySearch(stats.getSortedValues(), quality) + 1;
+			int index = Arrays.binarySearch(stats.getSortedValues(), quality);
+			int rank = count - index;
 
 			gbcName = (GridBagConstraints) gbcName.clone();
 			gbcQual = (GridBagConstraints) gbcQual.clone();
 			gbcRank = (GridBagConstraints) gbcRank.clone();
-			gcbStat = (GridBagConstraints) gcbStat.clone();
+			gbcStat = (GridBagConstraints) gbcStat.clone();
 
 			gbcName.gridy = rowIdx;
 			gbcQual.gridy = rowIdx;
 			gbcRank.gridy = rowIdx;
-			gcbStat.gridy = rowIdx;
+			gbcStat.gridy = rowIdx;
 
 			statsBars.add(new JLabel(metric.getName()), gbcName);
 			statsBars.add(new JLabel(String.format("%.2f", quality)), gbcQual);
 			statsBars.add(new JLabel(Integer.toString(rank)), gbcRank);
-			statsBars.add(new JStatBar(metric, stats, quality), gcbStat);
+			statsBars.add(new JStatBar(metric, stats, quality), gbcStat);
 			rowIdx++;
 		}
+		
+		// I find it strange that both revalidate and repaint must be explicitly called here
+		revalidate();
+		repaint();
 	}
 
 	private DescriptiveStatistics computeStats(ColormapQuality metric)

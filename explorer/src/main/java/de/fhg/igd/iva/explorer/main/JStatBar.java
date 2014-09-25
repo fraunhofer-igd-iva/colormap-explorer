@@ -74,7 +74,11 @@ public class JStatBar extends JComponent
 		int width = getWidth() - 1;
 		int height = getHeight() - 1;
 
-		drawFrame(g, width, height);
+		int whiskerSize = 6;
+
+		// fill background rect
+		g.setColor(Color.WHITE);
+		g.fillRect(insetX, insetY, width - 2 * insetX, height - 2 * insetY);
 
 		int q10X = mapXToScreen(stats.getPercentile(10.0), width);
 		int q25X = mapXToScreen(stats.getPercentile(25.0), width);
@@ -85,9 +89,16 @@ public class JStatBar extends JComponent
 		g.setColor(Color.PINK);
 		g.fillRect(insetX + q25X, insetY+1, q75X - q25X, height - 2 * insetY-1);
 		g.drawLine(insetX + q10X, height / 2, insetX + q90X, height / 2);
+		g.drawLine(insetX + q10X, (height - whiskerSize) / 2 , insetX + q10X, (height + whiskerSize) / 2);
+		g.drawLine(insetX + q10X, height / 2, insetX + q90X, height / 2);
+		g.drawLine(insetX + q90X, (height - whiskerSize) / 2 , insetX + q90X, (height + whiskerSize) / 2);
 
 		g.setColor(Color.RED);
 		g.drawLine(insetX + q50X, insetY+1, insetX + q50X, height - insetY-1);
+
+		// draw outline border rect
+		g.setColor(Color.BLACK);
+		g.drawRect(insetX, insetY, width - 2 * insetX, height - 2 * insetY);
 
 		int buttonX = mapXToScreen(quality, width);
 		drawButton(g, buttonX, height);
@@ -96,10 +107,9 @@ public class JStatBar extends JComponent
 	private void drawButton(Graphics2D g, int dx, int height)
 	{
 		int barWidth = 4;
-		g.setColor(Color.BLACK);
-		g.drawRect(insetX + dx - barWidth / 2, 0, barWidth, height);
 		g.setColor(Color.GRAY);
 		g.fillRect(insetX + dx - barWidth / 2, 0, barWidth, height);
+		g.draw3DRect(insetX + dx - barWidth / 2, 0, barWidth, height, true);
 	}
 
 	private int mapXToScreen(double val, int width)
@@ -108,14 +118,5 @@ public class JStatBar extends JComponent
 		double max = stats.getMax();
 
 		return DoubleMath.roundToInt((width - 2 * insetX) * (val - min) / (max - min), RoundingMode.HALF_UP);
-	}
-
-	private void drawFrame(Graphics2D g, int width, int height)
-	{
-		g.setColor(Color.WHITE);
-		g.fillRect(insetX, insetY, width - 2 * insetX, height - 2 * insetY);
-
-		g.setColor(Color.BLACK);
-		g.drawRect(insetX, insetY, width - 2 * insetX, height - 2 * insetY);
 	}
 }

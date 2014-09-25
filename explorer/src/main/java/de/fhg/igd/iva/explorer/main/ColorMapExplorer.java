@@ -76,7 +76,7 @@ public class ColorMapExplorer extends JFrame
 		AnalysisPanel analysisPanel = new AnalysisPanel();
 		JndViewPanel jndViewPanel = new JndViewPanel();
 		ColormapPlotterPanel plotterPanel = new ColormapPlotterPanel();
-//		CompareView comparePanel = new CompareView(colorMaps);
+		CompareView comparePanel = new CompareView(colorMaps);
 
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Overview", overviewPanel);
@@ -86,7 +86,7 @@ public class ColorMapExplorer extends JFrame
 		tabPane.add("Analysis View", analysisPanel);
 		tabPane.add("JND View", jndViewPanel);
 		tabPane.add("3D View", plotterPanel);
-//		tabPane.add("Comparative View", comparePanel);
+		tabPane.add("Comparative View", comparePanel);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);
 		splitPane.setDividerLocation(250);
@@ -134,7 +134,7 @@ public class ColorMapExplorer extends JFrame
 		ColorMapExplorer frame = new ColorMapExplorer(colorMaps, database);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1160, 855);
+		frame.setSize(1280, 855);
 		frame.setLocationRelativeTo(null);
 
 		frame.setVisible(true);
