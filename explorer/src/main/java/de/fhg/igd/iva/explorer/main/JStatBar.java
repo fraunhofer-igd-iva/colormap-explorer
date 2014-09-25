@@ -87,7 +87,10 @@ public class JStatBar extends JComponent
 		int q90X = mapXToScreen(stats.getPercentile(90.0), width);
 
 		g.setColor(Color.PINK);
-		g.fillRect(insetX + q25X, insetY+1, q75X - q25X, height - 2 * insetY-1);
+		int leftX = Math.min(q25X, q75X);
+		int rightX = Math.max(q25X, q75X);
+		
+		g.fillRect(insetX + leftX, insetY+1, rightX - leftX, height - 2 * insetY-1);
 		g.drawLine(insetX + q10X, height / 2, insetX + q90X, height / 2);
 		g.drawLine(insetX + q10X, (height - whiskerSize) / 2 , insetX + q10X, (height + whiskerSize) / 2);
 		g.drawLine(insetX + q10X, height / 2, insetX + q90X, height / 2);
@@ -116,7 +119,14 @@ public class JStatBar extends JComponent
 	{
 		double min = stats.getMin();
 		double max = stats.getMax();
+		
+		int barWidth = width - 2 * insetX;
+		
+		int value = DoubleMath.roundToInt(barWidth * (val - min) / (max - min), RoundingMode.HALF_UP);
 
-		return DoubleMath.roundToInt((width - 2 * insetX) * (val - min) / (max - min), RoundingMode.HALF_UP);
+		if (!metric.moreIsBetter())
+			value = barWidth - value;	// maybe we have to subtract 1px here
+		
+		return value;
 	}
 }

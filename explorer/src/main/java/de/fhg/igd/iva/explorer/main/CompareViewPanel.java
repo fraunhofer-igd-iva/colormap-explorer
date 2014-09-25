@@ -133,7 +133,8 @@ public class CompareViewPanel extends JPanel
 			double quality = row.get(metric);
 			DescriptiveStatistics stats = computeStats(metric);
 			int index = Arrays.binarySearch(stats.getSortedValues(), quality);
-			int rank = count - index;
+			
+			int rank = metric.moreIsBetter() ? count - index : index + 1;
 
 			gbcName = (GridBagConstraints) gbcName.clone();
 			gbcQual = (GridBagConstraints) gbcQual.clone();
