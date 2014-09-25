@@ -77,6 +77,8 @@ public class DecomposedPanel extends JPanel
 	 */
 	public DecomposedPanel(ColormapView colormap)
 	{
+		setToolTipText(colormap.getDescription());
+		
 		this.colormap = colormap;
 		int cells = 10;
 		
@@ -166,6 +168,7 @@ public class DecomposedPanel extends JPanel
 	public void setColorMapView(ColormapView colorMapView)
 	{
 		this.colormap = colorMapView;
+		setToolTipText(colormap.getDescription());
 		repaint();
 	}
 	

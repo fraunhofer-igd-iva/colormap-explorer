@@ -39,7 +39,7 @@ public class SimpleColormapView implements ColormapView
 		BLUE("Blue channel"),
 		HUE("Hue"),
 		SAT("Saturation"),
-		VAL("Value (in HSV)"),
+		BRIGHT("Brightness"),
 		ATT("Attention");
 		
 		private String desc;
@@ -78,7 +78,7 @@ public class SimpleColormapView implements ColormapView
 		int red = color.getRed();
 		int green = color.getGreen();
 		int blue = color.getBlue();
-		float[] hsv;
+		float[] hsb;
 		
 		switch (viewType)
 		{
@@ -94,15 +94,15 @@ public class SimpleColormapView implements ColormapView
 		case BLUE:
 			return new Color(0, 0, blue);
 		case HUE:
-			hsv = Color.RGBtoHSB(red, green, blue, null);
-			Color rgb = new Color(Color.HSBtoRGB(hsv[0], 1, 1));
+			hsb = Color.RGBtoHSB(red, green, blue, null);
+			Color rgb = new Color(Color.HSBtoRGB(hsb[0], 1, 1));
 			return new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue());
 		case SAT:
-			hsv = Color.RGBtoHSB(red, green, blue, null);
-			return new Color(hsv[1], hsv[1], hsv[1]);
-		case VAL:
-			hsv = Color.RGBtoHSB(red, green, blue, null);
-			return new Color(hsv[2], hsv[2], hsv[2]);
+			hsb = Color.RGBtoHSB(red, green, blue, null);
+			return new Color(hsb[1], hsb[1], hsb[1]);
+		case BRIGHT:
+			hsb = Color.RGBtoHSB(red, green, blue, null);
+			return new Color(hsb[2], hsb[2], hsb[2]);
 		case ATT:
 		{
 			double[] lch = new CIELABLch().fromColor(color);

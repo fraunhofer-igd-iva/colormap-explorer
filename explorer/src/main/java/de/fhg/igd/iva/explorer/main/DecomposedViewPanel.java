@@ -24,7 +24,7 @@ import static views.SimpleColormapView.ViewType.LUM;
 import static views.SimpleColormapView.ViewType.REAL;
 import static views.SimpleColormapView.ViewType.RED;
 import static views.SimpleColormapView.ViewType.SAT;
-import static views.SimpleColormapView.ViewType.VAL;
+import static views.SimpleColormapView.ViewType.BRIGHT;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -55,7 +55,7 @@ public class DecomposedViewPanel extends JPanel
 	private int cols = 3;
 	
 	private final DecomposedPanel[][] panels = new DecomposedPanel[rows][cols];
-	private final List<ViewType> types = ImmutableList.of(REAL, LUM, ATT, RED, GREEN, BLUE, HUE, SAT, VAL);
+	private final List<ViewType> types = ImmutableList.of(REAL, LUM, ATT, RED, GREEN, BLUE, HUE, SAT, BRIGHT);
 
 	/**
 	 * Default constructor
