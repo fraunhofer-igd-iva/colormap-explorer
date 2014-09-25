@@ -310,7 +310,7 @@ public class ConfigPanel extends JPanel
 
 			addInfo(tileInfoPanel, "Hue", String.valueOf((int)(hsb[0] * 360)) + " °");
 			addInfo(tileInfoPanel, "Saturation", String.valueOf((int)(hsb[1] * 100)) + "%");
-			addInfo(tileInfoPanel, "Value", String.valueOf((int)(hsb[2] * 100)) + "%");
+			addInfo(tileInfoPanel, "Brightness", String.valueOf((int)(hsb[2] * 100)) + "%");
 			addInfo(tileInfoPanel, "Luma", String.valueOf(luma));
 			addInfo(tileInfoPanel, "Luminance", String.format("%.1f %%", luminance));
 			addInfo(tileInfoPanel, "Lightness", String.format("%.0f", lch[0]));

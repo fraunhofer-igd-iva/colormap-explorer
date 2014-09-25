@@ -33,7 +33,7 @@ public class SimpleColormapView implements ColormapView
 	public enum ViewType
 	{
 		REAL("The original colormap"),
-		LUM("Luminance"),
+		LUM("Luma"),
 		RED("Red channel"),
 		GREEN("Green channel"),
 		BLUE("Blue channel"),
