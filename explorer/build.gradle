@@ -18,6 +18,9 @@ configurations {
 dependencies {
 	compile group: 'org.jbibtex', name: 'jbibtex', version: '1.0.13'
 	
+	// In Humboldt Artifactory
+	compile(group: 'de.fhg.igd', name: 'pcolor', version: '1.4.1') 
+
 	compile project(':metrics')
 	compile project(':colormaps')
 	

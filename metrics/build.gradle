@@ -6,7 +6,7 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-math3', version: '3.3'
 
 	// In Humboldt Artifactory
-	compile(group: 'de.fhg.igd', name: 'pcolor', version: '1.3.0') 
+	compile(group: 'de.fhg.igd', name: 'pcolor', version: '1.4.1') 
 
 	compile project(':colormaps')
 }
