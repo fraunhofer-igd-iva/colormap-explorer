@@ -21,10 +21,6 @@ $quality:{color|
 \definecolor{$color.name$\}{rgb\}{$color.r$, $color.g$, $color.b$\}
 }$
 
-$malus:{color| 
-\definecolor{$color.name$\}{rgb\}{$color.r$, $color.g$, $color.b$\}
-}$
-
 {
 % Centering the content of a table cell is a real pain
 % We therefore use \raisebox to do the centering manually for every single cell

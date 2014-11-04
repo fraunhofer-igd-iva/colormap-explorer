@@ -61,13 +61,19 @@ public class MetricColormap
 		} 
 		else
 		{
+			if (!metric.moreIsBetter()) 
+				quality = -quality;
+			
 			format = String.format(Locale.ENGLISH, "%.1f", quality);
 		}
 		
 		
 		metrics.put(metric, format);
 		
-		String colorName = (metric.moreIsBetter() ? "quality" : "malus") + points;
+		if (!metric.moreIsBetter())
+			points = 100 - points;
+
+		String colorName = "quality" + points;
 		colors.put(metric, colorName);
 	}
 
