@@ -60,7 +60,7 @@ public final class LatexTableDecomp
         List<LatexColormap> lcms = Lists.newArrayList();
 
 		File imageFolder = new File(outputFolder, imgFolderName);
-        imageFolder.mkdir();
+        imageFolder.mkdirs();
         
         for (KnownColormap cm : colormaps)
         {
