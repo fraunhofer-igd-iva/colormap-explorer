@@ -1,7 +1,7 @@
 #ColorMap Explorer
 **A tool for exploring 2D colormaps**
 
-![image1](images/2014-05-21_screenshot.png "The main panel")
+![image1](images/2014-11-06_screenshot_3dplot.png "The 3D plot of a colormap")
 
 
 ### Overview
@@ -9,6 +9,8 @@
 This tool gives an overview on different colormaps by separating them into different filtered views.
 The vector field indicates the distance between adjacent tiles, measured in delta E distance in CAM02-UCS 
 as published in "Uniform Colour Spaces Based on CIECAM02 Colour Appearance Model" (Luo et al).
+
+![image1](images/2014-11-06_screenshot_decomposed.png "The overview panel")
 
 The size of the tiles in the *hue*-filtered view at the bottom left corner indicates the amount of saturation.
 
