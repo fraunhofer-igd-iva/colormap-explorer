@@ -32,7 +32,7 @@ subprojects {
 	compileJava.options.encoding = 'ISO-8859-15'
 	javadoc.options.encoding = 'ISO-8859-15'
 
-	sourceCompatibility=1.7
+	sourceCompatibility=1.8
 
 	// We use both Maven Central and the Humboldt Artifactory instance, which contains igd-iva/pcolor
 	repositories {

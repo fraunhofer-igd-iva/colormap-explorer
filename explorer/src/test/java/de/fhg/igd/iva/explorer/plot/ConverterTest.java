@@ -59,6 +59,12 @@ public class ConverterTest
 		CoordinateConverter converter = CoordinateConverters.createHsb();
 		test(converter);
 	}
+	
+	@Test
+	public void testCam()
+	{
+		test(CoordinateConverters.createCAM_UCS(), 0.0001f);
+	}
 
 	/**
 	 * @param converter
@@ -80,6 +86,29 @@ public class ConverterTest
 			testEquals(color, new Color(rgb[0], rgb[1], rgb[2]));
 		}
 	}
+	
+	/**
+	 * @param converter
+	 * @param thr threshold in delta E/JND
+	 */
+	private void test(CoordinateConverter converter, float thr)
+	{
+		Function<Color, float[]> fromColor = converter.getColorToCubeCoordinates();
+		Function<float[], float[]> toColor = converter.getCubeCoordinatesToRgbColorComponents();
+
+		Random r = new Random(234234);
+
+		for (int i = 0; i < 100; i++)
+		{
+			Color color = new Color(r.nextInt(), false);
+
+			float[] vals = fromColor.apply(color);
+			float[] rgb = toColor.apply(vals);
+			float[] c = color.getComponents(null);
+			Assert.assertArrayEquals(new float[]{c[0], c[1], c[2]}, rgb, thr);
+		}
+	}
+
 
 	/**
 	 * @param color

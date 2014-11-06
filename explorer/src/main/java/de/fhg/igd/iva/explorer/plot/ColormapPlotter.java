@@ -54,13 +54,14 @@ public class ColormapPlotter extends JPanel
         plotsContainer.add(colormapPlotPanelXyz);
         panels.add(colormapPlotPanelXyz);
 
-        final ColormapPlotPanel colormapPlotPanelHsb = new ColormapPlotPanel();
-        colormapPlotPanelHsb.setBorder(BorderFactory.createTitledBorder("HSB"));
-        colormapPlotPanelHsb.setCoordinateConverter(CoordinateConverters.createHsb());
-        colormapPlotPanelHsb.setLabels("HSX", "HSY", "B");
-        colormapPlotPanelHsb.setLabelDigits(1);
-        plotsContainer.add(colormapPlotPanelHsb);
-        panels.add(colormapPlotPanelHsb);
+        final ColormapPlotPanel colormapPlotPanelUCS = new ColormapPlotPanel();
+        colormapPlotPanelUCS.setBorder(BorderFactory.createTitledBorder("CAM02-UCS"));
+        colormapPlotPanelUCS.setCoordinateConverter(CoordinateConverters.createCAM_UCS());
+        colormapPlotPanelUCS.setLabels("J'", "a'", "b'");
+        colormapPlotPanelUCS.setBounds(0, 100, -80, 80, -80, 80);
+        colormapPlotPanelUCS.setLabelDigits(0);
+        plotsContainer.add(colormapPlotPanelUCS);
+        panels.add(colormapPlotPanelUCS);
 
 //        final ColormapPlotPanel colormapPlotPanelLabSM = new ColormapPlotPanel();
 //        colormapPlotPanelLabSM.setBorder(BorderFactory.createTitledBorder("LabSM"));
