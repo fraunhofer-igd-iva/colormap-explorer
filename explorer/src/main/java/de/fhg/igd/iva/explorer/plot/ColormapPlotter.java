@@ -45,14 +45,14 @@ public class ColormapPlotter extends JPanel
         plotsContainer.add(colormapPlotPanelRgb);
         panels.add(colormapPlotPanelRgb);
 
-        final ColormapPlotPanel colormapPlotPanelXyz = new ColormapPlotPanel();
-        colormapPlotPanelXyz.setBorder(BorderFactory.createTitledBorder("XYZ"));
-        colormapPlotPanelXyz.setCoordinateConverter(CoordinateConverters.createXyz());
-        colormapPlotPanelXyz.setBounds(0, 100, 0, 100, 0, 100);
-        colormapPlotPanelXyz.setLabels("X", "Y", "Z");
-        colormapPlotPanelXyz.setLabelDigits(0);
-        plotsContainer.add(colormapPlotPanelXyz);
-        panels.add(colormapPlotPanelXyz);
+//        final ColormapPlotPanel colormapPlotPanelXyz = new ColormapPlotPanel();
+//        colormapPlotPanelXyz.setBorder(BorderFactory.createTitledBorder("XYZ"));
+//        colormapPlotPanelXyz.setCoordinateConverter(CoordinateConverters.createXyz());
+//        colormapPlotPanelXyz.setBounds(0, 100, 0, 100, 0, 100);
+//        colormapPlotPanelXyz.setLabels("X", "Y", "Z");
+//        colormapPlotPanelXyz.setLabelDigits(0);
+//        plotsContainer.add(colormapPlotPanelXyz);
+//        panels.add(colormapPlotPanelXyz);
 
         final ColormapPlotPanel colormapPlotPanelUCS = new ColormapPlotPanel();
         colormapPlotPanelUCS.setBorder(BorderFactory.createTitledBorder("CAM02-UCS"));
@@ -63,6 +63,14 @@ public class ColormapPlotter extends JPanel
         plotsContainer.add(colormapPlotPanelUCS);
         panels.add(colormapPlotPanelUCS);
 
+        final ColormapPlotPanel colormapPlotPanelHsb = new ColormapPlotPanel();
+        colormapPlotPanelHsb.setBorder(BorderFactory.createTitledBorder("HSB"));
+        colormapPlotPanelHsb.setCoordinateConverter(CoordinateConverters.createHsb());
+        colormapPlotPanelHsb.setLabels("HSX", "HSY", "B");
+        colormapPlotPanelHsb.setLabelDigits(1);
+        plotsContainer.add(colormapPlotPanelHsb);
+        panels.add(colormapPlotPanelHsb);
+        
 //        final ColormapPlotPanel colormapPlotPanelLabSM = new ColormapPlotPanel();
 //        colormapPlotPanelLabSM.setBorder(BorderFactory.createTitledBorder("LabSM"));
 //        colormapPlotPanelLabSM.setCoordinateConverter(CoordinateConverters.createLabSM());
