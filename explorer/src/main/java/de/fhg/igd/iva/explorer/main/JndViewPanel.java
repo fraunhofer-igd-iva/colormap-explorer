@@ -161,8 +161,8 @@ public class JndViewPanel extends JPanel
 
 		jndRegionCombo = new JComboBox<RegionSampling>();
 		jndRegionCombo.addItem(new RegionSampling(32, 0.005));
-		jndRegionCombo.addItem(new RegionSampling(128, 0.002));
-		jndRegionCombo.addItem(new RegionSampling(256, 0.0005));
+		jndRegionCombo.addItem(new RegionSampling(64, 0.002));
+		jndRegionCombo.addItem(new RegionSampling(128, 0.0005));
 		jndDistanceCombo.setSelectedIndex(1);
 		panel.add(new JLabel("Region Sampling"));
 		panel.add(jndRegionCombo);
