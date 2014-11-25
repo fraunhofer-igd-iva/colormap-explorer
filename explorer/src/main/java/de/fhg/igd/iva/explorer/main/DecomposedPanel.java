@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

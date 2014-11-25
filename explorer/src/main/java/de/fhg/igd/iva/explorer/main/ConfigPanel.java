@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -55,6 +56,7 @@ import views.ColormapView;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.FileImageColormap;
@@ -62,6 +64,7 @@ import de.fhg.igd.iva.colormaps.KnownColormap;
 import de.fhg.igd.iva.colorspaces.CIELABLch;
 import de.fhg.igd.iva.colorspaces.RGB;
 import de.fhg.igd.iva.colorspaces.XYZ;
+import de.fhg.igd.iva.explorer.events.ColormapAddedEvent;
 import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
 import de.fhg.igd.iva.explorer.events.MyEventBus;
 import de.fhg.igd.iva.explorer.events.TileSelectionEvent;
@@ -86,7 +89,8 @@ public class ConfigPanel extends JPanel
 
 	private final BibTeXDatabase database;
 
-	private JComboBox<KnownColormap> mapsCombo;
+	private final Set<KnownColormap> colormaps = Sets.newLinkedHashSet();
+	private final JComboBox<KnownColormap> mapsCombo;
 
 	private JLabel descLabel;
 	private JLabel refsLabel;
@@ -97,16 +101,21 @@ public class ConfigPanel extends JPanel
 	 * @param colorMaps the (sorted) list of all available color maps
 	 * @param database the BibTeX database
 	 */
-	public ConfigPanel(List<KnownColormap> colorMaps, final BibTeXDatabase database)
+	public ConfigPanel(Collection<KnownColormap> colorMaps, final BibTeXDatabase database)
 	{
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		this.database = database;
 
+		// store the dialog permanently so it remembers the LRU folder
 		this.fileDialog = FileDialogs.createOpenImageDialog();
 
-		mapsCombo = new JComboBox<KnownColormap>(colorMaps.toArray(new KnownColormap[0]));
+		// filter out duplicates
+		colormaps.addAll(colorMaps);
+		KnownColormap[] cmArray = colormaps.toArray(new KnownColormap[colormaps.size()]);
+
+		mapsCombo = new JComboBox<KnownColormap>(cmArray);
 
 		final JButton importButton = new JButton("Import colormap from image", loadIconImage("/icons/icon.png"));
 		importButton.addActionListener(new ActionListener()
@@ -186,8 +195,12 @@ public class ConfigPanel extends JPanel
 			try
 			{
 				colormap = new FileImageColormap(fileDialog.getSelectedFile());
-				mapsCombo.addItem(colormap);
-				mapsCombo.setSelectedItem(colormap);
+				if (!colormaps.contains(colormap)) {
+					mapsCombo.addItem(colormap);
+					mapsCombo.setSelectedItem(colormap);
+				
+					MyEventBus.getInstance().post(new ColormapAddedEvent(colormap));
+				}
 			}
 			catch (IOException e)
 			{

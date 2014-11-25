@@ -17,7 +17,6 @@
 package de.fhg.igd.iva.explorer.main;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,11 +80,11 @@ public class ColorMapExplorer extends JFrame
 		JTabbedPane tabPane = new JTabbedPane();
 		tabPane.add("Overview", overviewPanel);
 		tabPane.add("Decomposed Colormap", viewPanel);
+		tabPane.add("3D View", plotterPanel);
+		tabPane.add("JND View", jndViewPanel);
+		tabPane.add("Analysis View", analysisPanel);
 		tabPane.add("Points Example View", pointsExampleView);
 		tabPane.add("Overlay Example View", overlayExampleView);
-		tabPane.add("Analysis View", analysisPanel);
-		tabPane.add("JND View", jndViewPanel);
-		tabPane.add("3D View", plotterPanel);
 		tabPane.add("Comparative View", comparePanel);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPane, tabPane);

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -89,4 +90,34 @@ public class FileImageColormap extends ImageBasedColormap implements KnownColorm
 	{
 		return Collections.emptyList();
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(desc, name);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+	
+		if (obj == null)
+			return false;
+		
+		if (getClass() != obj.getClass())
+			return false;
+		
+		FileImageColormap other = (FileImageColormap) obj;
+
+		if (!Objects.equals(desc, other.desc))
+			return false;
+		
+		if (!Objects.equals(name, other.name))
+			return false;
+		
+		return true;
+	}
 }
+

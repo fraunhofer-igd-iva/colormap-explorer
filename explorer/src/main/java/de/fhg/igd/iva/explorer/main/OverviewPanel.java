@@ -18,15 +18,14 @@
 package de.fhg.igd.iva.explorer.main;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -42,6 +41,7 @@ import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhg.igd.iva.colormaps.KnownColormap;
+import de.fhg.igd.iva.explorer.events.ColormapAddedEvent;
 import de.fhg.igd.iva.explorer.events.ColormapSelectionEvent;
 import de.fhg.igd.iva.explorer.events.MyEventBus;
 
@@ -51,11 +51,19 @@ import de.fhg.igd.iva.explorer.events.MyEventBus;
  */
 public class OverviewPanel extends JPanel
 {
+	private static final long serialVersionUID = -6103669094099315619L;
+
 	private final JList<KnownColormap> list;
+	private final DefaultListModel<KnownColormap> model;
 
 	public OverviewPanel(List<KnownColormap> colormaps)
 	{
-		list = new JList<KnownColormap>(colormaps.toArray(new KnownColormap[0]));
+		model = new DefaultListModel<>();
+		for (KnownColormap map : colormaps) {
+			model.addElement(map);
+		}
+		
+		list = new JList<KnownColormap>(model);
 
 		list.setCellRenderer(new ListCellRenderer<KnownColormap>()
 		{
@@ -87,6 +95,10 @@ public class OverviewPanel extends JPanel
 		list.setVisibleRowCount(0);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+		if (!model.isEmpty()) {
+			list.setSelectedIndex(0);
+		}
+		
 		list.addListSelectionListener(new ListSelectionListener()
 		{
 			@Override
@@ -103,6 +115,19 @@ public class OverviewPanel extends JPanel
 		MyEventBus.getInstance().register(this);
 	}
 
+	@Subscribe
+	public void onAdded(ColormapAddedEvent event)
+	{
+		KnownColormap colormap = event.getColormap();
+		// the sender should check if the colormap already 
+		// exists before sending, but we double-check to be sure
+		
+		if (!model.contains(colormap)) {
+			model.addElement(colormap);
+			list.setSelectedValue(colormap, true);
+		}
+	}
+	
 	@Subscribe
 	public void onSelect(ColormapSelectionEvent event)
 	{
