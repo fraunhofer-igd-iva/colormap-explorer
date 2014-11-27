@@ -196,11 +196,15 @@ public class JndViewPanel extends JPanel
 
 	private void saveImageToFile()
 	{
-		if (fileChooser.showSaveDialog(JndViewPanel.this) == JFileChooser.APPROVE_OPTION)
+		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
 		{
 			try
 			{
 				File file = fileChooser.getSelectedFile();
+				
+				// TODO: this snippet also exists in the export view 
+				
+				// JFileChooser does not enforce an extension or set a default
 				int extIdx = file.getName().lastIndexOf('.');
 				String ext = extIdx >= 0 ? file.getName().substring(extIdx + 1) : null;
 				if (ext == null) {
@@ -336,7 +340,7 @@ public class JndViewPanel extends JPanel
 
 	}
 
-	private void renderToImage(File file, String format)
+	private void renderToImage(File file, String format) throws IOException
 	{
 		BufferedImage bi = new BufferedImage(getScreenWidth(), getScreenHeight(), BufferedImage.TYPE_INT_RGB);
 		Graphics2D gi = bi.createGraphics();
@@ -347,12 +351,7 @@ public class JndViewPanel extends JPanel
 
 		gi.dispose();
 
-		try {
-			ImageIO.write(bi, format, file);
-		}
-		catch (IOException e) {
-			logger.error("Could not save to file", e);
-		}
+		ImageIO.write(bi, format, file);
 	}
 
 	private int getScreenWidth()

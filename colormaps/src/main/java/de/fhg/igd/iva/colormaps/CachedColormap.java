@@ -83,6 +83,13 @@ public class CachedColormap extends ImageBasedColormap
 
 		return image;
 	}
+	
+	/**
+	 * @return the original, underlying colormap
+	 */
+	public Colormap getOriginal() {
+		return delegate;
+	}
 
 	@Override
 	public Color getColor(double mx, double my)

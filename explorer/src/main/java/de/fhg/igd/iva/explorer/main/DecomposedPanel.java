@@ -78,6 +78,8 @@ public class DecomposedPanel extends JPanel
 	 */
 	public DecomposedPanel(ColormapView colormap)
 	{
+		// not pretty, but it's a singleton - we can't change it
+		ToolTipManager.sharedInstance().setDismissDelay(1000);
 		setToolTipText(colormap.getDescription());
 		
 		this.colormap = colormap;
