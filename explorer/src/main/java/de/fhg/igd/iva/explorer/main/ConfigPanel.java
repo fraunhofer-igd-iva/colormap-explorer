@@ -149,6 +149,7 @@ public class ConfigPanel extends JPanel
 
 		tileInfoPanel = new JPanel(new GridLayout(0, 2, 5, 5));
 		tileInfoPanel.setBorder(BorderFactory.createTitledBorder("Tile Info"));
+		tileInfoPanel.setVisible(false);
 		centerPanel.add(tileInfoPanel, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
 
@@ -326,17 +327,18 @@ public class ConfigPanel extends JPanel
 			addInfo(tileInfoPanel, "Brightness", String.valueOf((int)(hsb[2] * 100)) + "%");
 			addInfo(tileInfoPanel, "Luma", String.valueOf(luma));
 			addInfo(tileInfoPanel, "Luminance", String.format("%.1f %%", luminance));
-			addInfo(tileInfoPanel, "Lightness", String.format("%.0f", lch[0]));
+//			addInfo(tileInfoPanel, "Lightness", String.format("%.0f", lch[0]));
 			addInfo(tileInfoPanel, "Chroma", String.format("%.0f", lch[1]));
 			addInfo(tileInfoPanel, "Attention", String.format("%.3f", attention/100.0));
-			addInfo(tileInfoPanel, "CAM Hue", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.h]));
-			addInfo(tileInfoPanel, "CAM Hue composition", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.H]));
-			addInfo(tileInfoPanel, "CAM Colorfulness", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.C]));
-			addInfo(tileInfoPanel, "CAM Saturation", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.s]));
+			addInfo(tileInfoPanel, "CAM Hue (h)", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.h]));
+			addInfo(tileInfoPanel, "CAM Hue composition (H)", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.H]));
+			addInfo(tileInfoPanel, "CAM Colorfulness (C)", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.C]));
+			addInfo(tileInfoPanel, "CAM Saturation (s)", String.format("%.0f", appearanceCorrelates[CS_CIECAM02.s]));
 			addInfo(tileInfoPanel, "CAM Lightness (J)", String.format("%.1f", appearanceCorrelates[CS_CIECAM02.J]));
 
 		}
-
+		
+		tileInfoPanel.setVisible(!tiles.isEmpty());
 		tileInfoPanel.revalidate();
 	}
 

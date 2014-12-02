@@ -83,7 +83,7 @@ public class ColorMapExplorer extends JFrame
 		tabPane.add("Comparative View", comparePanel);
 		tabPane.add("Decomposed Colormap", viewPanel);
 		tabPane.add("3D View", plotterPanel);
-		tabPane.add("JND View", jndViewPanel);
+		tabPane.add("Color Sampling View", jndViewPanel);
 		tabPane.add("Analysis View", analysisPanel);
 		tabPane.add("Points Example View", pointsExampleView);
 		tabPane.add("Overlay Example View", overlayExampleView);
@@ -132,6 +132,8 @@ public class ColorMapExplorer extends JFrame
 			logger.error("Could not parse bibtex file", e);
 		}
 
+		logger.info("Found {} color maps in total", colorMaps.size());
+		
 		ColorMapExplorer frame = new ColorMapExplorer(colorMaps, database);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
