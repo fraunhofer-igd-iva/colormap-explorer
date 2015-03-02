@@ -23,15 +23,19 @@ publishing {
     }
 	
     repositories {
-		if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
-			maven {
-				credentials {
-					username sonatypeUsername
-					password sonatypePassword
-				}
-			
-				url "http://a3srv:8081/nexus/content/repositories/releases/"
-			}
-		}
+        maven {
+            if (project.hasProperty('artifactoryUsername') && project.hasProperty('artifactoryPassword')) {
+                credentials {
+                    username artifactoryUsername
+                    password artifactoryPassword
+                }
+            } else {
+                logger.warn('Artifactory credentials not specified')
+                logger.warn('Please set "artifactoryUsername" and "artifactoryPasswort" in your ~/.gradle/gradle.properties file.')
+                logger.warn('You can use the LDAP password hash (Artifactory -> Profile -> Unlock -> Maven Settings)')
+            }
+
+            url "http://ivasrv.igd.fraunhofer.de:8081/artifactory/libs-release-local"
+        }
     }
 }
