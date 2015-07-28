@@ -50,28 +50,6 @@ class FourCornersAnchorColorMapParameterizable extends AbstractColormap {
 
 	@Override
 	public Color getColor(double x, double y) {
-		checkRanges(x, y);
-
-		double r = interpolate(upperLeft.getRed(), upperRight.getRed(),
-				lowerLeft.getRed(), lowerRight.getRed(), x, y);
-		double g = interpolate(upperLeft.getGreen(), upperRight.getGreen(),
-				lowerLeft.getGreen(), lowerRight.getGreen(), x, y);
-		double b = interpolate(upperLeft.getBlue(), upperRight.getBlue(),
-				lowerLeft.getBlue(), lowerRight.getBlue(), x, y);
-
-		return new Color((float)r / 255f, (float)g / 255f, (float)b / 255f);
+		return interpolate(upperLeft, upperRight, lowerLeft, lowerRight, x, y);
 	}
-
-	private double interpolate(double start, double end, double position) {
-		return start + (end - start) * position;
-	}
-
-	private double interpolate(double lo, double ro, double lu, double ru,
-			double positionX, double positionY) {
-		// TODO: needs testing!
-		double o = interpolate(lo, ro, positionX);
-		double u = interpolate(lu, ru, positionX);
-		return interpolate(o, u, positionY);
-	}
-
 }

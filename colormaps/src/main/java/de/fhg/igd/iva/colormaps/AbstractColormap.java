@@ -16,6 +16,8 @@
 
 package de.fhg.igd.iva.colormaps;
 
+import java.awt.Color;
+
 import com.google.common.base.Preconditions;
 
 /**
@@ -28,4 +30,25 @@ public abstract class AbstractColormap implements Colormap {
 		Preconditions.checkArgument(0 <= x && x <= 1, "X must in in range [0..1], but is %s", x);
 		Preconditions.checkArgument(0 <= y && y <= 1, "Y must in in range [0..1], but is %s", y);
 	}
+
+    protected Color interpolate(Color tl, Color tr, Color bl, Color br, double x, double y) {
+        checkRanges(x, y);
+
+        double r = interpolate(tl.getRed(), tr.getRed(), bl.getRed(), br.getRed(), x, y);
+        double g = interpolate(tl.getGreen(), tr.getGreen(), bl.getGreen(), br.getGreen(), x, y);
+        double b = interpolate(tl.getBlue(), tr.getBlue(), bl.getBlue(), br.getBlue(), x, y);
+
+        return new Color((float)r / 255f, (float)g / 255f, (float)b / 255f);
+    }
+
+    protected double interpolate(double start, double end, double position) {
+        Preconditions.checkArgument(0 <= position && position <= 1, "position must in in range [0..1], but is %s", position);
+        return start + (end - start) * position;
+    }
+
+    protected double interpolate(double topLeft, double topRight, double bottomLeft, double bottomRight, double posX, double posY) {
+        double o = interpolate(topLeft, topRight, posX);
+        double u = interpolate(bottomLeft, bottomRight, posX);
+        return interpolate(o, u, posY);
+    }
 }

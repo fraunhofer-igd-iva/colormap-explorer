@@ -26,6 +26,7 @@ de.fhg.igd.iva.colormaps.impl.RobertsonAndOCallaghan2
 de.fhg.igd.iva.colormaps.impl.RobertsonAndOCallaghan3
 de.fhg.igd.iva.colormaps.impl.RuppertGreenPurple
 de.fhg.igd.iva.colormaps.impl.RuppertOrangeBlue
+de.fhg.igd.iva.colormaps.impl.SchumannUrban97
 de.fhg.igd.iva.colormaps.impl.SimulaHSB3
 de.fhg.igd.iva.colormaps.impl.Steiger2014Generic
 de.fhg.igd.iva.colormaps.impl.LuoUCSTest

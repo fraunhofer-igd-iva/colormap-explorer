@@ -35,10 +35,10 @@ public class Ziegler extends AbstractKnownColormap {
 
 	@Override
 	public Color getColor(double valueX1, double valueX2) {
-		
-		// TODO: This should be transformed into a set of 16 {@link FourCornersAnchorColorMapParameterizable} 
+
+		// TODO: This should be transformed into a set of 16 {@link FourCornersAnchorColorMapParameterizable}
 		// maps, similar to RobertsonAndOCallaghan
-		
+
 		//rot
 		double rot;
 		if (valueX1 <= 0.25 && valueX2 <= 0.25)
@@ -49,7 +49,7 @@ public class Ziegler extends AbstractKnownColormap {
 			rot = interpolate(255, 255, 255, 230, valueX1*4, (valueX2-0.50)*4);
 		else if (valueX1 <= 0.25 && valueX2 > 0.75)
 			rot = interpolate(255, 230, 255, 200, valueX1*4, (valueX2-0.75)*4);
-		
+
 		else if (valueX1 > 0.25 && valueX1 <= 0.50 && valueX2 <= 0.25)
 			rot = interpolate(205, 150, 230, 170, (valueX1-0.25)*4, valueX2*4);
 		else if (valueX1 > 0.25 && valueX1 <= 0.50 && valueX2 > 0.25 && valueX2 <= 0.50)
@@ -58,7 +58,7 @@ public class Ziegler extends AbstractKnownColormap {
 			rot = interpolate(255, 200, 230, 150, (valueX1-0.25)*4, (valueX2-0.50)*4);
 		else if (valueX1 > 0.25 && valueX1 <= 0.50 && valueX2 > 0.75)
 			rot = interpolate(230, 150, 200, 128, (valueX1-0.25)*4, (valueX2-0.75)*4);
-		
+
 		else if (valueX1 > 0.50 && valueX1 <= 0.75 && valueX2 <= 0.25)
 			rot = interpolate(150, 90, 170, 80, (valueX1-0.50)*4, valueX2*4);
 		else if (valueX1 > 0.50 && valueX1 <= 0.75 && valueX2 > 0.25 && valueX2 <= 0.50)
@@ -67,7 +67,7 @@ public class Ziegler extends AbstractKnownColormap {
 			rot = interpolate(200, 70, 150, 50, (valueX1-0.50)*4, (valueX2-0.50)*4);
 		else if (valueX1 > 0.50 && valueX1 <= 0.75 && valueX2 > 0.75)
 			rot = interpolate(150, 50, 128, 50, (valueX1-0.50)*4, (valueX2-0.75)*4);
-		
+
 		else if (valueX1 > 0.75 && valueX2 <= 0.25)
 			rot = interpolate(90, 40, 80, 30, (valueX1-0.75)*4, valueX2*4);
 		else if (valueX1 > 0.75 && valueX2 > 0.25 && valueX2 <= 0.50)
@@ -79,7 +79,7 @@ public class Ziegler extends AbstractKnownColormap {
 		else{
 			System.out.println("undefined state. please refine parameters");
 			rot = 0;
-		}		
+		}
 		int r = (int) rot;
 
 		//grün
@@ -96,7 +96,7 @@ public class Ziegler extends AbstractKnownColormap {
 			gruen = interpolate(128, 160, 50, 50, gx*4, (gy-0.50)*4);
 		else if (gx <= 0.25 && gy > 0.75)
 			gruen = interpolate(50, 50, 0, 0, gx*4, (gy-0.75)*4);
-		
+
 		else if (gx > 0.25 && gx <= 0.50 && gy <= 0.25)
 			gruen = interpolate(255, 255, 240, 255, (gx-0.25)*4, gy*4);
 		else if (gx > 0.25 && gx <= 0.50 && gy > 0.25 && gy <= 0.50)
@@ -104,9 +104,9 @@ public class Ziegler extends AbstractKnownColormap {
 		else if (gx > 0.25 && gx <= 0.50 && gy > 0.50 && gy <= 0.75)
 			gruen = interpolate(160, 170, 50, 50, (gx-0.25)*4, (gy-0.50)*4);
 		else if (gx > 0.25 && gx <= 0.50 && gy > 0.75)
-			gruen = interpolate(50, 50, 0, 0, (gx-0.25)*4, (gy-0.75)*4);			
-		int g = (int) gruen;		
-		
+			gruen = interpolate(50, 50, 0, 0, (gx-0.25)*4, (gy-0.75)*4);
+		int g = (int) gruen;
+
 		//blau
 		double blau;
 		if (valueX1 <= 0.25 && valueX2 <= 0.25)
@@ -117,7 +117,7 @@ public class Ziegler extends AbstractKnownColormap {
 			blau = interpolate(0, 60, 0, 60, valueX1*4, (valueX2-0.50)*4);
 		else if (valueX1 <= 0.25 && valueX2 > 0.75)
 			blau = interpolate(0, 60, 0, 60, valueX1*4, (valueX2-0.75)*4);
-		
+
 		else if (valueX1 > 0.25 && valueX1 <= 0.50 && valueX2 <= 0.25)
 			blau = interpolate(0,0,60,60, (valueX1-0.25)*4, valueX2*4);
 		else if (valueX1 > 0.25 && valueX1 <= 0.50 && valueX2 > 0.25 && valueX2 <= 0.50)
@@ -126,7 +126,7 @@ public class Ziegler extends AbstractKnownColormap {
 			blau = interpolate(60, 200, 60, 170, (valueX1-0.25)*4, (valueX2-0.50)*4);
 		else if (valueX1 > 0.25 && valueX1 <= 0.50 && valueX2 > 0.75)
 			blau = interpolate(60, 170, 60, 130, (valueX1-0.25)*4, (valueX2-0.75)*4);
-		
+
 		else if (valueX1 > 0.50 && valueX1 <= 0.75 && valueX2 <= 0.25)
 			blau = interpolate(0,0,60,60, (valueX1-0.50)*4, valueX2*4);
 		else if (valueX1 > 0.50 && valueX1 <= 0.75 && valueX2 > 0.25 && valueX2 <= 0.50)
@@ -135,7 +135,7 @@ public class Ziegler extends AbstractKnownColormap {
 			blau = interpolate(200, 170, 170, 255, (valueX1-0.50)*4, (valueX2-0.50)*4);
 		else if (valueX1 > 0.50 && valueX1 <= 0.75 && valueX2 > 0.75)
 			blau = interpolate(170, 255, 130, 170, (valueX1-0.50)*4, (valueX2-0.75)*4);
-		
+
 		else if (valueX1 > 0.75 && valueX2 <= 0.25)
 			blau = interpolate(0,0,60,60, (valueX1-0.75)*4, valueX2*4);
 		else if (valueX1 > 0.75 && valueX2 > 0.25 && valueX2 <= 0.50)
@@ -147,22 +147,12 @@ public class Ziegler extends AbstractKnownColormap {
 		else{
 			System.out.println("undefined state. please refine parameters");
 			blau = 0;
-		}	
+		}
 		int b = (int) blau;
 
 		return new Color(r, g, b);
 	}
 
-	private double interpolate(double start, double end, double position) {
-		return start + (end - start) * position;
-	}
-
-	private double interpolate(double lo, double ro, double lu, double ru, double positionX, double positionY) {
-		double o = interpolate(lo, ro, positionX);
-		double u = interpolate(lu, ru, positionX);
-		return interpolate(o, u, positionY);
-	}
-	
 	@Override
 	public String getName()
 	{
@@ -182,7 +172,7 @@ public class Ziegler extends AbstractKnownColormap {
 	}
 
 	@Override
-	public List<String> getReferences() 
+	public List<String> getReferences()
 	{
 		return Arrays.asList("ziegler2007visual", "bernard2013", "bernardEuroVis2014");
 	}
